@@ -2,20 +2,18 @@
 #define S21_VECTOR_H_
 
 #include <iostream>
+#include <limits>
 
-using std::fill, std::copy, std::out_of_range, std::numeric_limits;
+using std::copy;
+using std::initializer_list;
+using std::invalid_argument;
+using std::numeric_limits;
+using std::out_of_range;
 
 namespace s21 {
 
 template <class T>
 class s21_vector {
- private:
-  size_type size_;
-  size_type capacity_;
-  iterator data_;
-
-  void reserve_more_capacity(size_type size);
-
  public:
   using value_type = T;
   using reference = T &;
@@ -26,14 +24,13 @@ class s21_vector {
 
   s21_vector();                      // default constructor
   explicit s21_vector(size_type n);  // parametrized constructor
-  s21_vector(
-      std::initializer_list<value_type> const &items);  // initializer list
-  s21_vector(const s21_vector &v);                      // copy constructor
-  s21_vector(s21_vector &&v) noexcept;                  // move constructor
-  ~s21_vector();                                        // destructor
+  s21_vector(initializer_list<value_type> const &items);  // initializer list
+  s21_vector(const s21_vector &v);                        // copy constructor
+  s21_vector(s21_vector &&v) noexcept;                    // move constructor
+  ~s21_vector();                                          // destructor
 
   // operator overload method
-  s21_vector operator=(s21_vector &&v) noexcept;
+  s21_vector &operator=(s21_vector &&v) noexcept;
 
   // access methods
   reference at(size_type pos);
@@ -64,7 +61,14 @@ class s21_vector {
   void erase(iterator pos);
   void push_back(const_reference value);
   void pop_back();
-  void swap(vector &other);
+  void swap(s21_vector &other);
+
+ private:
+  size_type size_;
+  size_type capacity_;
+  iterator data_;
+
+  void reallocate(size_type size);
 };
 
 };  // namespace s21
