@@ -1,17 +1,11 @@
 #ifndef S21_VECTOR_H_
 #define S21_VECTOR_H_
 
+#include <initializer_list>
 #include <iostream>
 #include <limits>
 
-using std::copy;
-using std::initializer_list;
-using std::invalid_argument;
-using std::numeric_limits;
-using std::out_of_range;
-
 namespace s21 {
-
 template <class T>
 class s21_vector {
  public:
@@ -24,10 +18,11 @@ class s21_vector {
 
   s21_vector();                      // default constructor
   explicit s21_vector(size_type n);  // parametrized constructor
-  s21_vector(initializer_list<value_type> const &items);  // initializer list
-  s21_vector(const s21_vector &v);                        // copy constructor
-  s21_vector(s21_vector &&v) noexcept;                    // move constructor
-  ~s21_vector();                                          // destructor
+  s21_vector(
+      std::initializer_list<value_type> const &items);  // initializer list
+  s21_vector(const s21_vector &v);                      // copy constructor
+  s21_vector(s21_vector &&v) noexcept;                  // move constructor
+  ~s21_vector();                                        // destructor
 
   // operator overload method
   s21_vector &operator=(s21_vector &&v) noexcept;
@@ -70,7 +65,8 @@ class s21_vector {
 
   void reallocate(size_type size);
 };
+}  // namespace s21
 
-};  // namespace s21
+#include "s21_vector.tpp"
 
 #endif

@@ -6,8 +6,8 @@ CXXFLAGS = -Wall -Wextra -Werror -std=c++17 -g
 all: clang-format build
 
 build:
-	$(CXX) $(CXXFLAGS) s21_vector/*.cpp -o s21_vector/s21_vector
-	s21_vector/s21_vector
+	$(CXX) $(CXXFLAGS) s21_vector/main.cpp -o s21_vector/main
+	s21_vector/main
 
 clang-format:
 	clang-format -i *.cpp *.hpp */*.cpp */*.hpp
