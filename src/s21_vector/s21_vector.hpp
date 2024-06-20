@@ -7,7 +7,7 @@
 
 namespace s21 {
 template <class T>
-class s21_vector {
+class vector {
  public:
   using value_type = T;
   using reference = T &;
@@ -16,16 +16,15 @@ class s21_vector {
   using const_iterator = const T *;
   using size_type = size_t;
 
-  s21_vector();                      // default constructor
-  explicit s21_vector(size_type n);  // parametrized constructor
-  s21_vector(
-      std::initializer_list<value_type> const &items);  // initializer list
-  s21_vector(const s21_vector &v);                      // copy constructor
-  s21_vector(s21_vector &&v) noexcept;                  // move constructor
-  ~s21_vector();                                        // destructor
+  vector();                      // default constructor
+  explicit vector(size_type n);  // parametrized constructor
+  vector(std::initializer_list<value_type> const &items);  // initializer list
+  vector(const vector &v);                                 // copy constructor
+  vector(vector &&v) noexcept;                             // move constructor
+  ~vector();                                               // destructor
 
   // operator overload method
-  s21_vector &operator=(s21_vector &&v) noexcept;
+  vector &operator=(vector &&v) noexcept;
 
   // access methods
   reference at(size_type pos);
@@ -56,7 +55,9 @@ class s21_vector {
   void erase(iterator pos);
   void push_back(const_reference value);
   void pop_back();
-  void swap(s21_vector &other);
+  void swap(vector &other);
+  //  iterator insert_many(const_iterator pos, Args &&...args);
+  //  void insert_many_back(Args &&...args);
 
  private:
   size_type size_;

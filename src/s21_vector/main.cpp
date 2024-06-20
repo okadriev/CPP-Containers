@@ -3,7 +3,7 @@
 using namespace s21;
 
 int main() {
-  s21_vector<int> v = {};
+  vector<int> v = {};
   v.insert(v.begin(), 15);
 
   //  v.push_back(6);
@@ -14,7 +14,7 @@ int main() {
 
   v.erase(v.begin());
 
-  // Ожидаемый вывод: 1 2 3 4 5 6 7 8 9
+  // Ожидаемый вывод: < >
   for (size_t i = 0; i < v.size(); ++i) {
     std::cout << v.at(i) << " ";
   }
