@@ -1,7 +1,5 @@
-#include "s21_queue.hpp"
-
-using namespace s21;
-
+namespace s21 {
+  
 /**
  * Удаляет первый элемент в контейнере
  */
@@ -60,21 +58,23 @@ size_t queue<T1, T2>::size() const {
   return queue<T1, T2>::_Get_container().size();
 }
 
-// /**
-//  * Добавляет элемент в контейнер без копирования
-//  * @param args - элементы
-//  */
-// template <typename T1, typename T2>
-// template <typename... Args>
-// void queue<T1, T2>::emplace(Args &&...args) {
-//   _Get_container().emplace(std::forward<Args>(args)...);
-// }
-
 /**
  * Возвращает ссылку на контейнер
  * @return тип контейнера
  */
 template <typename T1, typename T2>
 T2 &queue<T1, T2>::_Get_container() {
-  return *this; //но это не точно
+  return *this;  // но это не точно
 }
+
+/**
+ * Перегрузка оператора =
+ * @param other - ссылка на другой объект
+ * @return ссылка на текущий объект
+ */
+template <typename T1, typename T2>
+queue<T1, T2> &queue<T1, T2>::operator=(T2 &&other) {
+  queue<T1, T2>::_Get_container() = other;
+  return *this;
+}
+}  // namespace s21

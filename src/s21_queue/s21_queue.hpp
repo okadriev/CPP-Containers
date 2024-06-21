@@ -1,12 +1,16 @@
 #pragma once
-#include <iostream>
+
+#include "../s21_vector/s21_vector.hpp"
 
 namespace s21 {
-template <typename T1, typename T2 = s21_vector<T1>>
+template <typename T1, typename T2 = vector<T1>>
 class queue : protected T2 {
  private:
  public:
   using T2::T2;
+
+  stack<T1, T2> &operator=(T2 &&other);
+
   void pop();
   void push(const T1 &value);
   const T1 &front() const;
@@ -14,8 +18,6 @@ class queue : protected T2 {
   bool empty() const;
   size_t size() const;
   T2 &_Get_container();
-  // template <typename... Args>
-  // void emplace(Args &&...args);
 };
 
 // template <typename T1>
@@ -34,3 +36,5 @@ class queue : protected T2 {
 //   using list<T1>::list;
 // };
 }  // namespace s21
+
+#include "s21_queue.tpp"
