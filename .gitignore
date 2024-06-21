@@ -50,5 +50,8 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
-src/.clang-format
+
+# IDEA / Code Editor
+.vscode
+.ideasrc/.clang-format
 .vscode/
