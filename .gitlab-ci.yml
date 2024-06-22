@@ -1,0 +1,10 @@
+stages:
+  - lint
+
+lint-job:
+  stage: lint
+  script:
+    - cp ./materials/linters/.clang-format ./src/.clang-format
+    - cd ./src/
+    - if [ -f *.cc ] || [ -f *.h ]; then if $(clang-format -n *.cc *.h); then  clang-format -i *.cc *.h; fi; fi
+    - rm .clang-format
