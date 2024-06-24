@@ -5,7 +5,7 @@ namespace s21 {
  */
 template <typename T1, typename T2>
 void stack<T1, T2>::pop() {
-  stack<T1, T2>::_Get_container().pop_back();
+  _Get_container().pop_back();
 }
 
 /**
@@ -14,7 +14,7 @@ void stack<T1, T2>::pop() {
  */
 template <typename T1, typename T2>
 void stack<T1, T2>::push(const T1 &value) {
-  stack<T1, T2>::_Get_container().push_back(value);
+  _Get_container().push_back(value);
 }
 
 /**
@@ -32,7 +32,7 @@ const T1 &stack<T1, T2>::top() const {
  */
 template <typename T1, typename T2>
 bool stack<T1, T2>::empty() const {
-  return stack<T1, T2>::_Get_container().empty();
+  return _Get_container().empty();
 }
 
 /**
@@ -41,7 +41,7 @@ bool stack<T1, T2>::empty() const {
  */
 template <typename T1, typename T2>
 size_t stack<T1, T2>::size() const {
-  return stack<T1, T2>::_Get_container().size();
+  return _Get_container().size();
 }
 
 /**
@@ -69,7 +69,7 @@ const T2 &stack<T1, T2>::_Get_container() const {
  */
 template <typename T1, typename T2>
 stack<T1, T2> &stack<T1, T2>::operator=(T2 &&other) {
-  stack<T1, T2>::_Get_container() = other;
+  _Get_container() = other;
   return *this;
 }
 }  // namespace s21

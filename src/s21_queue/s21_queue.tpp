@@ -1,15 +1,17 @@
 namespace s21 {
-  
+
 /**
  * Удаляет первый элемент в контейнере
  */
 template <typename T1, typename T2>
 void queue<T1, T2>::pop() {
-  int size = queue<T1, T2>::_Get_container().size();
+  int size = _Get_container().size();
 
-  for (int i; i < size; i++) {
-    if (i == size - 1) queue<T1, T2>::_Get_container().pop_back();
-    queue<T1, T2>::_Get_container()[i] = queue<T1, T2>::_Get_container()[i + 1];
+  for (int i = 0; i < size; i++) {
+    if (i == size - 1)
+      _Get_container().pop_back();
+    else
+      _Get_container()[i] = _Get_container()[i + 1];
   }
 }
 
@@ -19,7 +21,7 @@ void queue<T1, T2>::pop() {
  */
 template <typename T1, typename T2>
 void queue<T1, T2>::push(const T1 &value) {
-  queue<T1, T2>::_Get_container().push_back(value);
+  _Get_container().push_back(value);
 }
 
 /**
@@ -46,7 +48,7 @@ const T1 &queue<T1, T2>::back() const {
  */
 template <typename T1, typename T2>
 bool queue<T1, T2>::empty() const {
-  return queue<T1, T2>::_Get_container().empty();
+  return _Get_container().empty();
 }
 
 /**
@@ -55,7 +57,7 @@ bool queue<T1, T2>::empty() const {
  */
 template <typename T1, typename T2>
 size_t queue<T1, T2>::size() const {
-  return queue<T1, T2>::_Get_container().size();
+  return _Get_container().size();
 }
 
 /**
@@ -64,7 +66,16 @@ size_t queue<T1, T2>::size() const {
  */
 template <typename T1, typename T2>
 T2 &queue<T1, T2>::_Get_container() {
-  return *this;  // но это не точно
+  return *this;
+}
+
+/**
+ * Возвращает const ссылку на контейнер
+ * @return тип контейнера
+ */
+template <typename T1, typename T2>
+const T2 &queue<T1, T2>::_Get_container() const {
+  return *this;
 }
 
 /**
@@ -74,7 +85,7 @@ T2 &queue<T1, T2>::_Get_container() {
  */
 template <typename T1, typename T2>
 queue<T1, T2> &queue<T1, T2>::operator=(T2 &&other) {
-  queue<T1, T2>::_Get_container() = other;
+  _Get_container() = other;
   return *this;
 }
 }  // namespace s21

@@ -9,7 +9,7 @@ class queue : protected T2 {
  public:
   using T2::T2;
 
-  stack<T1, T2> &operator=(T2 &&other);
+  queue<T1, T2> &operator=(T2 &&other);
 
   void pop();
   void push(const T1 &value);
@@ -18,6 +18,7 @@ class queue : protected T2 {
   bool empty() const;
   size_t size() const;
   T2 &_Get_container();
+  const T2 &_Get_container() const;
 };
 
 // template <typename T1>
