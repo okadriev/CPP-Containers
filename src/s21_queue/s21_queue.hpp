@@ -7,18 +7,25 @@ template <typename T1, typename T2 = vector<T1>>
 class queue : protected T2 {
  private:
  public:
+	using	value_type = T1;
+	using	container_type = T2;
+  using reference = T1 &;
+  using const_reference = const T1 &;
+	using		size_type = size_t;
+
   using T2::T2;
 
   queue<T1, T2> &operator=(T2 &&other);
 
   void pop();
   void push(const T1 &value);
-  const T1 &front() const;
-  const T1 &back() const;
+  const_reference front() const;
+  const_reference back() const;
   bool empty() const;
-  size_t size() const;
-  T2 &_Get_container();
-  const T2 &_Get_container() const;
+  size_type size() const;
+  container_type &_Get_container();
+  const container_type &_Get_container() const;
+  void swap(queue& other);
 };
 
 // template <typename T1>

@@ -22,7 +22,7 @@ void stack<T1, T2>::push(const T1 &value) {
  * @return ссылка на последний элемент в контейнере
  */
 template <typename T1, typename T2>
-const T1 &stack<T1, T2>::top() const {
+typename stack<T1,T2>::const_reference stack<T1, T2>::top() const {
   return _Get_container().back();
 }
 
@@ -40,7 +40,7 @@ bool stack<T1, T2>::empty() const {
  * @return размер контейнера
  */
 template <typename T1, typename T2>
-size_t stack<T1, T2>::size() const {
+typename stack<T1,T2>::size_type stack<T1, T2>::size() const {
   return _Get_container().size();
 }
 
@@ -49,7 +49,7 @@ size_t stack<T1, T2>::size() const {
  * @return тип контейнера
  */
 template <typename T1, typename T2>
-T2 &stack<T1, T2>::_Get_container() {
+typename stack<T1,T2>::container_type &stack<T1, T2>::_Get_container() {
   return *this;  // но это не точно
 }
 
@@ -58,7 +58,7 @@ T2 &stack<T1, T2>::_Get_container() {
  * @return тип контейнера
  */
 template <typename T1, typename T2>
-const T2 &stack<T1, T2>::_Get_container() const {
+const typename stack<T1,T2>::container_type &stack<T1, T2>::_Get_container() const {
   return *this;  // но это не точно
 }
 
