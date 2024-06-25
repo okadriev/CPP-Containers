@@ -90,9 +90,23 @@ queue<T1, T2> &queue<T1, T2>::operator=(T2 &&other) {
   return *this;
 }
 
+/**
+ * Меняет местами содержимое текущего и другого объекта
+ * @param other - ссылка на другой объект
+ */
 template <typename T1, typename T2>
 void queue<T1, T2>::swap(queue &other) {
   _Get_container().swap(other._Get_container());
+}
+
+/**
+ * Добавляет новые элементы в конец контейнера.
+ * @param args - переменное число аргументов
+ */
+template <typename T1, typename T2>
+template <typename... Args>
+void queue<T1, T2>::insert_many_back(Args &&...args) {
+  _Get_container().insert_many_back(std::forward<Args>(args)...);
 }
 
 }  // namespace s21

@@ -8,11 +8,11 @@ template <typename T1, typename T2 = vector<T1>>
 class stack : protected T2 {
  private:
  public:
-	using	value_type = T1;
-	using	container_type = T2;
+  using value_type = T1;
+  using container_type = T2;
   using reference = T1 &;
   using const_reference = const T1 &;
-	using		size_type = size_t;
+  using size_type = size_t;
 
   using T2::T2;
 
@@ -25,6 +25,8 @@ class stack : protected T2 {
   size_type size() const;
   container_type &_Get_container();
   const container_type &_Get_container() const;
+  template <typename... Args>
+  void insert_many_front(Args &&...args);
 };
 
 // template <typename T1>
