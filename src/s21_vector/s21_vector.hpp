@@ -6,25 +6,25 @@
 #include <limits>
 
 namespace s21 {
-template <class T>
+template <typename T>
 class vector {
  public:
   using value_type = T;
-  using reference = T &;
-  using const_reference = const T &;
-  using iterator = T *;
-  using const_iterator = const T *;
+  using reference = T&;
+  using const_reference = const T&;
+  using iterator = T*;
+  using const_iterator = const T*;
   using size_type = size_t;
 
   vector();                      // default constructor
   explicit vector(size_type n);  // parametrized constructor
-  vector(std::initializer_list<value_type> const &items);  // initializer list
-  vector(const vector &v);                                 // copy constructor
-  vector(vector &&v) noexcept;                             // move constructor
+  vector(std::initializer_list<value_type> const& items);  // initializer list
+  vector(const vector& v);                                 // copy constructor
+  vector(vector&& v) noexcept;                             // move constructor
   ~vector();                                               // destructor
 
   // operator overload method
-  vector &operator=(vector &&v) noexcept;
+  vector& operator=(vector&& v) noexcept;
 
   // access methods
   reference at(size_type pos);
@@ -55,9 +55,13 @@ class vector {
   void erase(iterator pos);
   void push_back(const_reference value);
   void pop_back();
-  void swap(vector &other);
-  //  iterator insert_many(const_iterator pos, Args &&...args);
+  void swap(vector& other);
+  //  iterator insert_many(v_const_iterator pos, Args &&...args);
   //  void insert_many_back(Args &&...args);
+
+  // nested iterator classes
+  class v_iterator;
+  //  class v_const_iterator;
 
  private:
   size_type size_;
@@ -65,6 +69,35 @@ class vector {
   iterator data_;
 
   void reallocate(size_type size);
+};
+
+template <typename T>
+class vector<T>::v_iterator {
+ public:
+  v_iterator(iterator ptr);
+
+  reference operator*() const;
+
+  v_iterator& operator++();
+  v_iterator operator++(int);
+  v_iterator& operator--();
+  v_iterator operator--(int);
+  v_iterator& operator+=(const int n);
+  v_iterator operator+(const int n) const;
+  v_iterator& operator-=(const int n);
+  v_iterator operator-(const int n) const;
+  v_iterator operator-(const v_iterator other) const;
+  v_iterator operator+(const v_iterator other) const;
+
+  bool operator==(const v_iterator& other) const;
+  bool operator!=(const v_iterator& other) const;
+  bool operator<(const v_iterator& other) const;
+  bool operator>(const v_iterator& other) const;
+  bool operator<=(const v_iterator& other) const;
+  bool operator>=(const v_iterator& other) const;
+
+ private:
+  iterator iter;
 };
 }  // namespace s21
 
