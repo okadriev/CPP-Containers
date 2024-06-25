@@ -37,9 +37,9 @@ class vector {
 
   // iterator methods
   iterator begin();
-  const_iterator begin() const;
+  const_iterator cbegin() const;
   iterator end();
-  const_iterator end() const;
+  const_iterator cend() const;
 
   // capacity methods
   bool empty() const;
@@ -61,7 +61,7 @@ class vector {
 
   // nested iterator classes
   class v_iterator;
-  //  class v_const_iterator;
+  class v_const_iterator;
 
  private:
   size_type size_;
@@ -98,6 +98,31 @@ class vector<T>::v_iterator {
 
  private:
   iterator iter;
+};
+
+template <typename T>
+class vector<T>::v_const_iterator {
+ public:
+  v_const_iterator(const_iterator ptr);
+
+  const_reference operator*() const;
+
+  v_const_iterator& operator++();
+  v_const_iterator operator++(int);
+  v_const_iterator& operator--();
+  v_const_iterator operator--(int);
+  v_const_iterator operator+(const int n) const;
+  v_const_iterator operator-(const int n) const;
+
+  bool operator==(const v_const_iterator& other) const;
+  bool operator!=(const v_const_iterator& other) const;
+  bool operator<(const v_const_iterator& other) const;
+  bool operator>(const v_const_iterator& other) const;
+  bool operator<=(const v_const_iterator& other) const;
+  bool operator>=(const v_const_iterator& other) const;
+
+ private:
+  const_iterator iter;
 };
 }  // namespace s21
 
