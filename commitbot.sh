@@ -3,16 +3,15 @@
 current_date=$(date '+%d.%m.%Y %H:%M:%S')
 echo
 echo "Текущее время: $current_date"
+cd $1
 echo "git pull"
 git pull 
 
 if [ "$(git status | grep 'git add')" ]; then
     commit_message="Sharlabr: автоматический коммит от $current_date"
-    echo "Коммитим\ngit add -A"
+    echo "Коммитим"
     git add -A
-    echo "git commit -m $commit_message"
     git commit -m "$commit_message"
-    echo "git push"
     git push
 else
     echo 'Коммитить нечего'
