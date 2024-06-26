@@ -58,4 +58,4 @@ dkms.conf
 src/.clang-format
 
 # Commitbot logs
-commitbot.logs
+./commitbot.logs
