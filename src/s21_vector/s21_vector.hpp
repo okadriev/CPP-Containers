@@ -56,8 +56,11 @@ class vector {
   void push_back(const_reference value);
   void pop_back();
   void swap(vector& other);
-  //  iterator insert_many(v_const_iterator pos, Args &&...args);
-  //  void insert_many_back(Args &&...args);
+
+  template <typename... Args>
+  iterator insert_many(const_iterator pos, Args&&... args);
+  template <typename... Args>
+  void insert_many_back(Args&&... args);
 
   // nested iterator classes
   class v_iterator;

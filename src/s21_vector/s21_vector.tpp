@@ -304,14 +304,42 @@ void vector<T>::swap(vector& other) {
 }
 
 /* inserts new elements into the container directly before pos */
-// template <typename T>
-// typename vector<T>::iterator vector<T>::insert_many(const_iterator
-// pos,
-//                                                             Args &&...args);
+template <typename T>
+template <typename... Args>
+typename vector<T>::iterator vector<T>::insert_many(const_iterator pos,
+                                                    Args&&... args) {
+  if (pos < this->begin() || pos > this->end()) {
+    throw std::out_of_range("Out of range: element is outside of container");
+  }
+
+  size_type index = pos - this->begin();
+  size_type num_new_el = sizeof...(args);
+  size_type total_size = this->size_ + num_new_el;
+
+  if (this->capacity_ < total_size) {
+    this->reserve(total_size);
+  }
+
+  for (size_type i = this->size_; i > index; i--) {
+    this->data_[i + num_new_el - 1] = std::move(this->data_[i - 1]);
+  }
+
+  value_type temp[] = {std::forward<Args>(args)...};
+  for (size_type i = 0; i < num_new_el; i++) {
+    this->data_[index + i] = std::move(temp[i]);
+  }
+
+  this->size_ += num_new_el;
+
+  return this->begin() + index;
+}
 
 /* appends new elements to the end of the container */
-// template <typename T>
-// void vector<T>::insert_many_back(Args &&...args);
+template <typename T>
+template <typename... Args>
+void vector<T>::insert_many_back(Args&&... args) {
+  insert_many(this->end(), std::forward<Args>(args)...);
+}
 
 /* iterator */
 /* default iterator constructor */
