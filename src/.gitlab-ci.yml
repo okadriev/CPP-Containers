@@ -9,5 +9,5 @@ lint-job:
   script:
     - cp ./materials/linters/.clang-format ./src/.clang-format
     - cd ./src/
-    - clang-format -n *.cc *.h
+    - clang-format -n *.cc *.hpp *.cpp *.tpp
     - rm .clang-format
