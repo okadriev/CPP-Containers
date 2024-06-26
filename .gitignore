@@ -56,3 +56,6 @@ dkms.conf
 .idea
 .vscode/
 src/.clang-format
+
+# Commitbot logs
+commitbot.logs
