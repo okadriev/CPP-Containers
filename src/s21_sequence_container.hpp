@@ -25,9 +25,12 @@ class s21_sequence_container {
   using size_type = size_t;
 
   // constructors and destructors
-  s21_sequence_container();  // default constructor
-  s21_sequence_container(size_type n,
-                         const T &val = T());  // parametrized constructor
+
+  // default constructor
+  s21_sequence_container() : size_(0UL), capacity_(0UL), data_(nullptr) {};
+
+  // parametrized constructor
+  s21_sequence_container(size_type n, const T &val = T());
   s21_sequence_container(const s21_sequence_container<T> &other);
   noexcept  // copy constructor
       s21_sequence_container(

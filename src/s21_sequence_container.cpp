@@ -4,7 +4,7 @@ using namespace s21;
 
 template <typename T>
 s21_sequence_container<T>::s21_sequence_container()
-    : size_(0UL), capacity_(0U), data_(nullptr) {}
+    : size_(0UL), capacity_(0UL), data_(nullptr) {}
 
 template <typename T>
 s21_sequence_container<T>::s21_sequence_container(size_type n,
