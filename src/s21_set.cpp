@@ -23,9 +23,9 @@ class set {
   key_type *tree;
 
  public:
-  set() : tree(new key_type()){};
+  set() : tree(new key_type()) {};
   set(std::initializer_list<value_type> const &items);  // init list constructor
-  set(const set &s) : tree(s){};                        // copy constructor
+  set(const set &s) : tree(s) {};                       // copy constructor
   set(set &&s) : tree(s) { s.tree->root = nullptr; };   // move constructor
   ~set() { delete tree; };
 
