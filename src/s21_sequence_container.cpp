@@ -3,8 +3,8 @@
 using namespace s21;
 
 template <typename T>
-void s21_sequence_container<T>::s21_sequence_container()
-    : size_(0U), capacity_(0U), data(nullptr) {}
+s21_sequence_container<T>::s21_sequence_container()
+    : size_(0UL), capacity_(0U), data_(nullptr) {}
 
 template <typename T>
 s21_sequence_container<T>::s21_sequence_container(size_type n,
