@@ -53,6 +53,8 @@ dkms.conf
 
 # IDEA / Code Editor
 .vscode
+.ideasrc/.clang-format
+.vscode/
 .idea
 .vscode/
 src/.clang-format

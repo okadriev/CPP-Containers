@@ -1,15 +1,17 @@
 namespace s21 {
-  
+
 /**
  * Удаляет первый элемент в контейнере
  */
 template <typename T1, typename T2>
 void queue<T1, T2>::pop() {
-  int size = queue<T1, T2>::_Get_container().size();
+  int size = _Get_container().size();
 
-  for (int i; i < size; i++) {
-    if (i == size - 1) queue<T1, T2>::_Get_container().pop_back();
-    queue<T1, T2>::_Get_container()[i] = queue<T1, T2>::_Get_container()[i + 1];
+  for (int i = 0; i < size; i++) {
+    if (i == size - 1)
+      _Get_container().pop_back();
+    else
+      _Get_container()[i] = _Get_container()[i + 1];
   }
 }
 
@@ -19,7 +21,7 @@ void queue<T1, T2>::pop() {
  */
 template <typename T1, typename T2>
 void queue<T1, T2>::push(const T1 &value) {
-  queue<T1, T2>::_Get_container().push_back(value);
+  _Get_container().push_back(value);
 }
 
 /**
@@ -27,7 +29,7 @@ void queue<T1, T2>::push(const T1 &value) {
  * @return ссылка на последний элемент в контейнере
  */
 template <typename T1, typename T2>
-const T1 &queue<T1, T2>::front() const {
+typename queue<T1, T2>::const_reference queue<T1, T2>::front() const {
   return _Get_container().front();
 }
 
@@ -36,7 +38,7 @@ const T1 &queue<T1, T2>::front() const {
  * @return ссылка на последний элемент в контейнере
  */
 template <typename T1, typename T2>
-const T1 &queue<T1, T2>::back() const {
+typename queue<T1, T2>::const_reference queue<T1, T2>::back() const {
   return _Get_container().back();
 }
 
@@ -46,7 +48,7 @@ const T1 &queue<T1, T2>::back() const {
  */
 template <typename T1, typename T2>
 bool queue<T1, T2>::empty() const {
-  return queue<T1, T2>::_Get_container().empty();
+  return _Get_container().empty();
 }
 
 /**
@@ -54,8 +56,8 @@ bool queue<T1, T2>::empty() const {
  * @return размер контейнера
  */
 template <typename T1, typename T2>
-size_t queue<T1, T2>::size() const {
-  return queue<T1, T2>::_Get_container().size();
+typename queue<T1, T2>::size_type queue<T1, T2>::size() const {
+  return _Get_container().size();
 }
 
 /**
@@ -63,18 +65,38 @@ size_t queue<T1, T2>::size() const {
  * @return тип контейнера
  */
 template <typename T1, typename T2>
-T2 &queue<T1, T2>::_Get_container() {
-  return *this;  // но это не точно
+typename queue<T1, T2>::container_type &queue<T1, T2>::_Get_container() {
+  return *this;
 }
 
 /**
- * Перегрузка оператора =
- * @param other - ссылка на другой объект
- * @return ссылка на текущий объект
+ * Возвращает const ссылку на контейнер
+ * @return тип контейнера
  */
 template <typename T1, typename T2>
-queue<T1, T2> &queue<T1, T2>::operator=(T2 &&other) {
-  queue<T1, T2>::_Get_container() = other;
+const typename queue<T1, T2>::container_type &queue<T1, T2>::_Get_container()
+    const {
   return *this;
 }
+
+
+/**
+ * Меняет местами содержимое текущего и другого объекта
+ * @param other - ссылка на другой объект
+ */
+template <typename T1, typename T2>
+void queue<T1, T2>::swap(queue &other) {
+  _Get_container().swap(other._Get_container());
+}
+
+/**
+ * Добавляет новые элементы в конец контейнера.
+ * @param args - переменное число аргументов
+ */
+template <typename T1, typename T2>
+template <typename... Args>
+void queue<T1, T2>::insert_many_back(Args &&...args) {
+  _Get_container().insert_many_back(std::forward<Args>(args)...);
+}
+
 }  // namespace s21
