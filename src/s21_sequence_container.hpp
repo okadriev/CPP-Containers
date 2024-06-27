@@ -31,11 +31,11 @@ class s21_sequence_container {
 
   // parametrized constructor
   s21_sequence_container(size_type n, const T &val = T());
-  s21_sequence_container(const s21_sequence_container<T> &other);
-  noexcept  // copy constructor
-      s21_sequence_container(
-          s21_sequence_container<T> &&other) noexcept;  // move constructor
-  ~s21_sequence_container() noexcept;                   // destructor
+  s21_sequence_container(const s21_sequence_container<T> &other) noexcept;
+  // copy constructor
+  s21_sequence_container(
+      s21_sequence_container<T> &&other) noexcept;  // move constructor
+  ~s21_sequence_container() noexcept;               // destructor
 
   // overload operator
   s21_sequence_container<T> &operator=(
