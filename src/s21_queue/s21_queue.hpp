@@ -6,16 +6,17 @@ namespace s21 {
 template <typename T1, typename T2 = vector<T1>>
 class queue : protected T2 {
  private:
- public:
   using value_type = T1;
   using container_type = T2;
   using reference = T1 &;
   using const_reference = const T1 &;
   using size_type = size_t;
 
+ public:
   using T2::T2;
-
-  queue<T1, T2> &operator=(T2 &&other);
+  using T2::operator=;
+  // using T2::pop_back;
+  // usung T2::push_back;
 
   void pop();
   void push(const T1 &value);

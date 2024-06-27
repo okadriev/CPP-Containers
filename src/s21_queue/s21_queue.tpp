@@ -79,16 +79,6 @@ const typename queue<T1, T2>::container_type &queue<T1, T2>::_Get_container()
   return *this;
 }
 
-/**
- * Перегрузка оператора =
- * @param other - ссылка на другой объект
- * @return ссылка на текущий объект
- */
-template <typename T1, typename T2>
-queue<T1, T2> &queue<T1, T2>::operator=(T2 &&other) {
-  _Get_container() = other;
-  return *this;
-}
 
 /**
  * Меняет местами содержимое текущего и другого объекта
