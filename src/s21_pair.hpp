@@ -11,5 +11,12 @@ struct pair {
   pair() : first_(), second_() {}
   pair(const T1& first, const T2& second) : first_(first), second_(second) {}
   pair(const pair& other) : first_(other.first_), second_(other.second_) {}
+
+  pair swap(pair& other) noexcept {
+    pair tmp = other;
+    other = *this;
+    *this = tmp;
+    return *this;
+  }
 };
 }  // namespace s21

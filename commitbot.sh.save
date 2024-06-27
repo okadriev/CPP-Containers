@@ -1,8 +1,0 @@
-#!/bin/bash
-
-NOW=`date '+%F %H:%M:%S'`
-cd ~/CPP2_s21_containers-1
-git pull
-git add -A
-git commit -am "sharlabr: автоматический коммит от $NOW"
-git push

@@ -1,60 +1,11 @@
-#pragma once
-#include <iostream>
-
 namespace s21 {
-
-template <typename T>
-struct Node {
-  T data;
-  Node<T> *left, *right, *parent;
-  bool is_red;
-
-  Node(T data)
-      : data(data),
-        left(nullptr),
-        right(nullptr),
-        parent(nullptr),
-        is_red(true) {}
-};
-
-template <typename T>
-class rb_tree {
- private:
-  Node<T> *root;
-
-  void rotateLeft(Node<T> *&);
-  void rotateRight(Node<T> *&);
-  void fixViolation(Node<T> *&);
-  void fixDoubleBlack(Node<T> *&);
-  void inorderHelper(Node<T> *) const;
-  void preorderHelper(Node<T> *) const;
-  void postorderHelper(Node<T> *) const;
-  Node<T> *minValueNode(Node<T> *) const;
-  Node<T> *maxValueNode(Node<T> *) const;
-  Node<T> *copyTree(Node<T> *node);
-  void deleteTree(Node<T> *);
-
- public:
-  rb_tree() : root(nullptr) {}
-  ~rb_tree() { deleteTree(root); }
-
-  void insert(const T &);
-  void remove(const T &);
-  void inorder() const;
-  void preorder() const;
-  void postorder() const;
-  Node<T> *search(const T &) const;
-
-  rb_tree<T> &operator=(const rb_tree<T> &other);
-  rb_tree<T> &operator=(rb_tree<T> &&other) noexcept;
-};
 
 template <typename T>
 rb_tree<T> &rb_tree<T>::operator=(const rb_tree<T> &other) {
   if (this != &other) {
-    deleteTree(root);
+    deleteTree(root_);
 
-    root = copyTree(other.root);
+    root_ = copyTree(other.root_);
   }
 
   return *this;
@@ -63,10 +14,10 @@ rb_tree<T> &rb_tree<T>::operator=(const rb_tree<T> &other) {
 template <typename T>
 rb_tree<T> &rb_tree<T>::operator=(rb_tree<T> &&other) noexcept {
   if (this != &other) {
-    deleteTree(root);
+    deleteTree(root_);
 
-    root = other.root;
-    other.root = nullptr;
+    root_ = other.root_;
+    other.root_ = nullptr;
   }
 
   return *this;
@@ -82,7 +33,7 @@ void rb_tree<T>::rotateLeft(Node<T> *&node) {
   rightChild->parent = node->parent;
 
   if (node->parent == nullptr)
-    root = rightChild;
+    root_ = rightChild;
   else if (node == node->parent->left)
     node->parent->left = rightChild;
   else
@@ -102,7 +53,7 @@ void rb_tree<T>::rotateRight(Node<T> *&node) {
   leftChild->parent = node->parent;
 
   if (node->parent == nullptr)
-    root = leftChild;
+    root_ = leftChild;
   else if (node == node->parent->left)
     node->parent->left = leftChild;
   else
@@ -117,7 +68,7 @@ void rb_tree<T>::fixViolation(Node<T> *&node) {
   Node<T> *parent = nullptr;
   Node<T> *grandParent = nullptr;
 
-  while ((node != root) && (node->is_red) && (node->parent->is_red)) {
+  while ((node != root_) && (node->is_red) && (node->parent->is_red)) {
     parent = node->parent;
     grandParent = node->parent->parent;
 
@@ -182,13 +133,13 @@ void rb_tree<T>::fixViolation(Node<T> *&node) {
     }
   }
 
-  root->is_red = 0;
+  root_->is_red = 0;
 }
 
 template <typename T>
 void rb_tree<T>::insert(const T &data) {
   Node<T> *newNode = new Node<T>(data);
-  Node<T> *current = root;
+  Node<T> *current = root_;
   Node<T> *parent = nullptr;
 
   while (current != nullptr) {
@@ -204,7 +155,7 @@ void rb_tree<T>::insert(const T &data) {
 
   // Вставляем новый узел в дерево
   if (parent == nullptr) {
-    root = newNode;
+    root_ = newNode;
   } else if (data < parent->data) {
     parent->left = newNode;
   } else {
@@ -216,7 +167,7 @@ void rb_tree<T>::insert(const T &data) {
 
 template <typename T>
 void rb_tree<T>::fixDoubleBlack(Node<T> *&node) {
-  if (node == root) return;
+  if (node == root_) return;
 
   Node<T> *sibling = nullptr;
   Node<T> *parent = nullptr;
@@ -280,7 +231,7 @@ void rb_tree<T>::fixDoubleBlack(Node<T> *&node) {
 
 template <typename T>
 void rb_tree<T>::remove(const T &data) {
-  if (root == nullptr) return;
+  if (root_ == nullptr) return;
 
   Node<T> *v = search(data);
 
@@ -303,7 +254,7 @@ void rb_tree<T>::remove(const T &data) {
 
   if (u == v) {
     if (vParent == nullptr)
-      root = nullptr;
+      root_ = nullptr;
     else {
       if (u == uParent->left)
         uParent->left = nullptr;
@@ -319,8 +270,8 @@ void rb_tree<T>::remove(const T &data) {
   }
 
   if (u == nullptr) {
-    if (v == root) {
-      root = nullptr;
+    if (v == root_) {
+      root_ = nullptr;
     } else {
       if (uvBlack)
         fixDoubleBlack(v);
@@ -339,7 +290,7 @@ void rb_tree<T>::remove(const T &data) {
 
   if (u->left != nullptr || u->right != nullptr) {
     if (uParent == nullptr) {
-      root = nullptr;
+      root_ = nullptr;
       delete u;
       return;
     }
@@ -364,7 +315,7 @@ void rb_tree<T>::remove(const T &data) {
 
     u->parent = vParent;
 
-    if (v == root) root = u;
+    if (v == root_) root_ = u;
 
     if (!v->is_red) {
       if (u->is_red)
@@ -386,7 +337,7 @@ void rb_tree<T>::remove(const T &data) {
   }
 
   if (uParent == nullptr) {
-    root = nullptr;
+    root_ = nullptr;
   } else {
     if (uParent->left == u)
       uParent->left = nullptr;
@@ -402,7 +353,7 @@ void rb_tree<T>::inorderHelper(Node<T> *node) const {
   if (node == nullptr) return;
 
   inorderHelper(node->left);
-  std::cout << node->data << " ";
+  // std::cout << node->data << " ";
   inorderHelper(node->right);
 }
 
@@ -410,7 +361,7 @@ template <typename T>
 void rb_tree<T>::preorderHelper(Node<T> *node) const {
   if (node == nullptr) return;
 
-  std::cout << node->data << " ";
+  // std::cout << node->data << " ";
   preorderHelper(node->left);
   preorderHelper(node->right);
 }
@@ -421,12 +372,12 @@ void rb_tree<T>::postorderHelper(Node<T> *node) const {
 
   postorderHelper(node->left);
   postorderHelper(node->right);
-  std::cout << node->data << " ";
+  // std::cout << node->data << " ";
 }
 
 template <typename T>
 Node<T> *rb_tree<T>::search(const T &data) const {
-  Node<T> *temp = root;
+  Node<T> *temp = root_;
   while (temp != nullptr) {
     if (data < temp->data) {
       if (temp->left == nullptr)
@@ -449,17 +400,17 @@ Node<T> *rb_tree<T>::search(const T &data) const {
 
 template <typename T>
 void rb_tree<T>::inorder() const {
-  inorderHelper(root);
+  inorderHelper(root_);
 }
 
 template <typename T>
 void rb_tree<T>::preorder() const {
-  preorderHelper(root);
+  preorderHelper(root_);
 }
 
 template <typename T>
 void rb_tree<T>::postorder() const {
-  postorderHelper(root);
+  postorderHelper(root_);
 }
 
 template <typename T>
@@ -505,7 +456,7 @@ void rb_tree<T>::deleteTree(Node<T> *node) {
     deleteTree(node->right);
     delete node;
   }
-}
+};
 
 /* int main() {
   rb_tree<int> tree;

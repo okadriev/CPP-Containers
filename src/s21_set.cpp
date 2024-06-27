@@ -1,7 +1,7 @@
 #include <initializer_list>
 #include <iostream>
 
-#include "s21_rb_tree.cpp"
+#include "s21_rb_tree.hpp"
 
 #define PRINT(tree, value)                                           \
   std::cout << "Set " << ((tree.contains(value)) ? "" : "does not ") \
@@ -26,7 +26,7 @@ class set {
   set() : tree(new key_type()) {};
   set(std::initializer_list<value_type> const &items);  // init list constructor
   set(const set &s) : tree(s) {};                       // copy constructor
-  set(set &&s) : tree(s) { s.tree->root = nullptr; };   // move constructor
+  set(set &&s) : tree(s) { s.tree->root_ = nullptr; };  // move constructor
   ~set() { delete tree; };
 
   /*  { this.tree = other.tree; } */;
