@@ -1,8 +1,28 @@
 #pragma once
+#include <type_traits>
 
 #include "../s21_vector/s21_vector.hpp"
 
 namespace s21 {
+
+template <typename T1, typename T2>
+class queue;
+
+template <typename T1, typename T2>
+struct is_valid_container_queue {
+  static constexpr bool value = false;
+};
+
+template <typename T1>
+struct is_valid_container_queue<T1, vector<T1>> {
+  static constexpr bool value = true;
+};
+
+// template <typename T1>
+// struct is_valid_container_queue<T1, list<T1>> {
+//   static constexpr bool value = false;
+// };
+
 template <typename T1, typename T2 = vector<T1>>
 class queue : protected T2 {
  private:
@@ -13,10 +33,13 @@ class queue : protected T2 {
   using size_type = size_t;
 
  public:
+  queue() {
+    static_assert(is_valid_container_queue<T1, T2>::value,
+                  "Invalid container type for queue");
+  }
+
   using T2::T2;
   using T2::operator=;
-  // using T2::pop_back;
-  // usung T2::push_back;
 
   void pop();
   void push(const T1 &value);
@@ -31,21 +54,6 @@ class queue : protected T2 {
   void insert_many_back(Args &&...args);
 };
 
-// template <typename T1>
-// class queue<T1, vector<T1>>::protected vector<T1>
-// {
-// private:
-// public:
-//   using vector<T1>::vector;
-// };
-
-// template <typename T1>
-// class queue<T1, list<T1>>::protected list<T1>
-// {
-// private:
-// public:
-//   using list<T1>::list;
-// };
 }  // namespace s21
 
 #include "s21_queue.tpp"
