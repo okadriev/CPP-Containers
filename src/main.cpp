@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 
+#include "s21_list/s21_list.hpp"
 #include "s21_queue/s21_queue.hpp"
 #include "s21_stack/s21_stack.hpp"
 
@@ -16,14 +17,6 @@ int main() {
   stack<int> v1(1);
   stack<int> v2{1, 2, 3};
   stack<int> v3(v2);
-
-  // queue<char, std::string> qFalse3;
-  // queue<int, int> qFalse2;
-  // queue<int, std::array<int, 10>> qFalse1;
-  queue<int> q;
-  queue<int> q1(1);
-  queue<int> q2{1, 2, 3};
-  queue<int> q3(q2);
 
   //  v.push(6);
   std::cout << "stack v: ";
@@ -49,6 +42,18 @@ int main() {
     v3.pop();
   }
   std::cout << std::endl;
+
+  //  v.push_back(6);
+  for (size_t i = 6; i > 0; i--) v.pop();
+  std::cout << "stack empty " << v.empty() << std::endl;
+
+  // queue<char, std::string> qFalse3;
+  // queue<int, int> qFalse2;
+  // queue<int, std::array<int, 10>> qFalse1;
+  queue<int> q;
+  queue<int> q1(1);
+  queue<int> q2{1, 2, 3};
+  queue<int> q3(q2);
 
   //  q.push(6);
   std::cout << "queue: ";
@@ -82,13 +87,26 @@ int main() {
   }
   std::cout << std::endl;
 
-  //  v.push_back(6);
-  for (size_t i = 6; i > 0; i--) v.pop();
-  std::cout << "stack empty " << v.empty() << std::endl;
-
   //  q.push_back(6);
   for (size_t i = 6; i > 0; i--) q.pop();
   std::cout << "queue empty " << q.empty() << std::endl;
+
+  list<int> l;
+  l.push_back(1);
+  std::cout << "list.push_back: " << l.back() << std::endl;
+  l.push_front(2);
+  std::cout << "list.push_front: " << l.front() << std::endl;
+  l.insert(l.end(), 3);
+  std::cout << "list.insert: " << l.back() << std::endl;
+  l.sort();
+  std::cout << "list.sort: " << l.front() << ' ' << l.back() << std::endl;
+  l.pop_back();
+  std::cout << "list.pop_back: " << l.back() << std::endl;
+  l.pop_front();
+  std::cout << "list.pop_front: " << l.front() << std::endl;
+  std::cout << "list.size: " << l.size() << std::endl;
+  std::cout << "list.empty: " << l.empty() << std::endl;
+  
 
   return 0;
 }
