@@ -1,133 +1,158 @@
+#pragma once
+#include <iomanip>   // удалить??
+#include <iostream>  // удалить??
+
 namespace s21 {
 
-template <typename T>
-rb_tree<T> &rb_tree<T>::operator=(const rb_tree<T> &other) {
-  if (this != &other) {
-    deleteTree(root_);
+#define MY_BRO_HAS_RED_SON                   \
+  ((my_bro->left && my_bro->left->is_red) || \
+   (my_bro->right && my_bro->right->is_red))
 
-    root_ = copyTree(other.root_);
+#define RED_GOES_UP         \
+  grand_parent->is_red = 1; \
+  parent->is_red = 0;       \
+  uncle->is_red = 0;
+
+template <typename T>
+struct Node {
+  T data;
+  Node<T> *left, *right, *parent;
+  bool is_red;  // поменять на int black?
+
+  Node(T data = 0)
+      : data(data),
+        left(nullptr),
+        right(nullptr),
+        parent(nullptr),
+        is_red(true) {}
+};
+
+template <typename T>
+class rb_tree {
+ private:
+  Node<T> *root;
+
+  Node<T> *copy(Node<T> *node);
+  void delete_tree(Node<T> *);
+  void remove_node(Node<T> *target);
+
+  void rotate_left(Node<T> *&);
+  void rotate_right(Node<T> *&);
+  void fix_2_red(Node<T> *&);
+  void fix_2_black(Node<T> *&);
+
+  void inorder(Node<T> *) const;               // удалить??
+  void preorder(Node<T> *) const;              // удалить??
+  void postorder(Node<T> *) const;             // удалить??
+  Node<T> *min_node(Node<T> *) const;          // удалить??
+  Node<T> *max_node(Node<T> *) const;          // удалить??
+  void print(Node<T> *node, int level) const;  // удалить??
+
+ public:
+  rb_tree() : root(nullptr) {}
+  rb_tree(const rb_tree<T> *other) { copy_tree(other); }
+  ~rb_tree() { delete_tree(root); }
+
+  void copy_tree(const rb_tree<T> *other) {
+    root = ((other->root) ? copy(other->root) : nullptr);
+  };
+
+  void insert(const T &data);
+  void remove(const T &data) {
+    if (Node<T> *target = search(data)) remove_node(target);
+  };
+
+  Node<T> *search(const T &) const;
+  void inorder_tree() const { inorder(root); };      // удалить??
+  void preorder_tree() const { preorder(root); };    // удалить??
+  void postorder_tree() const { postorder(root); };  // удалить??
+  void print_tree() const { print(root, 0); };       // удалить??
+};
+
+template <typename T>
+void rb_tree<T>::rotate_left(Node<T> *&node) {
+  Node<T> *right_child = node->right;
+  node->right = right_child->left;
+
+  if (node->right) {
+    node->right->parent = node;
   }
 
-  return *this;
-}
+  right_child->parent = node->parent;
 
-template <typename T>
-rb_tree<T> &rb_tree<T>::operator=(rb_tree<T> &&other) noexcept {
-  if (this != &other) {
-    deleteTree(root_);
-
-    root_ = other.root_;
-    other.root_ = nullptr;
+  if (node->parent == nullptr) {
+    root = right_child;
+  } else if (node == node->parent->left) {
+    node->parent->left = right_child;
+  } else {
+    node->parent->right = right_child;
   }
 
-  return *this;
+  right_child->left = node;
+  node->parent = right_child;
 }
 
 template <typename T>
-void rb_tree<T>::rotateLeft(Node<T> *&node) {
-  Node<T> *rightChild = node->right;
-  node->right = rightChild->left;
+void rb_tree<T>::rotate_right(Node<T> *&node) {
+  Node<T> *left_child = node->left;
+  node->left = left_child->right;
 
-  if (node->right != nullptr) node->right->parent = node;
+  if (node->left) {
+    node->left->parent = node;
+  }
 
-  rightChild->parent = node->parent;
+  left_child->parent = node->parent;
 
-  if (node->parent == nullptr)
-    root_ = rightChild;
-  else if (node == node->parent->left)
-    node->parent->left = rightChild;
-  else
-    node->parent->right = rightChild;
+  if (node->parent == nullptr) {
+    root = left_child;
+  } else if (node == node->parent->left) {
+    node->parent->left = left_child;
+  } else {
+    node->parent->right = left_child;
+  }
 
-  rightChild->left = node;
-  node->parent = rightChild;
+  left_child->right = node;
+  node->parent = left_child;
 }
 
 template <typename T>
-void rb_tree<T>::rotateRight(Node<T> *&node) {
-  Node<T> *leftChild = node->left;
-  node->left = leftChild->right;
+void rb_tree<T>::fix_2_red(Node<T> *&node) {
+  while ((node != root) && (node->is_red) && (node->parent->is_red)) {
+    Node<T> *parent = node->parent;
+    Node<T> *grand_parent = node->parent->parent;
 
-  if (node->left != nullptr) node->left->parent = node;
+    if (parent == grand_parent->left) {
+      Node<T> *uncle = grand_parent->right;
 
-  leftChild->parent = node->parent;
+      if ((uncle) && (uncle->is_red)) {
+        RED_GOES_UP;
+        node = grand_parent;
 
-  if (node->parent == nullptr)
-    root_ = leftChild;
-  else if (node == node->parent->left)
-    node->parent->left = leftChild;
-  else
-    node->parent->right = leftChild;
-
-  leftChild->right = node;
-  node->parent = leftChild;
-}
-
-template <typename T>
-void rb_tree<T>::fixViolation(Node<T> *&node) {
-  Node<T> *parent = nullptr;
-  Node<T> *grandParent = nullptr;
-
-  while ((node != root_) && (node->is_red) && (node->parent->is_red)) {
-    parent = node->parent;
-    grandParent = node->parent->parent;
-
-    /*  Case : A
-        Parent of node is left child of Grand-parent of node */
-    if (parent == grandParent->left) {
-      Node<T> *uncle = grandParent->right;
-
-      /* Case : 1
-         The uncle of node is also red
-         Only Recoloring required */
-      if (uncle != nullptr && uncle->is_red) {
-        grandParent->is_red = 1;
-        parent->is_red = 0;
-        uncle->is_red = 0;
-        node = grandParent;
       } else {
-        /* Case : 2
-           Node is right child of its parent
-           Left-rotation required */
         if (node == parent->right) {
-          rotateLeft(parent);
+          rotate_left(parent);
           node = parent;
           parent = node->parent;
         }
-
-        /* Case : 3
-           Node is left child of its parent
-           Right-rotation required */
-        rotateRight(grandParent);
-        std::swap(parent->is_red, grandParent->is_red);
+        rotate_right(grand_parent);
+        std::swap(parent->is_red, grand_parent->is_red);
         node = parent;
       }
-    } else {
-      Node<T> *uncle = grandParent->left;
 
-      /*  Case : 1
-          The uncle of node is also red
-          Only Recoloring required */
-      if ((uncle != nullptr) && (uncle->is_red)) {
-        grandParent->is_red = 1;
-        parent->is_red = 0;
-        uncle->is_red = 0;
-        node = grandParent;
+    } else {
+      Node<T> *uncle = grand_parent->left;
+      if ((uncle) && (uncle->is_red)) {
+        RED_GOES_UP;
+        node = grand_parent;
+
       } else {
-        /* Case : 2
-           Node is left child of its parent
-           Right-rotation required */
         if (node == parent->left) {
-          rotateRight(parent);
+          rotate_right(parent);
           node = parent;
           parent = node->parent;
         }
-
-        /* Case : 3
-           Node is right child of its parent
-           Left-rotation required */
-        rotateLeft(grandParent);
-        std::swap(parent->is_red, grandParent->is_red);
+        rotate_left(grand_parent);
+        std::swap(parent->is_red, grand_parent->is_red);
         node = parent;
       }
     }
@@ -138,355 +163,222 @@ void rb_tree<T>::fixViolation(Node<T> *&node) {
 
 template <typename T>
 void rb_tree<T>::insert(const T &data) {
-  Node<T> *newNode = new Node<T>(data);
-  Node<T> *current = root_;
+  Node<T> *new_node = new Node<T>(data);
+  Node<T> *current = root;
   Node<T> *parent = nullptr;
 
   while (current != nullptr) {
     parent = current;
-    if (data < current->data)
-      current = current->left;
-    else
-      current = current->right;
+    current = ((data < current->data) ? current->left : current->right);
   }
 
-  // Присваиваем родителя новому узлу
-  newNode->parent = parent;
+  new_node->parent = parent;
 
-  // Вставляем новый узел в дерево
   if (parent == nullptr) {
-    root_ = newNode;
+    root = new_node;
   } else if (data < parent->data) {
-    parent->left = newNode;
+    parent->left = new_node;
   } else {
-    parent->right = newNode;
+    parent->right = new_node;
   }
 
-  fixViolation(newNode);
+  fix_2_red(new_node);
 }
 
 template <typename T>
-void rb_tree<T>::fixDoubleBlack(Node<T> *&node) {
-  if (node == root_) return;
+void rb_tree<T>::fix_2_black(Node<T> *&node) {
+  if (node == root) return;
 
-  Node<T> *sibling = nullptr;
-  Node<T> *parent = nullptr;
-  bool leftChild = false;
-  if (node != nullptr) {
-    parent = node->parent;
-    leftChild = (node == parent->left);
-  }
+  Node<T> *parent = node->parent;
+  bool left_child = (node == parent->left);
+  Node<T> *my_bro = (left_child) ? parent->right : parent->left;
 
-  if (leftChild)
-    sibling = parent->right;
-  else
-    sibling = parent->left;
+  if (my_bro->is_red) {
+    parent->is_red = 1;
+    my_bro->is_red = 0;
 
-  if (sibling == nullptr)
-    fixDoubleBlack(parent);
-  else {
-    if (sibling->is_red) {
-      parent->is_red = 1;
-      sibling->is_red = 0;
-      if (leftChild)
-        rotateLeft(parent);
-      else
-        rotateRight(parent);
-      fixDoubleBlack(node);
+    if (left_child) {
+      rotate_left(parent);
     } else {
-      if ((sibling->left != nullptr && sibling->left->is_red) ||
-          (sibling->right != nullptr && sibling->right->is_red)) {
-        if (sibling->left != nullptr && sibling->left->is_red) {
-          if (leftChild) {
-            sibling->left->is_red = sibling->is_red;
-            sibling->is_red = parent->is_red;
-            rotateRight(parent);
-          } else {
-            sibling->left->is_red = parent->is_red;
-            rotateRight(sibling);
-            rotateLeft(parent);
-          }
-        } else {
-          if (leftChild) {
-            sibling->right->is_red = parent->is_red;
-            rotateLeft(sibling);
-            rotateRight(parent);
-          } else {
-            sibling->right->is_red = sibling->is_red;
-            sibling->is_red = parent->is_red;
-            rotateLeft(parent);
-          }
-        }
-        parent->is_red = 0;
+      rotate_right(parent);
+    }
+    fix_2_black(node);
+
+  } else if MY_BRO_HAS_RED_SON {
+    if (my_bro->left && my_bro->left->is_red) {
+      if (left_child) {
+        std::swap(my_bro->left->is_red, my_bro->is_red);
+        rotate_right(my_bro);  // OK
+        fix_2_black(node);
       } else {
-        sibling->is_red = 1;
-        if (!parent->is_red)
-          fixDoubleBlack(parent);
-        else
-          parent->is_red = 0;
+        my_bro->left->is_red = my_bro->is_red;
+        my_bro->is_red = parent->is_red;
+        rotate_right(parent);  // OK
       }
-    }
-  }
-}
-
-template <typename T>
-void rb_tree<T>::remove(const T &data) {
-  if (root_ == nullptr) return;
-
-  Node<T> *v = search(data);
-
-  if (v == nullptr) return;
-
-  Node<T> *u = nullptr;
-  if (v->left == nullptr || v->right == nullptr)
-    u = v;
-  else {
-    u = v->right;
-    while (u->left != nullptr) u = u->left;
-  }
-
-  Node<T> *uParent = u->parent;
-  Node<T> *vParent = v->parent;
-
-  bool uvBlack = ((u == nullptr || !u->is_red) && (!v->is_red));
-
-  Node<T> *parent = nullptr;
-
-  if (u == v) {
-    if (vParent == nullptr)
-      root_ = nullptr;
-    else {
-      if (u == uParent->left)
-        uParent->left = nullptr;
-      else
-        uParent->right = nullptr;
-    }
-    delete u;
-    if (u != nullptr) {
-      u = nullptr;
-    }
-    if (uvBlack) fixDoubleBlack(uParent);
-    return;
-  }
-
-  if (u == nullptr) {
-    if (v == root_) {
-      root_ = nullptr;
     } else {
-      if (uvBlack)
-        fixDoubleBlack(v);
-      else if (v->is_red)
-        v->is_red = 0;
-      if (vParent != nullptr) {
-        if (v == vParent->left)
-          vParent->left = nullptr;
-        else
-          vParent->right = nullptr;
+      if (left_child) {
+        my_bro->right->is_red = my_bro->is_red;
+        my_bro->is_red = parent->is_red;
+        rotate_left(parent);  // OK
+      } else {
+        std::swap(my_bro->right->is_red, my_bro->is_red);
+        rotate_left(my_bro);  // OK
+        fix_2_black(node);
       }
     }
-    delete v;
-    return;
-  }
+    parent->is_red = 0;
 
-  if (u->left != nullptr || u->right != nullptr) {
-    if (uParent == nullptr) {
-      root_ = nullptr;
-      delete u;
-      return;
-    }
-
-    if (uParent != nullptr) {
-      if (u == uParent->left)
-        uParent->left = nullptr;
-      else
-        uParent->right = nullptr;
-    }
-
-    if (uParent != nullptr) {
-      parent = uParent;
-    }
-
-    if (vParent != nullptr) {
-      if (v == vParent->left)
-        vParent->left = u;
-      else
-        vParent->right = u;
-    }
-
-    u->parent = vParent;
-
-    if (v == root_) root_ = u;
-
-    if (!v->is_red) {
-      if (u->is_red)
-        u->is_red = 0;
-      else
-        fixDoubleBlack(u);
-    } else
-      u->is_red = 0;
-
-    delete v;
-    return;
-  }
-
-  if (!u->is_red) {
-    if (!u->is_red)
-      fixDoubleBlack(u);
-    else
-      u->is_red = 0;
-  }
-
-  if (uParent == nullptr) {
-    root_ = nullptr;
   } else {
-    if (uParent->left == u)
-      uParent->left = nullptr;
+    my_bro->is_red = 1;
+    if (parent->is_red == 0)
+      fix_2_black(parent);
     else
-      uParent->right = nullptr;
+      parent->is_red = 0;
+  }
+}
+
+template <typename T>
+void rb_tree<T>::remove_node(Node<T> *target) {
+  Node<T> *target_parent = target->parent;
+  Node<T> *placeholder = nullptr;
+  if (target->left && target->right) {
+    placeholder = target->left;
+    while (placeholder->right != nullptr) {
+      placeholder = placeholder->right;
+    }
+  } else if (target->left == nullptr && target->right == nullptr) {
+    placeholder = nullptr;
+  } else {
+    placeholder = (target->left) ? target->left : target->right;
   }
 
-  delete u;
+  if (placeholder == nullptr) {
+    if (target == root) {
+      root = nullptr;
+
+    } else {
+      if (target->is_red == 0) {
+        fix_2_black(target);
+      }
+
+      if (target_parent && target == target_parent->left) {
+        target_parent->left = nullptr;
+      } else if (target_parent) {
+        target_parent->right = nullptr;
+      }
+    }
+    delete target;
+
+  } else {
+    if (placeholder->is_red == 0) {
+      fix_2_black(placeholder);
+    }
+
+    Node<T> *ph_parent = placeholder->parent;
+    if (ph_parent->left == placeholder) {
+      ph_parent->left = nullptr;
+    } else {
+      ph_parent->right = nullptr;
+    }
+
+    target->data = placeholder->data;
+    delete placeholder;
+  }
 }
 
-template <typename T>
-void rb_tree<T>::inorderHelper(Node<T> *node) const {
+template <typename T>  // удалить??
+void rb_tree<T>::inorder(Node<T> *node) const {
   if (node == nullptr) return;
 
-  inorderHelper(node->left);
-  // std::cout << node->data << " ";
-  inorderHelper(node->right);
+  inorder(node->left);
+  std::cout << node->data << " ";
+  inorder(node->right);
 }
 
-template <typename T>
-void rb_tree<T>::preorderHelper(Node<T> *node) const {
+template <typename T>  // удалить??
+void rb_tree<T>::preorder(Node<T> *node) const {
   if (node == nullptr) return;
 
-  // std::cout << node->data << " ";
-  preorderHelper(node->left);
-  preorderHelper(node->right);
+  std::cout << node->data << " ";
+  preorder(node->left);
+  preorder(node->right);
 }
 
-template <typename T>
-void rb_tree<T>::postorderHelper(Node<T> *node) const {
+template <typename T>  // удалить??
+void rb_tree<T>::postorder(Node<T> *node) const {
   if (node == nullptr) return;
 
-  postorderHelper(node->left);
-  postorderHelper(node->right);
-  // std::cout << node->data << " ";
+  postorder(node->left);
+  postorder(node->right);
+  std::cout << node->data << " ";
 }
 
 template <typename T>
 Node<T> *rb_tree<T>::search(const T &data) const {
-  Node<T> *temp = root_;
-  while (temp != nullptr) {
-    if (data < temp->data) {
-      if (temp->left == nullptr)
-        break;
-      else
-        temp = temp->left;
-    } else if (data == temp->data)
-      break;
+  Node<T> *temp = root;
 
-    else {
-      if (temp->right == nullptr)
-        break;
-      else
-        temp = temp->right;
-    }
+  while (temp != nullptr && temp->data != data) {
+    temp = ((data < temp->data) ? temp->left : temp->right);
   }
 
   return temp;
 }
 
-template <typename T>
-void rb_tree<T>::inorder() const {
-  inorderHelper(root_);
-}
-
-template <typename T>
-void rb_tree<T>::preorder() const {
-  preorderHelper(root_);
-}
-
-template <typename T>
-void rb_tree<T>::postorder() const {
-  postorderHelper(root_);
-}
-
-template <typename T>
-Node<T> *rb_tree<T>::minValueNode(Node<T> *node) const {
+template <typename T>  // удалить??
+Node<T> *rb_tree<T>::min_node(Node<T> *node) const {
   Node<T> *current = node;
   while (current->left != nullptr) current = current->left;
   return current;
 }
 
-template <typename T>
-Node<T> *rb_tree<T>::maxValueNode(Node<T> *node) const {
+template <typename T>  // удалить??
+Node<T> *rb_tree<T>::max_node(Node<T> *node) const {
   Node<T> *current = node;
   while (current->right != nullptr) current = current->right;
   return current;
 }
 
-template <typename T>
-Node<T> *rb_tree<T>::copyTree(Node<T> *node) {
-  Node<T> *newNode = new Node<T>();
+template <typename T>  // удалить??
+void rb_tree<T>::print(Node<T> *node, int level) const {
+  if (node == nullptr) return;
 
-  if (node != nullptr) {
-    newNode->data = node->data;
-    newNode->is_red = node->is_red;
-    newNode->left = copyTree(node->left);
-    newNode->right = copyTree(node->right);
+  print(node->right, level + 1);
 
-    if (newNode->left != nullptr) {
-      newNode->left->parent = newNode;
-    }
-
-    if (newNode->right != nullptr) {
-      newNode->right->parent = newNode;
-    }
+  for (int i = 0; i < level; i++) {
+    std::cout << "    ";
   }
+  std::cout << std::setw(2) << node->data << (node->is_red ? " RED" : " BLK")
+            << std::endl;
 
-  return newNode;
+  print(node->left, level + 1);
 }
 
 template <typename T>
-void rb_tree<T>::deleteTree(Node<T> *node) {
-  if (node != nullptr) {
-    deleteTree(node->left);
-    deleteTree(node->right);
+Node<T> *rb_tree<T>::copy(Node<T> *node) {
+  Node<T> *new_node = new Node<T>(node->data);
+  new_node->is_red = node->is_red;
+
+  if (node->left) {
+    new_node->left = copy(node->left);
+    new_node->left->parent = new_node;
+  }
+
+  if (node->right) {
+    new_node->right = copy(node->right);
+    new_node->right->parent = new_node;
+  }
+
+  return new_node;
+}
+
+template <typename T>
+void rb_tree<T>::delete_tree(Node<T> *node) {
+  if (node) {
+    delete_tree(node->left);
+    delete_tree(node->right);
+
     delete node;
   }
-};
-
-/* int main() {
-  rb_tree<int> tree;
-
-  tree.insert(10);
-  tree.insert(20);
-  tree.insert(30);
-  tree.insert(40);
-  tree.insert(50);
-  tree.insert(25);
-
-  std::cout << "Inorder traversal: ";
-  tree.inorder();
-  std::cout << std::endl;
-
-  std::cout << "Preorder traversal: ";
-  tree.preorder();
-  std::cout << std::endl;
-
-  std::cout << "Postorder traversal: ";
-  tree.postorder();
-  std::cout << std::endl;
-
-  std::cout << "Deleting 20\n";
-  tree.remove(20);
-  std::cout << "Inorder traversal: ";
-  tree.inorder();
-  std::cout << std::endl;
-
-  return 0;
-} */
+}
 
 }  // namespace s21

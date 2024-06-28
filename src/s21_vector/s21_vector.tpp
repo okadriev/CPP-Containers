@@ -20,7 +20,7 @@ vector<T>::vector(size_type n) {
 /* initializer list constructor, creates vector initizialized using
  * std::initializer_list */
 template <typename T>
-vector<T>::vector(std::initializer_list<value_type> const &items) {
+vector<T>::vector(std::initializer_list<value_type> const& items) {
   this->data_ = new value_type[items.size()];
   this->size_ = this->capacity_ = items.size();
   std::copy(items.begin(), items.end(), this->data_);
@@ -28,7 +28,7 @@ vector<T>::vector(std::initializer_list<value_type> const &items) {
 
 /* copy constructor */
 template <typename T>
-vector<T>::vector(const vector &v) {
+vector<T>::vector(const vector& v) {
   this->data_ = new value_type[v.capacity_];
   this->size_ = v.size_;
   this->capacity_ = v.capacity_;
@@ -37,7 +37,7 @@ vector<T>::vector(const vector &v) {
 
 /* move constructor */
 template <typename T>
-vector<T>::vector(vector &&v) noexcept {
+vector<T>::vector(vector&& v) noexcept {
   this->data_ = v.data_;
   this->size_ = v.size_;
   this->capacity_ = v.capacity_;
@@ -57,7 +57,7 @@ vector<T>::~vector() {
 
 /* assignment operator overload for moving object */
 template <typename T>
-vector<T> &vector<T>::operator=(vector &&v) noexcept {
+vector<T>& vector<T>::operator=(vector&& v) noexcept {
   if (this != &v) {
     delete[] this->data_;
 
@@ -146,7 +146,7 @@ typename vector<T>::iterator vector<T>::begin() {
 
 /* returns an iterator to the beginning (const) */
 template <typename T>
-typename vector<T>::const_iterator vector<T>::begin() const {
+typename vector<T>::const_iterator vector<T>::cbegin() const {
   return this->data_;
 }
 
@@ -158,7 +158,7 @@ typename vector<T>::iterator vector<T>::end() {
 
 /* returns an iterator to the end (const) */
 template <typename T>
-typename vector<T>::const_iterator vector<T>::end() const {
+typename vector<T>::const_iterator vector<T>::cend() const {
   return this->data_ + this->size_;
 }
 
@@ -289,7 +289,7 @@ void vector<T>::pop_back() {
 
 /* swaps the contents */
 template <typename T>
-void vector<T>::swap(vector &other) {
+void vector<T>::swap(vector& other) {
   iterator temp = this->data_;
   size_type size = this->size_;
   size_type capacity = this->capacity_;
@@ -304,12 +304,261 @@ void vector<T>::swap(vector &other) {
 }
 
 /* inserts new elements into the container directly before pos */
-// template <typename T>
-// typename vector<T>::iterator vector<T>::insert_many(const_iterator
-// pos,
-//                                                             Args &&...args);
+template <typename T>
+template <typename... Args>
+typename vector<T>::iterator vector<T>::insert_many(const_iterator pos,
+                                                    Args&&... args) {
+  if (pos < this->begin() || pos > this->end()) {
+    throw std::out_of_range("Out of range: element is outside of container");
+  }
+
+  size_type index = pos - this->begin();
+  size_type num_new_el = sizeof...(args);
+  size_type total_size = this->size_ + num_new_el;
+
+  if (this->capacity_ < total_size) {
+    this->reserve(total_size);
+  }
+
+  for (size_type i = this->size_; i > index; i--) {
+    this->data_[i + num_new_el - 1] = std::move(this->data_[i - 1]);
+  }
+
+  value_type temp[] = {std::forward<Args>(args)...};
+  for (size_type i = 0; i < num_new_el; i++) {
+    this->data_[index + i] = std::move(temp[i]);
+  }
+
+  this->size_ += num_new_el;
+
+  return this->begin() + index;
+}
 
 /* appends new elements to the end of the container */
-// template <typename T>
-// void vector<T>::insert_many_back(Args &&...args);
+template <typename T>
+template <typename... Args>
+void vector<T>::insert_many_back(Args&&... args) {
+  insert_many(this->end(), std::forward<Args>(args)...);
+}
+
+/* iterator */
+/* default iterator constructor */
+template <typename T>
+vector<T>::v_iterator::v_iterator(iterator ptr) : iter(ptr) {}
+
+/* dereference operator overload method */
+template <typename T>
+typename vector<T>::reference vector<T>::v_iterator::operator*() const {
+  return *(this->iter);
+}
+
+/* prefix increment operator */
+template <typename T>
+typename vector<T>::v_iterator& vector<T>::v_iterator::operator++() {
+  ++this->iter;
+  return *this;
+}
+
+/* postfix increment operator */
+template <typename T>
+typename vector<T>::v_iterator vector<T>::v_iterator::operator++(int) {
+  v_iterator tmp = *this;
+  ++(*this);
+  return tmp;
+}
+
+/* prefix decrement operator */
+template <typename T>
+typename vector<T>::v_iterator& vector<T>::v_iterator::operator--() {
+  --this->iter;
+  return *this;
+}
+
+/* postfix decrement operator */
+template <typename T>
+typename vector<T>::v_iterator vector<T>::v_iterator::operator--(int) {
+  v_iterator tmp = *this;
+  --(*this);
+  return tmp;
+}
+
+/* compound assignment addition operator */
+template <typename T>
+typename vector<T>::v_iterator& vector<T>::v_iterator::operator+=(const int n) {
+  this->iter += n;
+  return *this;
+}
+
+/* addition operator */
+template <typename T>
+typename vector<T>::v_iterator vector<T>::v_iterator::operator+(
+    const int n) const {
+  return v_iterator(this->iter + n);
+}
+
+/* compound assignment subtraction operator */
+template <typename T>
+typename vector<T>::v_iterator& vector<T>::v_iterator::operator-=(const int n) {
+  this->iter -= n;
+  return *this;
+}
+
+/* subtraction operator */
+template <typename T>
+typename vector<T>::v_iterator vector<T>::v_iterator::operator-(
+    const int n) const {
+  return v_iterator(this->iter - n);
+}
+
+/* subtraction operator (difference between iterators) */
+template <typename T>
+typename vector<T>::v_iterator vector<T>::v_iterator::operator-(
+    const v_iterator other) const {
+  return this->iter - other.iter;
+}
+
+/* addition operator (difference between iterators) */
+template <typename T>
+typename vector<T>::v_iterator vector<T>::v_iterator::operator+(
+    const v_iterator other) const {
+  return this->iter + other.iter;
+}
+
+/* equality operator */
+template <typename T>
+bool vector<T>::v_iterator::operator==(const v_iterator& other) const {
+  return this->iter == other.iter;
+}
+
+/* inequality operator */
+template <typename T>
+bool vector<T>::v_iterator::operator!=(const v_iterator& other) const {
+  return this->iter != other.iter;
+}
+
+/* less-than operator */
+template <typename T>
+bool vector<T>::v_iterator::operator<(const v_iterator& other) const {
+  return this->iter < other.iter;
+}
+
+/* greater-than operator */
+template <typename T>
+bool vector<T>::v_iterator::operator>(const v_iterator& other) const {
+  return this->iter > other.iter;
+}
+
+/* less-than-or-equal-to operator */
+template <typename T>
+bool vector<T>::v_iterator::operator<=(const v_iterator& other) const {
+  return this->iter <= other.iter;
+}
+
+/* greater-than-or-equal-to operator */
+template <typename T>
+bool vector<T>::v_iterator::operator>=(const v_iterator& other) const {
+  return this->iter >= other.iter;
+}
+
+/* const iterator */
+/* default iterator constructor */
+template <typename T>
+vector<T>::v_const_iterator::v_const_iterator(const_iterator ptr) : iter(ptr) {}
+
+/* dereference operator overload method */
+template <typename T>
+typename vector<T>::const_reference vector<T>::v_const_iterator::operator*()
+    const {
+  return *(this->iter);
+}
+
+/* prefix increment operator */
+template <typename T>
+typename vector<T>::v_const_iterator&
+vector<T>::v_const_iterator::operator++() {
+  ++this->iter;
+  return *this;
+}
+
+/* postfix increment operator */
+template <typename T>
+typename vector<T>::v_const_iterator vector<T>::v_const_iterator::operator++(
+    int) {
+  v_const_iterator tmp = *this;
+  ++(*this);
+  return tmp;
+}
+
+/* prefix decrement operator */
+template <typename T>
+typename vector<T>::v_const_iterator&
+vector<T>::v_const_iterator::operator--() {
+  --this->iter;
+  return *this;
+}
+
+/* postfix decrement operator */
+template <typename T>
+typename vector<T>::v_const_iterator vector<T>::v_const_iterator::operator--(
+    int) {
+  v_const_iterator tmp = *this;
+  --(*this);
+  return tmp;
+}
+
+/* addition operator */
+template <typename T>
+typename vector<T>::v_const_iterator vector<T>::v_const_iterator::operator+(
+    const int n) const {
+  return v_const_iterator(this->iter + n);
+}
+
+/* subtraction operator */
+template <typename T>
+typename vector<T>::v_const_iterator vector<T>::v_const_iterator::operator-(
+    const int n) const {
+  return v_const_iterator(this->iter - n);
+}
+
+/* equality operator */
+template <typename T>
+bool vector<T>::v_const_iterator::operator==(
+    const v_const_iterator& other) const {
+  return this->iter == other.iter;
+}
+
+/* inequality operator */
+template <typename T>
+bool vector<T>::v_const_iterator::operator!=(
+    const v_const_iterator& other) const {
+  return this->iter != other.iter;
+}
+
+/* less-than operator */
+template <typename T>
+bool vector<T>::v_const_iterator::operator<(
+    const v_const_iterator& other) const {
+  return this->iter < other.iter;
+}
+
+/* greater-than operator */
+template <typename T>
+bool vector<T>::v_const_iterator::operator>(
+    const v_const_iterator& other) const {
+  return this->iter > other.iter;
+}
+
+/* less-than-or-equal-to operator */
+template <typename T>
+bool vector<T>::v_const_iterator::operator<=(
+    const v_const_iterator& other) const {
+  return this->iter <= other.iter;
+}
+
+/* greater-than-or-equal-to operator */
+template <typename T>
+bool vector<T>::v_const_iterator::operator>=(
+    const v_const_iterator& other) const {
+  return this->iter >= other.iter;
+}
 }  // namespace s21

@@ -1,5 +1,5 @@
 all:
 	@clear
 	@g++ -Wall -Wextra -Werror s21_set.cpp
-	@./a.out
+	@-./a.out
 	@rm a.out
