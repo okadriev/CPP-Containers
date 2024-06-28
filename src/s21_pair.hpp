@@ -18,5 +18,21 @@ struct pair {
     *this = tmp;
     return *this;
   }
+
+  pair& operator=(const pair& other) {
+    if (this != &other) {
+      first_ = other.first_;
+      second_ = other.second_;
+    }
+    return *this;
+  }
+  T1& first() noexcept { return first_; }
+  const T1& first() const noexcept { return first_; }
+  T2& second() noexcept { return second_; }
+  const T2& second() const noexcept { return second_; }
+
+  bool operator==(const pair& other) const noexcept {
+    return first_ == other.first_ && second_ == other.second_;
+  }
 };
 }  // namespace s21

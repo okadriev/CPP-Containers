@@ -1,5 +1,6 @@
 #pragma once
-#include <iostream>  // удалить??
+// #include <iostream>  // удалить??
+#include <utility>
 
 namespace s21 {
 
@@ -293,7 +294,7 @@ void rb_tree<T>::inorder(Node<T> *node) const {
   if (node == nullptr) return;
 
   inorder(node->left);
-  std::cout << node->data << " ";
+  // std::cout << node->data << " ";
   inorder(node->right);
 }
 
@@ -301,7 +302,7 @@ template <typename T>  // удалить??
 void rb_tree<T>::preorder(Node<T> *node) const {
   if (node == nullptr) return;
 
-  std::cout << node->data << " ";
+  // std::cout << node->data << " ";
   preorder(node->left);
   preorder(node->right);
 }
@@ -312,7 +313,7 @@ void rb_tree<T>::postorder(Node<T> *node) const {
 
   postorder(node->left);
   postorder(node->right);
-  std::cout << node->data << " ";
+  // std::cout << node->data << " ";
 }
 
 template <typename T>
@@ -351,11 +352,11 @@ void rb_tree<T>::print(Node<T> *node, int level) const {
   print(node->right, level + 1);
 
   for (int i = 0; i < level; i++) {
-    std::cout << "    ";
+    // std::cout << "    ";
   }
 
-  std::cout << ((node->data < 10) ? " " : "") << node->data
-            << (node->is_red ? " RED" : " BLK") << std::endl;
+  // std::cout << ((node->data < 10) ? " " : "") << node->data
+            // << (node->is_red ? " RED" : " BLK") << std::endl;
 
   print(node->left, level + 1);
 }
