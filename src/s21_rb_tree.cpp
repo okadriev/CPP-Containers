@@ -1,5 +1,4 @@
 #pragma once
-#include <iomanip>   // удалить??
 #include <iostream>  // удалить??
 
 namespace s21 {
@@ -32,7 +31,7 @@ class rb_tree {
  private:
   Node<T> *root;
 
-  Node<T> *copy(Node<T> *node);
+  Node<T> *copy_node(Node<T> *node);
   void delete_tree(Node<T> *);
   void remove_node(Node<T> *target);
 
@@ -44,25 +43,26 @@ class rb_tree {
   void inorder(Node<T> *) const;               // удалить??
   void preorder(Node<T> *) const;              // удалить??
   void postorder(Node<T> *) const;             // удалить??
-  Node<T> *min_node(Node<T> *) const;          // удалить??
-  Node<T> *max_node(Node<T> *) const;          // удалить??
   void print(Node<T> *node, int level) const;  // удалить??
 
  public:
   rb_tree() : root(nullptr) {}
   rb_tree(const rb_tree<T> *other) { copy_tree(other); }
   ~rb_tree() { delete_tree(root); }
-
   void copy_tree(const rb_tree<T> *other) {
-    root = ((other->root) ? copy(other->root) : nullptr);
+    root = ((other->root) ? copy_node(other->root) : nullptr);
   };
 
-  void insert(const T &data);
+  Node<T> *insert(const T &data);
   void remove(const T &data) {
     if (Node<T> *target = search(data)) remove_node(target);
   };
 
+  Node<T> *min() const;
+  Node<T> *max() const;  // удалить??
   Node<T> *search(const T &) const;
+  bool empty() const { return (root == nullptr); };
+
   void inorder_tree() const { inorder(root); };      // удалить??
   void preorder_tree() const { preorder(root); };    // удалить??
   void postorder_tree() const { postorder(root); };  // удалить??
@@ -162,7 +162,7 @@ void rb_tree<T>::fix_2_red(Node<T> *&node) {
 }
 
 template <typename T>
-void rb_tree<T>::insert(const T &data) {
+Node<T> *rb_tree<T>::insert(const T &data) {
   Node<T> *new_node = new Node<T>(data);
   Node<T> *current = root;
   Node<T> *parent = nullptr;
@@ -183,6 +183,8 @@ void rb_tree<T>::insert(const T &data) {
   }
 
   fix_2_red(new_node);
+
+  return new_node;
 }
 
 template <typename T>
@@ -208,21 +210,21 @@ void rb_tree<T>::fix_2_black(Node<T> *&node) {
     if (my_bro->left && my_bro->left->is_red) {
       if (left_child) {
         std::swap(my_bro->left->is_red, my_bro->is_red);
-        rotate_right(my_bro);  // OK
+        rotate_right(my_bro);
         fix_2_black(node);
       } else {
         my_bro->left->is_red = my_bro->is_red;
         my_bro->is_red = parent->is_red;
-        rotate_right(parent);  // OK
+        rotate_right(parent);
       }
     } else {
       if (left_child) {
         my_bro->right->is_red = my_bro->is_red;
         my_bro->is_red = parent->is_red;
-        rotate_left(parent);  // OK
+        rotate_left(parent);
       } else {
         std::swap(my_bro->right->is_red, my_bro->is_red);
-        rotate_left(my_bro);  // OK
+        rotate_left(my_bro);
         fix_2_black(node);
       }
     }
@@ -324,17 +326,21 @@ Node<T> *rb_tree<T>::search(const T &data) const {
   return temp;
 }
 
-template <typename T>  // удалить??
-Node<T> *rb_tree<T>::min_node(Node<T> *node) const {
-  Node<T> *current = node;
-  while (current->left != nullptr) current = current->left;
+template <typename T>
+Node<T> *rb_tree<T>::min() const {
+  Node<T> *current = root;
+  if (current)
+    while (current->left) current = current->left;
+
   return current;
 }
 
 template <typename T>  // удалить??
-Node<T> *rb_tree<T>::max_node(Node<T> *node) const {
-  Node<T> *current = node;
-  while (current->right != nullptr) current = current->right;
+Node<T> *rb_tree<T>::max() const {
+  Node<T> *current = root;
+  if (current)
+    while (current->right) current = current->right;
+
   return current;
 }
 
@@ -347,24 +353,25 @@ void rb_tree<T>::print(Node<T> *node, int level) const {
   for (int i = 0; i < level; i++) {
     std::cout << "    ";
   }
-  std::cout << std::setw(2) << node->data << (node->is_red ? " RED" : " BLK")
-            << std::endl;
+
+  std::cout << ((node->data < 10) ? " " : "") << node->data
+            << (node->is_red ? " RED" : " BLK") << std::endl;
 
   print(node->left, level + 1);
 }
 
 template <typename T>
-Node<T> *rb_tree<T>::copy(Node<T> *node) {
+Node<T> *rb_tree<T>::copy_node(Node<T> *node) {
   Node<T> *new_node = new Node<T>(node->data);
   new_node->is_red = node->is_red;
 
   if (node->left) {
-    new_node->left = copy(node->left);
+    new_node->left = copy_node(node->left);
     new_node->left->parent = new_node;
   }
 
   if (node->right) {
-    new_node->right = copy(node->right);
+    new_node->right = copy_node(node->right);
     new_node->right->parent = new_node;
   }
 
