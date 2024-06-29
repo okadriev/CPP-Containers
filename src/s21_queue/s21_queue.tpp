@@ -79,7 +79,6 @@ const typename queue<T1, T2>::container_type &queue<T1, T2>::_Get_container()
   return *this;
 }
 
-
 /**
  * Меняет местами содержимое текущего и другого объекта
  * @param other - ссылка на другой объект
