@@ -38,8 +38,9 @@ TEST(Method, stack_pop) {
   EXPECT_EQ(v.top(), 1);
   EXPECT_EQ(v.size(), 1);
 }
-stack < in TEST(Method, stack_empty) {
-  t > v;
+
+TEST(Method, stack_empty) {
+  stack<int> v;
   v.push(1);
 
   EXPECT_EQ(v.empty(), false);
