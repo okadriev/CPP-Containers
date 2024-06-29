@@ -1,73 +1,83 @@
-#pragma once
-#include <iostream>  // удалить??
+#include "s21_rb_tree.hpp"
 
 namespace s21 {
 
-#define MY_BRO_HAS_RED_SON                   \
-  ((my_bro->left && my_bro->left->is_red) || \
-   (my_bro->right && my_bro->right->is_red))
+template <typename T>
+Node<T> *rb_tree<T>::copy_node(Node<T> *node) {
+  Node<T> *new_node = new Node<T>(node->data);
+  new_node->is_red = node->is_red;
 
-#define RED_GOES_UP         \
-  grand_parent->is_red = 1; \
-  parent->is_red = 0;       \
-  uncle->is_red = 0;
+  if (node->left) {
+    new_node->left = copy_node(node->left);
+    new_node->left->parent = new_node;
+  }
+
+  if (node->right) {
+    new_node->right = copy_node(node->right);
+    new_node->right->parent = new_node;
+  }
+
+  return new_node;
+}
 
 template <typename T>
-struct Node {
-  T data;
-  Node<T> *left, *right, *parent;
-  bool is_red;  // поменять на int black?
+void rb_tree<T>::remove_node(Node<T> *target) {
+  Node<T> *target_parent = target->parent;
+  Node<T> *placeholder = nullptr;
+  if (target->left && target->right) {
+    placeholder = target->left;
+    while (placeholder->right != nullptr) {
+      placeholder = placeholder->right;
+    }
+  } else if (target->left == nullptr && target->right == nullptr) {
+    placeholder = nullptr;
+  } else {
+    placeholder = (target->left) ? target->left : target->right;
+  }
 
-  Node(T data = 0)
-      : data(data),
-        left(nullptr),
-        right(nullptr),
-        parent(nullptr),
-        is_red(true) {}
-};
+  if (placeholder == nullptr) {
+    if (target == root) {
+      root = nullptr;
+
+    } else {
+      if (target->is_red == 0) {
+        fix_2_black(target);
+      }
+
+      if (target_parent && target == target_parent->left) {
+        target_parent->left = nullptr;
+      } else if (target_parent) {
+        target_parent->right = nullptr;
+      }
+    }
+    delete target;
+
+  } else {
+    if (placeholder->is_red == 0) {
+      fix_2_black(placeholder);
+    }
+
+    Node<T> *ph_parent = placeholder->parent;
+    if (ph_parent->left == placeholder) {
+      ph_parent->left = nullptr;
+    } else {
+      ph_parent->right = nullptr;
+    }
+
+    target->data = placeholder->data;
+    delete placeholder;
+  }
+}
 
 template <typename T>
-class rb_tree {
- private:
-  Node<T> *root;
+void rb_tree<T>::delete_tree(Node<T> *node) {
+  if (node) {
+    delete_tree(node->left);
+    delete_tree(node->right);
 
-  Node<T> *copy_node(Node<T> *node);
-  void delete_tree(Node<T> *);
-  void remove_node(Node<T> *target);
-
-  void rotate_left(Node<T> *&);
-  void rotate_right(Node<T> *&);
-  void fix_2_red(Node<T> *&);
-  void fix_2_black(Node<T> *&);
-
-  void inorder(Node<T> *) const;               // удалить??
-  void preorder(Node<T> *) const;              // удалить??
-  void postorder(Node<T> *) const;             // удалить??
-  void print(Node<T> *node, int level) const;  // удалить??
-
- public:
-  rb_tree() : root(nullptr) {}
-  rb_tree(const rb_tree<T> *other) { copy_tree(other); }
-  ~rb_tree() { delete_tree(root); }
-  void copy_tree(const rb_tree<T> *other) {
-    root = ((other->root) ? copy_node(other->root) : nullptr);
-  };
-
-  Node<T> *insert(const T &data);
-  void remove(const T &data) {
-    if (Node<T> *target = search(data)) remove_node(target);
-  };
-
-  Node<T> *min() const;
-  Node<T> *max() const;  // удалить??
-  Node<T> *search(const T &) const;
-  bool empty() const { return (root == nullptr); };
-
-  void inorder_tree() const { inorder(root); };      // удалить??
-  void preorder_tree() const { preorder(root); };    // удалить??
-  void postorder_tree() const { postorder(root); };  // удалить??
-  void print_tree() const { print(root, 0); };       // удалить??
-};
+    delete node;
+  }
+}
 
 template <typename T>
 void rb_tree<T>::rotate_left(Node<T> *&node) {
@@ -160,34 +170,8 @@ void rb_tree<T>::fix_2_red(Node<T> *&node) {
 
   root->is_red = 0;
 }
-
 template <typename T>
-Node<T> *rb_tree<T>::insert(const T &data) {
-  Node<T> *new_node = new Node<T>(data);
-  Node<T> *current = root;
-  Node<T> *parent = nullptr;
 
-  while (current != nullptr) {
-    parent = current;
-    current = ((data < current->data) ? current->left : current->right);
-  }
-
-  new_node->parent = parent;
-
-  if (parent == nullptr) {
-    root = new_node;
-  } else if (data < parent->data) {
-    parent->left = new_node;
-  } else {
-    parent->right = new_node;
-  }
-
-  fix_2_red(new_node);
-
-  return new_node;
-}
-
-template <typename T>
 void rb_tree<T>::fix_2_black(Node<T> *&node) {
   if (node == root) return;
 
@@ -240,111 +224,45 @@ void rb_tree<T>::fix_2_black(Node<T> *&node) {
 }
 
 template <typename T>
-void rb_tree<T>::remove_node(Node<T> *target) {
-  Node<T> *target_parent = target->parent;
-  Node<T> *placeholder = nullptr;
-  if (target->left && target->right) {
-    placeholder = target->left;
-    while (placeholder->right != nullptr) {
-      placeholder = placeholder->right;
-    }
-  } else if (target->left == nullptr && target->right == nullptr) {
-    placeholder = nullptr;
-  } else {
-    placeholder = (target->left) ? target->left : target->right;
+size_t rb_tree<T>::count_elements(Node<T> *node, const T &data) const {
+  size_t result = 0;
+  if (node->data == data) result++;
+
+  if (node->data >= data && node->left) {
+    result += count_elements(node->left, data);
   }
 
-  if (placeholder == nullptr) {
-    if (target == root) {
-      root = nullptr;
-
-    } else {
-      if (target->is_red == 0) {
-        fix_2_black(target);
-      }
-
-      if (target_parent && target == target_parent->left) {
-        target_parent->left = nullptr;
-      } else if (target_parent) {
-        target_parent->right = nullptr;
-      }
-    }
-    delete target;
-
-  } else {
-    if (placeholder->is_red == 0) {
-      fix_2_black(placeholder);
-    }
-
-    Node<T> *ph_parent = placeholder->parent;
-    if (ph_parent->left == placeholder) {
-      ph_parent->left = nullptr;
-    } else {
-      ph_parent->right = nullptr;
-    }
-
-    target->data = placeholder->data;
-    delete placeholder;
+  if (node->data <= data && node->right) {
+    result += count_elements(node->right, data);
   }
-}
 
-template <typename T>  // удалить??
-void rb_tree<T>::inorder(Node<T> *node) const {
-  if (node == nullptr) return;
-
-  inorder(node->left);
-  std::cout << node->data << " ";
-  inorder(node->right);
-}
-
-template <typename T>  // удалить??
-void rb_tree<T>::preorder(Node<T> *node) const {
-  if (node == nullptr) return;
-
-  std::cout << node->data << " ";
-  preorder(node->left);
-  preorder(node->right);
-}
-
-template <typename T>  // удалить??
-void rb_tree<T>::postorder(Node<T> *node) const {
-  if (node == nullptr) return;
-
-  postorder(node->left);
-  postorder(node->right);
-  std::cout << node->data << " ";
+  return result;
 }
 
 template <typename T>
-Node<T> *rb_tree<T>::search(const T &data) const {
-  Node<T> *temp = root;
-
-  while (temp != nullptr && temp->data != data) {
-    temp = ((data < temp->data) ? temp->left : temp->right);
+std::pair<Node<T> *, Node<T> *> rb_tree<T>::element_range(Node<T> *node,
+                                                          const T &data) {
+  std::pair<Node<T> *, Node<T> *> range = {nullptr, nullptr};
+  if (node->data >= data && node->left) {
+    range.first = element_range(node->left, data).first;
   }
 
-  return temp;
+  if (node->data <= data && node->right) {
+    range.second = element_range(node->right, data).second;
+  }
+
+  if (range.first == nullptr) {
+    range.first = ((node->data == data) ? node : range.second);
+  }
+
+  if (range.second == nullptr) {
+    range.second = ((node->data == data) ? node : range.first);
+  }
+
+  return range;
 }
 
 template <typename T>
-Node<T> *rb_tree<T>::min() const {
-  Node<T> *current = root;
-  if (current)
-    while (current->left) current = current->left;
-
-  return current;
-}
-
-template <typename T>  // удалить??
-Node<T> *rb_tree<T>::max() const {
-  Node<T> *current = root;
-  if (current)
-    while (current->right) current = current->right;
-
-  return current;
-}
-
-template <typename T>  // удалить??
 void rb_tree<T>::print(Node<T> *node, int level) const {
   if (node == nullptr) return;
 
@@ -361,31 +279,76 @@ void rb_tree<T>::print(Node<T> *node, int level) const {
 }
 
 template <typename T>
-Node<T> *rb_tree<T>::copy_node(Node<T> *node) {
-  Node<T> *new_node = new Node<T>(node->data);
-  new_node->is_red = node->is_red;
+void rb_tree<T>::copy_tree(const rb_tree<T> *other) {
+  root = ((other->root) ? copy_node(other->root) : nullptr);
+}
 
-  if (node->left) {
-    new_node->left = copy_node(node->left);
-    new_node->left->parent = new_node;
+template <typename T>
+Node<T> *rb_tree<T>::insert(const T &data) {
+  Node<T> *new_node = new Node<T>(data);
+  Node<T> *current = root;
+  Node<T> *parent = nullptr;
+
+  while (current != nullptr) {
+    parent = current;
+    current = ((data < current->data) ? current->left : current->right);
   }
 
-  if (node->right) {
-    new_node->right = copy_node(node->right);
-    new_node->right->parent = new_node;
+  new_node->parent = parent;
+
+  if (parent == nullptr) {
+    root = new_node;
+  } else if (data < parent->data) {
+    parent->left = new_node;
+  } else {
+    parent->right = new_node;
   }
+
+  fix_2_red(new_node);
 
   return new_node;
 }
 
 template <typename T>
-void rb_tree<T>::delete_tree(Node<T> *node) {
-  if (node) {
-    delete_tree(node->left);
-    delete_tree(node->right);
+void rb_tree<T>::remove(const T &data) {
+  if (Node<T> *target = search(data)) remove_node(target);
+}
 
-    delete node;
+template <typename T>
+Node<T> *rb_tree<T>::min() const {
+  Node<T> *current = root;
+  if (current)
+    while (current->left) current = current->left;
+
+  return current;
+}
+
+template <typename T>
+Node<T> *rb_tree<T>::search(const T &data) const {
+  Node<T> *temp = root;
+
+  while (temp != nullptr && temp->data != data) {
+    temp = ((data < temp->data) ? temp->left : temp->right);
   }
+
+  return temp;
+}
+
+template <typename T>
+size_t rb_tree<T>::count(const T &data) const {
+  Node<T> *target = search(data);
+
+  return ((target) ? count_elements(target, data) : 0);
+}
+
+template <typename T>
+std::pair<Node<T> *, Node<T> *> rb_tree<T>::equal_range(const T &data) {
+  std::pair<Node<T> *, Node<T> *> range;
+  Node<T> *target = search(data);
+
+  if (target) range = element_range(target, data);
+
+  return range;
 }
 
 }  // namespace s21

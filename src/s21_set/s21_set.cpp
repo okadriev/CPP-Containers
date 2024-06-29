@@ -1,100 +1,34 @@
-#include <limits>
-
-#include "s21_rb_tree.cpp"  //сделать нормально
+#include "s21_rb_tree.hpp"
+#include "s21_set.hpp"
 
 namespace s21 {
 
 template <typename T>
-class set_iterator {
- private:
-  using value_type = T;
-  using pointer = T *;
-  using reference = T &;
+set_iterator<T> &set_iterator<T>::operator++() {
+  node = next_node(node);
 
-  Node<value_type> *node_;
-
-  Node<value_type> *next_node(Node<value_type> *node) const;
-
- public:
-  set_iterator() : node_(nullptr) {};
-  set_iterator(Node<value_type> *node) : node_(node) {};
-  ~set_iterator() {};
-
-  bool operator==(const set_iterator &s) const { return (node_ == s.node_); };
-  bool operator!=(const set_iterator &s) const { return (node_ != s.node_); };
-  reference operator*() const { return node_->data; };
-  set_iterator &operator++() {
-    node_ = next_node(node_);
-
-    return *this;
-  };
-};
+  return *this;
+}
 
 template <typename T>
-Node<T> *set_iterator<T>::next_node(Node<T> *node) const {
-  if (node == nullptr) return nullptr;
+Node<T> *set_iterator<T>::next_node(Node<T> *ptr_node) const {
+  if (ptr_node == nullptr) return nullptr;
 
   Node<T> *next = nullptr;
 
-  if (node->right) {
-    next = node->right;
+  if (ptr_node->right) {
+    next = ptr_node->right;
     while (next->left) next = next->left;
 
   } else {
-    next = node->parent;
-    while (next && node == next->right) {
-      node = next;
+    next = ptr_node->parent;
+    while (next && ptr_node == next->right) {
+      ptr_node = next;
       next = next->parent;
     }
   }
 
   return next;
-};
-
-template <typename T>
-class set {
- private:
-  using value_type = T;
-  using key_type = rb_tree<value_type>;
-  using reference = value_type &;
-  using const_reference = const value_type &;
-  using iterator = set_iterator<T>;
-  using const_iterator = const set_iterator<T>;
-  using size_type = size_t;
-
-  key_type *tree;
-  size_type m_size;
-
- public:
-  set() : tree(new key_type()), m_size(0){};
-  set(std::initializer_list<value_type> const &items);
-  set(const set &s) : tree(new key_type()), m_size(s.m_size) {
-    tree->copy_tree(s.tree);
-  };
-  set(set &&s) : tree(s), m_size(s.m_size) { s.tree = nullptr, s.m_size = 0; };
-  ~set() { delete tree; };
-
-  set<value_type> &operator=(const set &other);
-  set<value_type> &operator=(set &&other) noexcept;
-
-  void clear();
-  std::pair<iterator, bool> insert(const_reference data);
-  void erase(const_reference data);
-  void erase(iterator pos);
-  void swap(set &other);
-  void merge(set &other);
-
-  void print() { tree->print_tree(); };
-  iterator find(const_reference data) { return iterator(tree->search(data)); };
-  bool contains(const_reference data) { return find(data) != end(); };
-  iterator begin() const { return iterator(tree->min()); };
-  iterator end() const { return iterator(nullptr); };
-
-  bool empty() const { return tree->empty(); };
-  size_type size() const { return m_size; };
-  size_t max_size() const noexcept {
-    return std::numeric_limits<size_t>::max() / sizeof(value_type);
-  };
 };
 
 template <typename value_type>
@@ -160,9 +94,9 @@ void set<value_type>::erase(const_reference data) {
 };
 
 template <typename value_type>
-void set<value_type>::erase(iterator pos) {
-  if (pos != end() && contains(*pos)) {
-    tree->remove(*pos);
+void set<value_type>::erase(iterator ptr) {
+  if (ptr != end() && contains(*ptr)) {
+    tree->remove(*ptr);
     --m_size;
   }
 };
@@ -181,65 +115,3 @@ void set<value_type>::merge(set &other) {
 }
 
 }  // namespace s21
-
-/* using namespace s21;
-
-int main() {
-  set<int> test{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18};
-  // std::cout << "before clear \n";
-  for (int n : test) std::cout << n << " ";
-  // std::cout << "\nafter clear \n";
-  // test.clear();
-  // for (int n : test) std::cout << n << " ";
-  std::cout << std::endl;
-  set<int> test2{1, 2, 3, 4, 11};
-  set<int> test3(test);
-
-  // std::set<int> numbers{2, 1, 3, 4, 5};
-  // std::cout << "max size = " << numbers.max_size() << std::endl;
-  // std::cout << "max size = " << test.max_size() << std::endl;
-  // for (int elem : numbers) std::cout << elem << " ";
-  // std::cout << "before clear \n";
-  // numbers.clear();
-  // std::cout << "\nafter clear \n";
-  // for (int elem : numbers) std::cout << elem << " ";
-
-  // std::cout << std::endl;
-  // test.print();
-  test.erase(15);
-  test.erase(14);
-  test.erase(13);
-  test.erase(12);
-  test.erase(4);
-  test.erase(1);
-  test.erase(18);
-  test.erase(17);
-  test.erase(2);
-  test.erase(7);
-  test.erase(16);
-  test.print();
-
-  // std::cout << "test " << std::endl;
-  // test.print();
-  test2 = test;
-  test2.erase(test2.begin());
-  std::pair<set_iterator<int>, bool> pair = test2.insert(15);
-  std::cout << "result = " << *(pair.first) << std::endl;
-
-  std::cout << "test1 " << std::endl;
-  test.print();
-  std::cout << "test2 " << std::endl;
-  test2.print();
-
-  test.swap(test2);
-  std::cout << "test1 " << std::endl;
-  test.print();
-  std::cout << "test2 " << std::endl;
-  test2.print();
-
-  test.merge(test2);
-  std::cout << "test1 " << std::endl;
-  test.print();
-
-  return 0;
-} */
