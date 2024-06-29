@@ -1,11 +1,20 @@
-#include <iostream>
-
 #include "s21_multiset.hpp"
 #include "s21_set.hpp"
 
 using namespace s21;
 
 int main() {
+  set<int> test1{1, 2, 3};
+  set<int> test2;
+
+  test2 = std::move(test1);
+  test2.print();
+  test1.empty();
+
+  return 0;
+}
+
+/* int main() {
   multiset<int> test{15, 10, 16, 15, 15, 15};
   test.print();
   std::cout << "size = " << test.size() << std::endl;
@@ -81,7 +90,7 @@ int main() {
   // test.print();
 
   return 0;
-}
+} */
 
 /* using namespace s21;
 
