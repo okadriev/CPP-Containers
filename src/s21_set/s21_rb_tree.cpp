@@ -15,16 +15,18 @@ namespace s21 {
 
 template <typename T>
 struct Node {
+  enum e_color { black = false, red = true };
+
   T data;
   Node<T> *left, *right, *parent;
-  bool is_red;  // поменять на int black?
+  e_color color;  // поменять на int black?
 
   Node(T data = 0)
       : data(data),
         left(nullptr),
         right(nullptr),
         parent(nullptr),
-        is_red(true) {}
+        color(red) {}
 };
 
 template <typename T>
@@ -67,7 +69,6 @@ class rb_tree {
   void inorder_tree() const { inorder(root); };      // удалить??
   void preorder_tree() const { preorder(root); };    // удалить??
   void postorder_tree() const { postorder(root); };  // удалить??
-  void print_tree() const { print(root, 0); };       // удалить??
 };
 
 template <typename T>
@@ -327,6 +328,13 @@ Node<T> *rb_tree<T>::search(const T &data) const {
   return temp;
 }
 
+/**
+ * Возвращает узел с минимальным значением в красно-черном дереве.
+ *
+ * @return Указатель на узел с минимальным значением в дереве.
+ *
+ * @throws Нет
+ */
 template <typename T>
 Node<T> *rb_tree<T>::min() const {
   Node<T> *current = root;
