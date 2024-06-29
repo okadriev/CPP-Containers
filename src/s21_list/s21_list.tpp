@@ -56,10 +56,10 @@ list<T>::list(const list &l) : list() {
  */
 template <typename T>
 list<T>::list(list &&l) noexcept : list() {
-  list_.size = l.list_.size;
+  list_.size_list = l.list_.size_list;
   list_.head = l.list_.head;
   list_.tail = l.list_.tail;
-  l.list_.size = 0;
+  l.list_.size_list = 0;
   l.list_.head = nullptr;
   l.list_.tail = nullptr;
   std::cout << "left constructor";
@@ -298,7 +298,6 @@ void list<T>::swap(list &other) {
 template <typename T>
 void list<T>::sort() {
   if (!empty()) {
-    // Создаем массив указателей на узлы списка
     Node **nodes = new Node *[size()];
     Node *curr = list_.head;
     size_t i = 0;
@@ -307,14 +306,12 @@ void list<T>::sort() {
       curr = curr->next;
     }
 
-    // Сортируем массив указателей с помощью std::qsort
     std::qsort(nodes, size(), sizeof(Node *), [](const void *a, const void *b) {
       Node *nodeA = *static_cast<Node *const *>(a);
       Node *nodeB = *static_cast<Node *const *>(b);
       return nodeA->value < nodeB->value ? -1 : nodeA->value > nodeB->value;
     });
 
-    // Восстанавливаем связанный список из отсортированного массива
     list_.head = nodes[0];
     curr = list_.head;
     for (i = 1; i < size(); ++i) {
@@ -322,10 +319,10 @@ void list<T>::sort() {
       nodes[i]->prev = curr;
       curr = curr->next;
     }
+
     curr->next = nullptr;
     list_.tail = curr;
 
-    // Освобождаем память, выделенную для массива указателей
     delete[] nodes;
   }
 }
@@ -338,10 +335,8 @@ void list<T>::sort() {
 template <typename T>
 void list<T>::merge(list<T> &other) {
   list<T>::sort();
-  other.list<T>::sort();
-  for (iterator it = other.begin(); it != other.end(); ++it) {
-      insert(end(), *it);
-    }
+  other.sort();
+  splice(end(), other);
 }
 
 /**
@@ -351,11 +346,31 @@ void list<T>::merge(list<T> &other) {
  */
 template <typename T>
 void list<T>::splice(list<T>::const_iterator pos, list<T> &other) {
-  if (!other.empty()) {
-    for (iterator it = other.begin(); it != other.end(); ++it) {
-      insert(pos, *it);
-    }
+  if (pos.node == nullptr)
+    throw std::invalid_argument("Error: invalid iterator");
+  
+  if (pos == begin()) {
+    other.list_.tail->next = list_.head;
+    list_.head->prev = other.list_.tail;
+    list_.head = other.list_.head;
+
+  } else if (pos == end()) {
+    list_.tail->next = other.list_.head;
+    other.list_.head->prev = list_.tail;
+    list_.tail = other.list_.tail;
+  
+  } else {
+    iterator it_pos = pos;
+    it_pos.node->prev->next = other.list_.head;
+    other.list_.head = it_pos.node->prev;
+    other.list_.tail->next = it_pos.node;
+    it_pos.node->prev = other.list_.tail;
   }
+  
+  list_.size_list += other.list_.size_list;
+  other.list_.tail = nullptr;
+  other.list_.head = nullptr;
+  other.list_.size_list = 0;
 }
 
 /**
@@ -372,7 +387,7 @@ void list<T>::erase(iterator pos) {
     list<T>::Node *node = pos.node;
     node->prev->next = node->next;
     node->next->prev = node->prev;
-    delete[] node;
+    delete node;
     this->list_.size_list--;
   }
 }
@@ -412,13 +427,14 @@ typename list<T>::iterator list<T>::insert(list<T>::iterator pos,
   } else {
     Node *new_node = new Node(value);
     Node *prev_node = list_.head;
-    for (iterator it = list<T>::begin(); it != pos; ++it) {
+    for (iterator it = list<T>::begin(); it != pos; ++it)
       prev_node = prev_node->next;
-    }
+
     new_node->next = prev_node->next;
     new_node->prev = prev_node;
     prev_node->next->prev = new_node;
     prev_node->next = new_node;
+
     ++list_.size_list;
 
     pos = list<T>::iterator(new_node);

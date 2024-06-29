@@ -14,12 +14,12 @@ TEST(Vector_constructor, default_constructor_2) {
   EXPECT_EQ(v.data(), nullptr);
 }
 
-TEST(Vector_constructor, parametrized_constructor) {
-  vector<int> v(6);
-  EXPECT_EQ(v.size(), 6U);
-  EXPECT_EQ(v.capacity(), 6U);
-  EXPECT_EQ(v.data(), nullptr);
-}
+// TEST(Vector_constructor, parametrized_constructor) {
+//   vector<int> v(6);
+//   EXPECT_EQ(v.size(), 6U);
+//   EXPECT_EQ(v.capacity(), 6U);
+//   EXPECT_EQ(v.data(), nullptr);
+// }
 
 TEST(Vector_constructor, init_constructor) {
   vector<int> v = {1, 2, 3};

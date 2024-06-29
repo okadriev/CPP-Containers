@@ -1,5 +1,6 @@
 #pragma once
 #include <type_traits>
+#include "../s21_list/s21_list.hpp"
 
 #include "../s21_vector/s21_vector.hpp"
 
