@@ -9,13 +9,13 @@
 namespace s21 {
 
 template <typename T1, typename T2>
-class associative_container : sorted_container<key_pair<T1, T2>> {
+class associative_container : sorted_container<pair<T1, T2>> {
   using key_type = T1;
   using value_type = T2;
   using iterator =
-      typename sorted_container<key_pair<key_type, value_type>>::iterator;
-  using reference = key_pair<key_type, value_type> &;
-  using const_reference = const key_pair<key_type, value_type> &;
+      typename sorted_container<pair<key_type, value_type>>::iterator;
+  using reference = pair<key_type, value_type> &;
+  using const_reference = const pair<key_type, value_type> &;
 
   virtual ~associative_container() = default;
 
