@@ -356,7 +356,7 @@ void rb_tree<T>::print(Node<T> *node, int level) const {
   }
 
   // std::cout << ((node->data < 10) ? " " : "") << node->data
-            // << (node->is_red ? " RED" : " BLK") << std::endl;
+  // << (node->is_red ? " RED" : " BLK") << std::endl;
 
   print(node->left, level + 1);
 }

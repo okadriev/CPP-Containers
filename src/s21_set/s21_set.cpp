@@ -60,13 +60,13 @@ class set {
   using const_reference = const value_type &;
   using iterator = set_iterator<T>;
   using const_iterator = const set_iterator<T>;
-  using size_type = size_t;
+  using size_type = std::size_t;
 
   key_type *tree;
   size_type m_size;
 
  public:
-  set() : tree(new key_type()), m_size(0){};
+  set() : tree(new key_type()), m_size(0) {};
   set(std::initializer_list<value_type> const &items);
   set(const set &s) : tree(new key_type()), m_size(s.m_size) {
     tree->copy_tree(s.tree);
@@ -92,8 +92,8 @@ class set {
 
   bool empty() const { return tree->empty(); };
   size_type size() const { return m_size; };
-  size_t max_size() const noexcept {
-    return std::numeric_limits<size_t>::max() / sizeof(value_type);
+  size_type max_size() const noexcept {
+    return std::numeric_limits<size_type>::max() / sizeof(value_type);
   };
 };
 

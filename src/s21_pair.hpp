@@ -2,31 +2,43 @@
 
 namespace s21 {
 template <typename T1, typename T2>
-struct pair {
-  T1 first_;
-  T2 second_;
+struct key_pair {
+  T1 key;
+  T2 data;
 
-  pair() : first_(), second_() {}
-  pair(const T1& first, const T2& second) : first_(first), second_(second) {}
-  pair(const pair& other) : first_(other.first()), second_(other.second()) {}
+  key_pair() : key(), data() {}
+  key_pair(const T1& key, const T2& second) : key(key), data(second) {}
+  key_pair(const key_pair& other) : key(other.key), data(other.data) {}
 
-  pair swap(pair& other) noexcept {
-    pair tmp = other;
+  key_pair swap(key_pair& other) noexcept {
+    key_pair tmp = other;
     other = *this;
     *this = tmp;
     return *this;
   }
 
-  pair& operator=(const pair& other) {
+  key_pair& operator=(const key_pair& other) {
     if (this != &other) {
-      first_ = other.first_;
-      second_ = other.second_;
+      key = other.key;
+      data = other.data;
     }
     return *this;
   }
 
-  bool operator==(const pair& other) const noexcept {
-    return first_ == other.first_ && second_ == other.second_;
+  bool operator==(const key_pair& other) const noexcept {
+    return key == other.key;
+  }
+
+  bool operator!=(const key_pair& other) const noexcept {
+    return key != other.key;
+  }
+
+  bool operator<(const key_pair& other) const noexcept {
+    return key < other.key;
+  }
+
+  bool operator>(const key_pair& other) const noexcept {
+    return key > other.key;
   }
 };
 }  // namespace s21
