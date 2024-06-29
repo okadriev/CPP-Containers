@@ -17,10 +17,10 @@ struct is_valid_container_stack<T1, vector<T1>> {
   static constexpr bool value = true;
 };
 
-// template <typename T1>
-// struct is_valid_container_stack<T1, list<T1>> {
-//   static constexpr bool value = false;
-// };
+template <typename T1>
+struct is_valid_container_stack<T1, list<T1>> {
+  static constexpr bool value = true;
+};
 template <typename T1, typename T2 = vector<T1>>
 class stack : protected T2 {
  private:

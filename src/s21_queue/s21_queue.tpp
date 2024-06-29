@@ -5,14 +5,7 @@ namespace s21 {
  */
 template <typename T1, typename T2>
 void queue<T1, T2>::pop() {
-  int size = _Get_container().size();
-
-  for (int i = 0; i < size; i++) {
-    if (i == size - 1)
-      _Get_container().pop_back();
-    else
-      _Get_container()[i] = _Get_container()[i + 1];
-  }
+ _Get_container().erase(_Get_container().begin());
 }
 
 /**

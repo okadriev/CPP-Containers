@@ -185,12 +185,19 @@ typename list<T>::size_type list<T>::max_size() const {
 template <typename T>
 void list<T>::reverse() {
   if (list_.size_list > 1) {
-    list<T>::Node *node = this->list_.head;;
-    for (size_type i = 0; i < this->list_.size_list; ++i) {
-      std::swap(node->prev, node->next);
-      node = node->next;
+    list<T>::Node *prev = nullptr;
+    list<T>::Node *curr = list_.head;
+    list<T>::Node *next = nullptr;
+
+    while (curr) {
+      next = curr->next;
+      curr->next = prev;
+      prev = curr;
+      curr = next;
     }
-    std::swap(this->list_.head, this->list_.tail);
+
+    list_.tail = list_.head;
+    list_.head = prev;
   }
 }
 
@@ -286,62 +293,41 @@ void list<T>::swap(list &other) {
 }
 
 /**
- * Сортивка списка
+ * Сортировка списка
  */
 template <typename T>
 void list<T>::sort() {
-  std::cout << "list.sort: " << front() << ' ' << back() << std::endl;
-
-  this->list_.head = MergeSort(this->list_.head);
-  this->list_.tail = this->list_.head;
-  while (this->list_.tail->next) {
-    this->list_.tail = this->list_.tail->next;
-  }
-
-  std::cout << "list.sort: " << front() << ' ' << back() << std::endl;
-}
-
-template <typename T>
-typename list<T>::Node *list<T>::MergeSort(typename list<T>::Node *head) {
-  int flag = 0;
-  typename list<T>::Node *left = nullptr;
-  typename list<T>::Node *right = nullptr;
-
-  if (head && head->next) {
-    flag = 1;
-    typename list<T>::Node *node1 = head;
-    typename list<T>::Node *node2 = head;
-
-    while (node2->next && node2->next->next) {
-      node1 = node1->next;
-      node2 = node2->next->next;
+  if (!empty()) {
+    // Создаем массив указателей на узлы списка
+    Node **nodes = new Node *[size()];
+    Node *curr = list_.head;
+    size_t i = 0;
+    while (curr) {
+      nodes[i++] = curr;
+      curr = curr->next;
     }
 
-    typename list<T>::Node *middle = node1;
-    typename list<T>::Node *next_middle = middle->next;
-    middle->next = nullptr;
+    // Сортируем массив указателей с помощью std::qsort
+    std::qsort(nodes, size(), sizeof(Node *), [](const void *a, const void *b) {
+      Node *nodeA = *static_cast<Node *const *>(a);
+      Node *nodeB = *static_cast<Node *const *>(b);
+      return nodeA->value < nodeB->value ? -1 : nodeA->value > nodeB->value;
+    });
 
-    left = MergeSort(head);
-    right = MergeSort(next_middle);
-  }
-
-  return flag ? Merge(left, right) : head;
-}
-
-template <typename T>
-typename list<T>::Node *list<T>::Merge(typename list<T>::Node *left,
-                                       typename list<T>::Node *right) {
-  typename list<T>::Node *result = nullptr;
-  if (left && right) {
-    if (left->value <= right->value) {
-      result = left;
-      result->next = Merge(left->next, right);
-    } else {
-      result = right;
-      result->next = Merge(left, right->next);
+    // Восстанавливаем связанный список из отсортированного массива
+    list_.head = nodes[0];
+    curr = list_.head;
+    for (i = 1; i < size(); ++i) {
+      curr->next = nodes[i];
+      nodes[i]->prev = curr;
+      curr = curr->next;
     }
+    curr->next = nullptr;
+    list_.tail = curr;
+
+    // Освобождаем память, выделенную для массива указателей
+    delete[] nodes;
   }
-  return !left ? right : !right ? left : result;
 }
 
 /**
@@ -353,7 +339,9 @@ template <typename T>
 void list<T>::merge(list<T> &other) {
   list<T>::sort();
   other.list<T>::sort();
-  list<T>::insert_many(list<T>::end(), other);
+  for (iterator it = other.begin(); it != other.end(); ++it) {
+      insert(end(), *it);
+    }
 }
 
 /**
@@ -363,7 +351,11 @@ void list<T>::merge(list<T> &other) {
  */
 template <typename T>
 void list<T>::splice(list<T>::const_iterator pos, list<T> &other) {
-  list<T>::insert_many(pos, other);
+  if (!other.empty()) {
+    for (iterator it = other.begin(); it != other.end(); ++it) {
+      insert(pos, *it);
+    }
+  }
 }
 
 /**
@@ -434,48 +426,22 @@ typename list<T>::iterator list<T>::insert(list<T>::iterator pos,
   return pos;
 }
 
-// template <typename T>
-// void list<T>::insert_(list<T>::const_iterator pos,
-//                                            list<T>::const_reference value) {
-//   if (pos == list<T>::begin()) {
-//     list<T>::push_front(value);
-//     // pos = list<T>::iterator(this->list_.head);
-//   } else if (pos == list<T>::end()) {
-//     list<T>::push_back(value);
-//     // pos = list<T>::iterator(this->list_.tail);
-//   } else {
-//     Node *new_node = new Node(value);
-//     Node *prev_node = list_.head;
-//     for (iterator it = list<T>::begin(); it != pos; ++it) {
-//       prev_node = prev_node->next;
-//     }
-//     new_node->next = prev_node->next;
-//     new_node->prev = prev_node;
-//     prev_node->next->prev = new_node;
-//     prev_node->next = new_node;
-//     ++list_.size_list;
-
-//     // pos = list<T>::iterator(new_node);
-//   }
-// }
-
 /**
  * Вставляет новые элементы в контейнер непосредственно перед pos
  * @param pos указатель на позицию
  * @param args переменное число аргументов
  * @return итератор
  */
-// template <typename T>
-// template <typename... Args>
-// typename list<T>::iterator list<T>::insert_many(const_iterator pos,
-//                                                 Args &&...args) {
+template <typename T>
+template <typename... Args>
+typename list<T>::iterator list<T>::insert_many(const_iterator pos,
+                                                Args &&...args) {
+  for (const auto &arg : {args...}) {
+    insert(pos, arg);
+  }
 
-//     for (const auto& arg : {args...}) {
-//     insert(pos, arg);
-//   }
-  
-//   return pos;
-// }
+  return pos;
+}
 
 /**
  * Добавляет новые элементы в верхнюю часть контейнера
@@ -486,7 +452,7 @@ typename list<T>::iterator list<T>::insert(list<T>::iterator pos,
 template <typename T>
 template <typename... Args>
 void list<T>::insert_many_front(Args &&...args) {
-  list<T>::insert_many(list<T>::begin(), std::forward<Args>(args)...);
+  for (const auto &arg : {args...}) push_front(arg);
 }
 
 /**
@@ -498,7 +464,7 @@ void list<T>::insert_many_front(Args &&...args) {
 template <typename T>
 template <typename... Args>
 void list<T>::insert_many_back(Args &&...args) {
-  list<T>::insert_many(list<T>::end(), std::forward<Args>(args)...);
+  for (const auto &arg : {args...}) push_back(arg);
 }
 
 /**
