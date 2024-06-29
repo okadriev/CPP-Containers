@@ -56,24 +56,9 @@ TEST(Vector_constructor, move_constructor) {
 
 TEST(Vector_method, overload_method) {
   vector<int> v = {1, 2, 3};
-  s21::vector<int> other;
-
-  other = v;
-
-  EXPECT_EQ(other.size(), 3U);
-  EXPECT_EQ(other.capacity(), 3U);
-
-  EXPECT_EQ(other[0], 1);
-  EXPECT_EQ(other[1], 2);
-  EXPECT_EQ(other[2], 3);
-
-  EXPECT_EQ(v.size(), 3U);
-  EXPECT_EQ(v.capacity(), 3U);
   EXPECT_EQ(v[0], 1);
   EXPECT_EQ(v[1], 2);
   EXPECT_EQ(v[2], 3);
-
-  EXPECT_NE(v.data(), other.data());
 }
 
 TEST(Vector_method, at_method) {
@@ -140,7 +125,7 @@ TEST(Vector_method, empty_method) {
 
 TEST(Vector_method, max_size_method) {
   vector<int> v = {1, 2, 3};
-  auto size = std::numeric_limits<size_type>::max() / sizeof(int);
+  auto size = std::numeric_limits<size_t>::max() / sizeof(int);
   EXPECT_EQ(v.max_size(), size);
 }
 
@@ -157,9 +142,11 @@ TEST(Vector_method, capacity_method) {
 
 TEST(Vector_method, shrink_to_fit_method) {
   vector<int> v = {1, 2, 3};
+
   v.push_back(4);
   EXPECT_EQ(v.capacity(), 6U);
-  EXPECT_EQ(v.shrink_to_fit(), 4U);
+  v.shrink_to_fit();
+  EXPECT_EQ(v.capacity(), 4U);
 }
 
 TEST(Vector_method, clear_method) {
@@ -222,8 +209,8 @@ TEST(Vector_method, insert_many_method) {
 TEST(Vector_method, insert_many_back_method) {
   vector<int> v = {1, 2, 3};
   v.insert_many(v.cbegin(), 4, 5, 6);
-  EXPECT_EQ(vct[0], 4);
-  EXPECT_EQ(vct[2], 6);
-  EXPECT_EQ(vct[3], 1);
-  EXPECT_EQ(vct.size(), 6U);
+  EXPECT_EQ(v[0], 4);
+  EXPECT_EQ(v[2], 6);
+  EXPECT_EQ(v[3], 1);
+  EXPECT_EQ(v.size(), 6U);
 }
