@@ -10,7 +10,7 @@
 
 namespace s21 {
 template <typename Key, typename Value>
-class associative_container : container<rb_tree<pair<Key, Value*>>> {
+class associative_container : container<rb_tree<pair<Key, Value>>> {
   using Tree = rb_tree<pair<Key, Value*>>;
   using iterator = typename Tree::iterator;
 
