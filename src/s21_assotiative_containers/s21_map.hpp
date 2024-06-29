@@ -6,9 +6,13 @@ template <typename T1, typename T2>
 class map : public associative_container<T1, T2> {
   using key_type = T1;
   using value_type = T2;
-  using pair_type = key_pair<key_type, value_type>;
-  using tree_type = rb_tree<pair_type>;
+  using tree_type = rb_tree<key_pair<key_type, value_type>>;
   using size_t = std::size_t;
+  using node_type = Node<key_pair<key_type, value_type>>;
+  using iterator =
+      typename associative_container<key_type, value_type>::iterator;
+  using reference = key_pair<key_type, value_type>&;
+  using const_reference = const key_pair<key_type, value_type>&;
 
  private:
   tree_type tree_;
