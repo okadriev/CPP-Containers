@@ -2,6 +2,7 @@
 #include <initializer_list>
 #include <iostream>
 #include <limits>
+#include <memory>
 
 namespace s21 {
 
@@ -92,6 +93,11 @@ class list<T>::ListIterator {
 
  public:
   using iterator = ListIterator;
+  using iterator_category = std::bidirectional_iterator_tag;
+  using value_type = T;
+  using difference_type = std::ptrdiff_t;
+  using pointer = T*;
+  using reference = T&;
 
   ListIterator(typename list<T>::Node *node_ = nullptr,
                typename list<T>::Node *last_node_ = nullptr)

@@ -4,7 +4,7 @@
 #include <initializer_list>
 #include <iostream>
 #include <limits>
-
+#include <memory>
 namespace s21 {
 template <typename T>
 class vector {
