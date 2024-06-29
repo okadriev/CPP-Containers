@@ -1,17 +1,20 @@
 #pragma once
-
-#include "../s21_sequence_container.hpp"
+#include <initializer_list>
+#include <iostream>
+#include <limits>
 
 namespace s21 {
 
 template <class T>
 class list {
  public:
+  class ListIterator;
+
   using value_type = T;
   using reference = T &;
-  using const_reference = const T &;
-  using iterator = T *;
-  using const_iterator = const T *;
+  using const_reference = const T&;
+  using iterator = ListIterator;
+  using const_iterator = const ListIterator;
   using size_type = size_t;
 
   list();
@@ -28,6 +31,8 @@ class list {
 
   const_iterator begin() const;
   const_iterator end() const;
+  iterator begin();
+  iterator end();
 
   bool empty() const;
   size_type size() const;
@@ -45,9 +50,10 @@ class list {
   void merge(list &other);
   void splice(const_iterator pos, list &other);
   void unique();
-  // void sort();   
-  
+  void sort();
+
   iterator insert(iterator pos, const_reference value);
+  // void insert_(const_iterator pos, const_reference value);
   template <typename... Args>
   iterator insert_many(const_iterator pos, Args &&...args);
   template <typename... Args>
@@ -55,7 +61,8 @@ class list {
   template <typename... Args>
   void insert_many_front(Args &&...args);
 
-  class ListIterator;
+  void print_list();
+
 
  private:
   struct Node {
@@ -65,34 +72,37 @@ class list {
     Node(value_type val = value_type(), Node *next_ = nullptr,
          Node *prev_ = nullptr)
         : value(val), next(next_), prev(prev_) {}
+    // Node(const_reference val) : value(*val), next(nullptr), prev(nullptr) {}
   };
 
   struct List {
-    size_type size = 0;
+    size_type size_list = 0;
     Node *head = nullptr;
     Node *tail = nullptr;
   };
 
   List list_;
+  Node *MergeSort(Node *head);
+// Node* GetMiddle(Node* head) ;
+  Node *Merge(Node *left, Node *right);
 };
-
 template <typename T>
 class list<T>::ListIterator {
   friend class list<T>;
 
  public:
-  ListIterator(list<T>::iterator.Node *node_ = nullptr,
-               list<T>::iterator.Node *last_node_ = nullptr)
+  using iterator = ListIterator;
+
+  ListIterator(typename list<T>::Node *node_ = nullptr,
+               typename list<T>::Node *last_node_ = nullptr)
       : node(node_), last_node(last_node_){};
-  ListIterator::ListIterator(list<T>::Node *node_) : node(node_) {}
-  ~ListIterator() {
-    if (node != nullptr) {
-      delete[] node;
-    }
-    if (last_node != nullptr) {
-      delete[] last_node;
-    }
-  };
+
+  ListIterator(const list<T>::Node *node_) : node(node_) {}
+
+  // ~ListIterator() {
+  //   if(node) delete node;
+  //   if(last_node) delete last_node;
+  // }
 
   iterator &operator++();
   iterator operator++(int);
@@ -104,15 +114,13 @@ class list<T>::ListIterator {
   bool operator<=(const iterator &other) const;
   bool operator>(const iterator &other) const;
   bool operator>=(const iterator &other) const;
+  value_type *operator->() const;
+  reference operator*() const;
 
  protected:
-  struct Iterator {
-    list<T>::Node *node;
-    list<T>::Node *last_node;
-  };
-
-  Iterator iterator;
-
+  list<T>::Node *node;
+  list<T>::Node *last_node;
+};
 }  // namespace s21
 
 #include "s21_list.tpp"

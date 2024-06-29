@@ -1,11 +1,19 @@
 namespace s21 {
 
+template <typename T>
+void list<T>::print_list() {
+  std::cout << "[ ";
+  for (iterator i = list<T>::iterator(begin()); i.node; ++i) {
+    std::cout << i.node->value << " ";
+  }
+  std::cout << "]" << std::endl;
+}
+
 /**
  * Конструктор по умолчанию
  */
 template <typename T>
-list<T>::list() : list_.size(0),
-list_.head(nullptr), list_.tail(nullptr){};
+list<T>::list() : list_({0, nullptr, nullptr}){};
 
 /**
  * Конструктор с параметром n, создает список
@@ -35,7 +43,11 @@ list<T>::list(std::initializer_list<value_type> const &items) : list() {
  */
 template <typename T>
 list<T>::list(const list &l) : list() {
-  for (const auto &item : items) push_back(item);
+  Node *current = l.list_.head;
+  while (current) {
+    push_back(current->value);
+    current = current->next;
+  }
 }
 
 /**
@@ -44,7 +56,14 @@ list<T>::list(const list &l) : list() {
  */
 template <typename T>
 list<T>::list(list &&l) noexcept : list() {
-  *this = l;
+  list_.size = l.list_.size;
+  list_.head = l.list_.head;
+  list_.tail = l.list_.tail;
+  l.list_.size = 0;
+  l.list_.head = nullptr;
+  l.list_.tail = nullptr;
+  std::cout << "left constructor";
+  std::cout << list_.head << std::endl;
 }
 
 /**
@@ -64,9 +83,9 @@ template <typename T>
 list<T> &list<T>::operator=(list &&other) noexcept {
   if (this != &other) {
     list<T>::clear();
-    while (other.list<T>::empty) {
-      list<T>::push_back(other.list<T>::front());
-      other.list<T>::pop_front();
+    while (!other.empty()) {
+      list<T>::push_back(other.front());
+      other.pop_front();
     }
   }
 
@@ -78,7 +97,7 @@ list<T> &list<T>::operator=(list &&other) noexcept {
  * @return const ссылка на начало списка
  */
 template <typename T>
-list<T>::const_reference list<T>::front() const {
+typename list<T>::const_reference list<T>::front() const {
   if (this->empty())
     throw std::out_of_range("Out of range: no elements in container");
 
@@ -102,8 +121,26 @@ typename list<T>::const_reference list<T>::back() const {
  * @return const ссылка на начало списка
  */
 template <typename T>
-typename list<T>::iterator list<T>::begin() const {
+typename list<T>::const_iterator list<T>::begin() const {
   return list_.head;
+}
+
+/**
+ * Возвращает итератор на конец
+ * @return ссылка на конец списка
+ */
+template <typename T>
+typename list<T>::iterator list<T>::end() {
+  return list<T>::iterator(list_.tail);
+}
+
+/**
+ * Возвращает итератор на начало
+ * @return ссылка на начало списка
+ */
+template <typename T>
+typename list<T>::iterator list<T>::begin() {
+  return list<T>::iterator(list_.head);
 }
 
 /**
@@ -111,7 +148,7 @@ typename list<T>::iterator list<T>::begin() const {
  * @return const ссылка на конец списка
  */
 template <typename T>
-typename list<T>::iterator list<T>::end() {
+typename list<T>::const_iterator list<T>::end() const {
   return list_.tail;
 }
 
@@ -130,7 +167,7 @@ bool list<T>::empty() const {
  */
 template <typename T>
 typename list<T>::size_type list<T>::size() const {
-  return this->list_.size;
+  return this->list_.size_list;
 }
 
 /**
@@ -147,9 +184,9 @@ typename list<T>::size_type list<T>::max_size() const {
  */
 template <typename T>
 void list<T>::reverse() {
-  if (list_.size > 1) {
-    list<T>::Node *node(list_.value, list_.head);
-    for (size_type i = 0; i < this->list_.size; ++i) {
+  if (list_.size_list > 1) {
+    list<T>::Node *node = this->list_.head;;
+    for (size_type i = 0; i < this->list_.size_list; ++i) {
       std::swap(node->prev, node->next);
       node = node->next;
     }
@@ -161,10 +198,8 @@ void list<T>::reverse() {
  * Очищает содержимое
  */
 template <typename T>
-void vector<T>::clear() noexcept {
-  while (!list<T>::empty()) {
-    list<T>::pop_front();
-  }
+void list<T>::clear() noexcept {
+  while (!list<T>::empty()) list<T>::pop_front();
 }
 
 /**
@@ -181,7 +216,7 @@ void list<T>::push_front(list<T>::const_reference value) {
   list_.head = node;
   if (list_.tail == nullptr) list_.tail = node;
 
-  ++list_.size;
+  ++list_.size_list;
 }
 
 /**
@@ -199,7 +234,7 @@ void list<T>::pop_front() {
       list_.tail = nullptr;
 
     delete node;
-    --list_.size;
+    --list_.size_list;
   }
 }
 
@@ -217,7 +252,7 @@ void list<T>::push_back(list<T>::const_reference value) {
   list_.tail = node;
   if (!list_.head) list_.head = node;
 
-  ++list_.size;
+  ++list_.size_list;
 }
 
 /**
@@ -235,7 +270,7 @@ void list<T>::pop_back() {
       list_.head = nullptr;
 
     delete node;
-    --list_.size;
+    --list_.size_list;
   }
 }
 
@@ -245,9 +280,68 @@ void list<T>::pop_back() {
  */
 template <typename T>
 void list<T>::swap(list &other) {
-  std::swap(list_.size, other.list_.size);
+  std::swap(list_.size_list, other.list_.size_list);
   std::swap(list_.head, other.list_.head);
   std::swap(list_.tail, other.list_.tail);
+}
+
+/**
+ * Сортивка списка
+ */
+template <typename T>
+void list<T>::sort() {
+  std::cout << "list.sort: " << front() << ' ' << back() << std::endl;
+
+  this->list_.head = MergeSort(this->list_.head);
+  this->list_.tail = this->list_.head;
+  while (this->list_.tail->next) {
+    this->list_.tail = this->list_.tail->next;
+  }
+
+  std::cout << "list.sort: " << front() << ' ' << back() << std::endl;
+}
+
+template <typename T>
+typename list<T>::Node *list<T>::MergeSort(typename list<T>::Node *head) {
+  int flag = 0;
+  typename list<T>::Node *left = nullptr;
+  typename list<T>::Node *right = nullptr;
+
+  if (head && head->next) {
+    flag = 1;
+    typename list<T>::Node *node1 = head;
+    typename list<T>::Node *node2 = head;
+
+    while (node2->next && node2->next->next) {
+      node1 = node1->next;
+      node2 = node2->next->next;
+    }
+
+    typename list<T>::Node *middle = node1;
+    typename list<T>::Node *next_middle = middle->next;
+    middle->next = nullptr;
+
+    left = MergeSort(head);
+    right = MergeSort(next_middle);
+  }
+
+  return flag ? Merge(left, right) : head;
+}
+
+template <typename T>
+typename list<T>::Node *list<T>::Merge(typename list<T>::Node *left,
+                                       typename list<T>::Node *right) {
+  typename list<T>::Node *result = nullptr;
+  if (left && right) {
+    if (left->value <= right->value) {
+      result = left;
+      result->next = Merge(left->next, right);
+    } else {
+      result = right;
+      result->next = Merge(left, right->next);
+    }
+  }
+  return !left ? right : !right ? left : result;
 }
 
 /**
@@ -287,7 +381,7 @@ void list<T>::erase(iterator pos) {
     node->prev->next = node->next;
     node->next->prev = node->prev;
     delete[] node;
-    this->list_.size--;
+    this->list_.size_list--;
   }
 }
 
@@ -297,8 +391,7 @@ void list<T>::erase(iterator pos) {
 template <typename T>
 void list<T>::unique() {
   if (!this->list<T>::empty())
-    for (iterator i = list<T>::begin(), iterator j = i;
-         last != list<T>::end() && j.node;) {
+    for (iterator i = list<T>::begin(), j = i; i != list<T>::end() && j.node;) {
       j = i;
       ++j;
       if (*i == *j)
@@ -316,50 +409,79 @@ void list<T>::unique() {
  * @return итератор на новый элемент
  */
 template <typename T>
-list<T>::iterator list<T>::insert(list<T>::iterator pos,
-                                  list<T>::const_reference value) {
+typename list<T>::iterator list<T>::insert(list<T>::iterator pos,
+                                           list<T>::const_reference value) {
   if (pos == list<T>::begin()) {
     list<T>::push_front(value);
-    pos = this->list_.head;
+    pos = list<T>::iterator(this->list_.head);
   } else if (pos == list<T>::end()) {
     list<T>::push_back(value);
-    pos = this->list_.tail;
+    pos = list<T>::iterator(this->list_.tail);
   } else {
-    list<T>::Node *current = pos.node;
-    list<T>::Node *new_node = new list<T>::Node(value);
-
-    new_node->next = current;
-    new_node->prev = current->prev;
-    current->prev->next = new_node;
-    current->prev = new_node;
-    this->list_.size++;
+    Node *new_node = new Node(value);
+    Node *prev_node = list_.head;
+    for (iterator it = list<T>::begin(); it != pos; ++it) {
+      prev_node = prev_node->next;
+    }
+    new_node->next = prev_node->next;
+    new_node->prev = prev_node;
+    prev_node->next->prev = new_node;
+    prev_node->next = new_node;
+    ++list_.size_list;
 
     pos = list<T>::iterator(new_node);
   }
   return pos;
 }
 
+// template <typename T>
+// void list<T>::insert_(list<T>::const_iterator pos,
+//                                            list<T>::const_reference value) {
+//   if (pos == list<T>::begin()) {
+//     list<T>::push_front(value);
+//     // pos = list<T>::iterator(this->list_.head);
+//   } else if (pos == list<T>::end()) {
+//     list<T>::push_back(value);
+//     // pos = list<T>::iterator(this->list_.tail);
+//   } else {
+//     Node *new_node = new Node(value);
+//     Node *prev_node = list_.head;
+//     for (iterator it = list<T>::begin(); it != pos; ++it) {
+//       prev_node = prev_node->next;
+//     }
+//     new_node->next = prev_node->next;
+//     new_node->prev = prev_node;
+//     prev_node->next->prev = new_node;
+//     prev_node->next = new_node;
+//     ++list_.size_list;
+
+//     // pos = list<T>::iterator(new_node);
+//   }
+// }
+
 /**
  * Вставляет новые элементы в контейнер непосредственно перед pos
  * @param pos указатель на позицию
  * @param args переменное число аргументов
- * @return итератор 
+ * @return итератор
  */
-template <class T>
-template <class... Args>
-typename list<T>::iterator list<T>::insert_many(const_iterator pos,
-                                                Args&&... args) {
-  for (const auto& arg : {args...}) {
-    list<T>::insert(pos, arg);
-  }
-  return pos;
-}
+// template <typename T>
+// template <typename... Args>
+// typename list<T>::iterator list<T>::insert_many(const_iterator pos,
+//                                                 Args &&...args) {
+
+//     for (const auto& arg : {args...}) {
+//     insert(pos, arg);
+//   }
+  
+//   return pos;
+// }
 
 /**
  * Добавляет новые элементы в верхнюю часть контейнера
  * @param pos указатель на позицию
  * @param args переменное число аргументов
- * @return итератор 
+ * @return итератор
  */
 template <typename T>
 template <typename... Args>
@@ -371,7 +493,7 @@ void list<T>::insert_many_front(Args &&...args) {
  * Добавляет новые элементы в конец контейнера
  * @param pos указатель на позицию
  * @param args переменное число аргументов
- * @return итератор 
+ * @return итератор
  */
 template <typename T>
 template <typename... Args>
@@ -379,11 +501,11 @@ void list<T>::insert_many_back(Args &&...args) {
   list<T>::insert_many(list<T>::end(), std::forward<Args>(args)...);
 }
 
-
 /**
  * Перегрузка оператора ++ для итераторв
  */
-ListIterator::iterator &ListIterator::operator++() {
+template <typename T>
+typename list<T>::ListIterator::iterator &list<T>::ListIterator::operator++() {
   last_node = node;
   node = node->next;
   return *this;
@@ -392,16 +514,19 @@ ListIterator::iterator &ListIterator::operator++() {
 /**
  * Перегрузка оператора ++ для итераторв
  */
-ListIterator::iterator ListIterator::operator++(int) {
-  iterator it = *this;
+template <typename T>
+typename list<T>::ListIterator::iterator list<T>::ListIterator::operator++(
+    int) {
+  iterator i = *this;
   node = node->next;
-  return it;
+  return i;
 }
 
 /**
  * Перегрузка оператора -- для итераторв
  */
-ListIterator::iterator &ListIterator::operator--() {
+template <typename T>
+typename list<T>::ListIterator::iterator &list<T>::ListIterator::operator--() {
   if (node == nullptr)
     node = last_node;
   else
@@ -413,52 +538,70 @@ ListIterator::iterator &ListIterator::operator--() {
 /**
  * Перегрузка оператора -- для итераторв
  */
-ListIterator::iterator ListIterator::operator--(int) {
-  iterator it = *this;
+template <typename T>
+typename list<T>::ListIterator::iterator list<T>::ListIterator::operator--(
+    int) {
+  iterator i = *this;
   node = node->prev;
-  return it;
+  return i;
 }
 
 /**
  * Перегрузка оператора == для итераторв
  */
-bool ListIterator::operator==(const iterator &other) const {
+template <typename T>
+bool list<T>::ListIterator::operator==(const iterator &other) const {
   return node == other.node;
 }
 
 /**
  * Перегрузка оператора != для итераторв
  */
-bool ListIterator::operator!=(const iterator &other) const {
+template <typename T>
+bool list<T>::ListIterator::operator!=(const iterator &other) const {
   return node != other.node;
 }
 
 /**
  * Перегрузка оператора < для итераторв
  */
-bool ListIterator::operator<(const iterator &other) const {
+template <typename T>
+bool list<T>::ListIterator::operator<(const iterator &other) const {
   return node < other.node;
 }
 
 /**
  * Перегрузка оператора <= для итераторв
  */
-bool ListIterator::operator<=(const iterator &other) const {
+template <typename T>
+bool list<T>::ListIterator::operator<=(const iterator &other) const {
   return node <= other.node;
 }
 
 /**
  * Перегрузка оператора > для итераторв
  */
-bool ListIterator::operator>(const iterator &other) const {
+template <typename T>
+bool list<T>::ListIterator::operator>(const iterator &other) const {
   return node > other.node;
 }
 
 /**
  * Перегрузка оператора >= для итераторв
  */
-bool ListIterator::operator>=(const iterator &other) const {
+template <typename T>
+bool list<T>::ListIterator::operator>=(const iterator &other) const {
   return node >= other.node;
+}
+
+template <typename T>
+typename list<T>::value_type *list<T>::ListIterator::operator->() const {
+  return &node->value;
+}
+
+template <typename T>
+typename list<T>::reference list<T>::ListIterator::operator*() const {
+  return node->value;
 }
 
 }  // namespace s21
