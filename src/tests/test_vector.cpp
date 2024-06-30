@@ -60,11 +60,20 @@ TEST(VectorConstructorTest, MoveConstructor) {
   EXPECT_EQ(v.data(), nullptr);
 }
 
-TEST(VectorMethodTest, OverloadMethod) {
-  vector<int> v = {1, 2, 3};
-  EXPECT_EQ(v[0], 1);
-  EXPECT_EQ(v[1], 2);
-  EXPECT_EQ(v[2], 3);
+TEST(VectorMethodTest, OperatorEqual) {
+  vector<int> v{1, 2, 3};
+  vector<int> other;
+  other = std::move(v);
+
+  EXPECT_EQ(other.size(), 3U);
+  EXPECT_EQ(other.capacity(), 3U);
+  EXPECT_EQ(other[0], 1);
+  EXPECT_EQ(other[1], 2);
+  EXPECT_EQ(other[2], 3);
+
+  EXPECT_EQ(v.size(), 0U);
+  EXPECT_EQ(v.capacity(), 0U);
+  EXPECT_EQ(v.data(), nullptr);
 }
 
 TEST(VectorMethodTest, AtMethod) {
@@ -82,6 +91,32 @@ TEST(VectorMethodTest, AtMethod_EmptyContainer) {
 TEST(VectorMethodTest, AtMethod_OutOfBounds) {
   vector<int> v = {1, 2, 3};
   EXPECT_THROW(v.at(3), std::out_of_range);
+}
+
+TEST(VectorMethodTest, AtConstMethod) {
+  const vector<int> v = {1, 2, 3};
+  EXPECT_EQ(v.at(0), 1);
+  EXPECT_EQ(v.at(1), 2);
+  EXPECT_EQ(v.at(2), 3);
+}
+
+TEST(VectorAtMethodTest, AtConstMethod_OutOfRange) {
+  const vector<int> v = {1, 2, 3, 4, 5};
+  EXPECT_THROW(v.at(5), std::out_of_range);
+}
+
+TEST(VectorAtMethodTest, AtConstMethod_OutOfRangeEmpty) {
+  const vector<int> v;
+  EXPECT_THROW(v.at(0), std::out_of_range);
+}
+
+TEST(VectorMethodTest, OperatorBracket) {
+  const vector<int> v = {10, 20, 30, 40, 50};
+  EXPECT_EQ(v[0], 10);
+  EXPECT_EQ(v[1], 20);
+  EXPECT_EQ(v[2], 30);
+  EXPECT_EQ(v[3], 40);
+  EXPECT_EQ(v[4], 50);
 }
 
 TEST(VectorMethodTest, OperatorBracket_EmptyContainer) {
@@ -116,7 +151,7 @@ TEST(VectorMethodTest, BackMethod_EmptyContainer) {
 
 TEST(VectorMethodTest, DataMethod) {
   vector<int> v = {1, 2, 3};
-  int *ptr = v.data();
+  int* ptr = &(*v.data());
 
   EXPECT_EQ(*ptr, 1);
   EXPECT_EQ(ptr[0], 1);
@@ -148,8 +183,8 @@ TEST(VectorMethodTest, EndMethod) {
 }
 
 TEST(VectorMethodTest, CEndMethod) {
-  vector<int> v = {1, 2, 3};
-  auto it = v.end();
+  const vector<int> v = {1, 2, 3};
+  auto it = v.cend();
   --it;
   EXPECT_EQ(*it, 3);
 }
@@ -229,12 +264,15 @@ TEST(VectorMethodTest, InsertMethod_PositionOutOfRange) {
   EXPECT_THROW(v.insert(v.end() + 1, 4), std::out_of_range);
 }
 
-TEST(VectorMethodTest, EraseMethod) {
-  vector<int> v = {1, 2, 3};
-  v.erase(v.end() - 1);
-  EXPECT_EQ(v.size(), 2U);
+TEST(VectorEraseTest, EraseMethod) {
+  s21::vector<int> v = {1, 2, 3, 4, 5};
+
+  v.erase(v.begin() + 2);
+  EXPECT_EQ(v.size(), 4U);
+  EXPECT_EQ(v[0], 1);
   EXPECT_EQ(v[1], 2);
-  EXPECT_THROW(v.at(2), std::out_of_range);
+  EXPECT_EQ(v[2], 4);
+  EXPECT_EQ(v[3], 5);
 }
 
 TEST(VectorMethodTest, EraseMethod_OutOfRange) {
@@ -282,22 +320,99 @@ TEST(VectorMethodTest, SwapMethod) {
 }
 
 TEST(VectorMethodTest, InsertManyMethod) {
+  vector<int> v{1, 2, 3};
+  v.insert_many(v.cbegin() + 1, 4, 5, 6);
+  EXPECT_EQ(v.size(), 6U);
+  EXPECT_EQ(v[0], 1);
+  EXPECT_EQ(v[1], 4);
+  EXPECT_EQ(v[2], 5);
+  EXPECT_EQ(v[3], 6);
+  EXPECT_EQ(v[4], 2);
+  EXPECT_EQ(v[5], 3);
+}
+
+TEST(VectorMethodTest, InsertManyMethod_OutOfRange) {
+  vector<int> v = {1, 2, 3};
+  EXPECT_THROW(v.insert_many(v.cend() + 1, 4, 5, 6), std::out_of_range);
+}
+
+TEST(VectorMethodTest, InsertManyBackMethod) {
   vector<int> v = {1, 2, 3};
   v.insert_many_back(4, 5, 6, 7, 8);
   EXPECT_EQ(v[3], 4);
   EXPECT_EQ(v.size(), 8U);
 }
 
-TEST(VectorMethodTest, InsertManyMethod_OutOfRange) {
-  vector<int> v = {1, 2, 3};
-  EXPECT_THROW(v.insert_many(v.end() + 1, 4, 5, 6), std::out_of_range);
+TEST(VectorIteratorTest, IteratorOperations) {
+  s21::vector<int> v = {1, 2, 3, 4, 5};
+  auto it = v.begin();
+
+  EXPECT_EQ(*it, 1);
+
+  ++it;
+  EXPECT_EQ(*it, 2);
+
+  it++;
+  EXPECT_EQ(*it, 3);
+
+  --it;
+  EXPECT_EQ(*it, 2);
+
+  it--;
+  EXPECT_EQ(*it, 1);
+
+  it += 3;
+  EXPECT_EQ(*it, 4);
+
+  it = it + 1;
+  EXPECT_EQ(*it, 5);
+
+  it -= 2;
+  EXPECT_EQ(*it, 3);
+
+  it = it - 1;
+  EXPECT_EQ(*it, 2);
+
+  auto it2 = v.begin() + 4;
+  EXPECT_EQ(it2 - it, 3);
+
+  EXPECT_TRUE(it < it2);
+  EXPECT_TRUE(it2 > it);
+  EXPECT_TRUE(it <= it2);
+  EXPECT_TRUE(it2 >= it);
+  EXPECT_FALSE(it == it2);
+  EXPECT_TRUE(it != it2);
 }
 
-TEST(VectorMethodTest, InsertManyBackMethod) {
-  vector<int> v = {1, 2, 3};
-  v.insert_many(v.cbegin(), 4, 5, 6);
-  EXPECT_EQ(v[0], 4);
-  EXPECT_EQ(v[2], 6);
-  EXPECT_EQ(v[3], 1);
-  EXPECT_EQ(v.size(), 6U);
+TEST(VectorConstIteratorTest, ConstIteratorOperations) {
+  const vector<int> v = {1, 2, 3, 4, 5};
+  auto it = v.cbegin();
+
+  EXPECT_EQ(*it, 1);
+
+  ++it;
+  EXPECT_EQ(*it, 2);
+
+  it++;
+  EXPECT_EQ(*it, 3);
+
+  --it;
+  EXPECT_EQ(*it, 2);
+
+  it--;
+  EXPECT_EQ(*it, 1);
+
+  it = it + 3;
+  EXPECT_EQ(*it, 4);
+
+  it = it - 2;
+  EXPECT_EQ(*it, 2);
+
+  auto it2 = v.cbegin() + 4;
+  EXPECT_TRUE(it < it2);
+  EXPECT_TRUE(it2 > it);
+  EXPECT_TRUE(it <= it2);
+  EXPECT_TRUE(it2 >= it);
+  EXPECT_FALSE(it == it2);
+  EXPECT_TRUE(it != it2);
 }

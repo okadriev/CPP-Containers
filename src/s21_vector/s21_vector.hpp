@@ -5,15 +5,81 @@
 #include <iostream>
 #include <limits>
 #include <memory>
+
 namespace s21 {
+
+template <typename T>
+class v_iterator {
+ public:
+  using value_type = T;
+  using reference = T&;
+  using iterator = v_iterator;
+  using size_type = size_t;
+
+  v_iterator(value_type* ptr);
+
+  reference operator*() const;
+
+  iterator& operator++();
+  iterator operator++(int);
+  iterator& operator--();
+  iterator operator--(int);
+  iterator& operator+=(const int n);
+  iterator operator+(const int n);
+  iterator& operator-=(const int n);
+  iterator operator-(const int n);
+  size_type operator-(iterator other);
+
+  bool operator==(const iterator& other) const;
+  bool operator!=(const iterator& other) const;
+  bool operator<(const iterator& other) const;
+  bool operator>(const iterator& other) const;
+  bool operator<=(const iterator& other) const;
+  bool operator>=(const iterator& other) const;
+
+ private:
+  value_type* iter;
+};
+
+template <typename T>
+class v_const_iterator {
+ public:
+  using value_type = T;
+  using const_reference = const T&;
+  using const_iterator = v_const_iterator;
+  using size_type = size_t;
+
+  v_const_iterator(const value_type* ptr);
+
+  const_reference operator*() const;
+
+  const_iterator& operator++();
+  const_iterator operator++(int);
+  const_iterator& operator--();
+  const_iterator operator--(int);
+  const_iterator operator+(const int n) const;
+  const_iterator operator-(const int n) const;
+  size_type operator-(const const_iterator other);
+
+  bool operator==(const const_iterator& other) const;
+  bool operator!=(const const_iterator& other) const;
+  bool operator<(const const_iterator& other) const;
+  bool operator>(const const_iterator& other) const;
+  bool operator<=(const const_iterator& other) const;
+  bool operator>=(const const_iterator& other) const;
+
+ private:
+  const value_type* iter;
+};
+
 template <typename T>
 class vector {
  public:
   using value_type = T;
   using reference = T&;
   using const_reference = const T&;
-  using iterator = T*;
-  using const_iterator = const T*;
+  using iterator = v_iterator<T>;
+  using const_iterator = v_const_iterator<T>;
   using size_type = size_t;
 
   vector();                      // default constructor
@@ -62,70 +128,12 @@ class vector {
   template <typename... Args>
   void insert_many_back(Args&&... args);
 
-  // nested iterator classes
-  class v_iterator;
-  class v_const_iterator;
-
  private:
   size_type size_;
   size_type capacity_;
-  iterator data_;
+  value_type* data_;
 
   void reallocate(size_type size);
-};
-
-template <typename T>
-class vector<T>::v_iterator {
- public:
-  v_iterator(iterator ptr);
-
-  reference operator*() const;
-
-  v_iterator& operator++();
-  v_iterator operator++(int);
-  v_iterator& operator--();
-  v_iterator operator--(int);
-  v_iterator& operator+=(const int n);
-  v_iterator operator+(const int n) const;
-  v_iterator& operator-=(const int n);
-  v_iterator operator-(const int n) const;
-  v_iterator operator-(const v_iterator other) const;
-  v_iterator operator+(const v_iterator other) const;
-
-  bool operator==(const v_iterator& other) const;
-  bool operator!=(const v_iterator& other) const;
-  bool operator<(const v_iterator& other) const;
-  bool operator>(const v_iterator& other) const;
-  bool operator<=(const v_iterator& other) const;
-  bool operator>=(const v_iterator& other) const;
-
- private:
-  iterator iter;
-};
-
-template <typename T>
-class vector<T>::v_const_iterator {
- public:
-  v_const_iterator(const_iterator ptr);
-
-  const_reference operator*() const;
-
-  v_const_iterator& operator++();
-  v_const_iterator operator++(int);
-  v_const_iterator& operator--();
-  v_const_iterator operator--(int);
-  v_const_iterator operator+(const int n) const;
-  v_const_iterator operator-(const int n) const;
-
-  bool operator==(const v_const_iterator& other) const;
-  bool operator!=(const v_const_iterator& other) const;
-  bool operator<(const v_const_iterator& other) const;
-  bool operator>(const v_const_iterator& other) const;
-  bool operator<=(const v_const_iterator& other) const;
-  bool operator>=(const v_const_iterator& other) const;
-
- private:
-  const_iterator iter;
 };
 }  // namespace s21
 
