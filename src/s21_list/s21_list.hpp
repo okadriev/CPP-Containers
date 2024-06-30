@@ -25,6 +25,7 @@ class list {
   list(list &&l) noexcept;
   ~list();
 
+  list &operator=(const list &other);
   list &operator=(list &&other) noexcept;
 
   const_reference front() const;
@@ -105,11 +106,6 @@ class list<T>::ListIterator {
   iterator operator--(int);
   bool operator==(const iterator &other) const;
   bool operator!=(const iterator &other) const;
-  bool operator<(const iterator &other) const;
-  bool operator<=(const iterator &other) const;
-  bool operator>(const iterator &other) const;
-  bool operator>=(const iterator &other) const;
-  value_type *operator->() const;
   reference operator*() const;
 
  protected:

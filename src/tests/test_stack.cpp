@@ -52,8 +52,6 @@ TEST(StackTest, stack_empty2) {
   EXPECT_EQ(v.empty(), true);
 }
 
-
-
 TEST(StackTest, PushAndPop) {
   s21::stack<int> s;
   s.push(1);
@@ -64,31 +62,29 @@ TEST(StackTest, PushAndPop) {
   EXPECT_EQ(s.top(), 2);
 }
 
-
-
 TEST(StackTest, DefaultConstructor) {
-    s21::stack<int> s;
-    EXPECT_TRUE(s.empty());
-    EXPECT_EQ(s.size(), 0);
+  s21::stack<int> s;
+  EXPECT_TRUE(s.empty());
+  EXPECT_EQ(s.size(), 0);
 }
 
 TEST(StackTest, InitializerListConstructor) {
-    s21::stack<int> s{1, 2, 3, 4, 5};
-    EXPECT_FALSE(s.empty());
-    EXPECT_EQ(s.size(), 5);
-    EXPECT_EQ(s.top(), 5);
+  s21::stack<int> s{1, 2, 3, 4, 5};
+  EXPECT_FALSE(s.empty());
+  EXPECT_EQ(s.size(), 5);
+  EXPECT_EQ(s.top(), 5);
 }
 
 TEST(StackTest, CopyConstructor) {
-    s21::stack<int> s1{1, 2, 3};
-    s21::stack<int> s2(s1);
-    EXPECT_EQ(s2.size(), 3);
-    EXPECT_EQ(s2.top(), 3);
+  s21::stack<int> s1{1, 2, 3};
+  s21::stack<int> s2(s1);
+  EXPECT_EQ(s2.size(), 3);
+  EXPECT_EQ(s2.top(), 3);
 }
 
 TEST(StackTest, InsertManyFront) {
-    s21::stack<int, s21::list<int>> s;
-    s.insert_many_front(1, 2, 3);
-    EXPECT_EQ(s.top(), 1);
-    EXPECT_EQ(s.size(), 3);
+  s21::stack<int, s21::list<int>> s;
+  s.insert_many_front(1, 2, 3);
+  EXPECT_EQ(s.top(), 1);
+  EXPECT_EQ(s.size(), 3);
 }

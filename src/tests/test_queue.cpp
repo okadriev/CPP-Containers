@@ -59,7 +59,6 @@ TEST(QueueTest, queue_empty2) {
   EXPECT_EQ(v.empty(), true);
 }
 
-
 TEST(QueueTest, PushAndPop) {
   s21::queue<int> q;
   q.push(1);
@@ -73,24 +72,47 @@ TEST(QueueTest, PushAndPop) {
 }
 
 TEST(QueueTest, DefaultConstructor) {
-    s21::queue<int> q;
-    EXPECT_TRUE(q.empty());
-    EXPECT_EQ(q.size(), 0);
+  s21::queue<int> q;
+  EXPECT_TRUE(q.empty());
+  EXPECT_EQ(q.size(), 0);
 }
 
 TEST(QueueTest, InitializerListConstructor) {
-    s21::queue<int> q{1, 2, 3, 4, 5};
-    EXPECT_FALSE(q.empty());
-    EXPECT_EQ(q.size(), 5);
-    EXPECT_EQ(q.front(), 1);
-    EXPECT_EQ(q.back(), 5);
+  s21::queue<int> q{1, 2, 3, 4, 5};
+  EXPECT_FALSE(q.empty());
+  EXPECT_EQ(q.size(), 5);
+  EXPECT_EQ(q.front(), 1);
+  EXPECT_EQ(q.back(), 5);
 }
 
 TEST(QueueTest, CopyConstructor) {
-    s21::queue<int> q1{1, 2, 3};
-    s21::queue<int> q2(q1);
-    EXPECT_EQ(q2.size(), 3);
-    EXPECT_EQ(q2.front(), 1);
-    EXPECT_EQ(q2.back(), 3);
+  s21::queue<int> q1{1, 2, 3};
+  s21::queue<int> q2(q1);
+  EXPECT_EQ(q2.size(), 3);
+  EXPECT_EQ(q2.front(), 1);
+  EXPECT_EQ(q2.back(), 3);
 }
 
+TEST(QueueTest, swap) {
+  s21::queue<int> q1{1, 2, 3};
+  s21::queue<int> q2{4, 5, 6};
+
+  q1.swap(q2);
+
+  EXPECT_EQ(q1.size(), 3);
+  EXPECT_EQ(q1.front(), 4);
+  EXPECT_EQ(q1.back(), 6);
+  EXPECT_EQ(q2.size(), 3);
+  EXPECT_EQ(q2.front(), 1);
+  EXPECT_EQ(q2.back(), 3);
+}
+
+TEST(QueueTest, insert_many) {
+  s21::queue<int> q1{1, 2, 3};
+
+  q1.insert_many_back(4, 5, 6);
+
+  EXPECT_EQ(q1.size(), 6);
+  EXPECT_EQ(q1.front(), 1);
+  EXPECT_EQ(q1.back(), 6);
+}

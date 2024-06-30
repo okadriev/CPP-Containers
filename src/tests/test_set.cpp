@@ -38,7 +38,7 @@ TEST(Method, set_move) {
   set<int> test2;
 
   test2 = std::move(test1);
-  
+
   EXPECT_EQ(test1.empty(), true);
   EXPECT_EQ(test2.size(), 3);
   EXPECT_EQ(test2.empty(), false);
