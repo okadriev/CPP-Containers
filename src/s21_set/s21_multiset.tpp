@@ -19,8 +19,7 @@ pair<typename multiset<T>::iterator, bool> multiset<T>::insert(
 };
 
 template <typename T>
-pair<typename multiset<T>::iterator, typename multiset<T>::iterator>
-multiset<T>::equal_range(const_reference data) {
+pair<*T, *T> multiset<T>::equal_range(const_reference data) {
   return this->tree->equal_range(data);
 };
 
@@ -32,6 +31,13 @@ typename multiset<T>::iterator multiset<T>::lower_bound(const_reference data) {
 template <typename T>
 typename multiset<T>::iterator multiset<T>::upper_bound(const_reference data) {
   return ++(equal_range(data).second);
+}
+
+template <typename T>
+void multiset<T>::merge(multiset &other) {
+  for (auto it = other.begin(); it != other.end(); ++it) {
+    insert(*it);
+  }
 }
 
 }  // namespace s21

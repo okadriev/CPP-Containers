@@ -43,7 +43,7 @@ TEST(Method, multiset_insert) {
   multiset<int> test1;
 
   test1.insert(1);
-  s21::pair<set<int>::iterator, bool> pair = test1.insert(2);
+  s21::pair<multiset<int>::iterator, bool> pair = test1.insert(2);
   test1.insert(3);
 
   EXPECT_EQ(test1.size(), 3);

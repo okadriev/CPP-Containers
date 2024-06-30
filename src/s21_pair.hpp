@@ -10,7 +10,8 @@ struct pair {
 
   pair() : first(), second() {}
   pair(const T1& first, const T2& second) : first(first), second(second) {}
-  pair(T1&& first, T2&& second) : first(std::move(first)), second(std::move(second)) {}
+  pair(T1&& first, T2&& second)
+      : first(std::move(first)), second(std::move(second)) {}
   pair(const pair& other) : first(other.first), second(other.second) {}
 
   pair& operator=(const pair& other) {
@@ -21,13 +22,21 @@ struct pair {
     return *this;
   }
 
-  bool operator==(const pair& other) const noexcept { return first == other.first; }
+  bool operator==(const pair& other) const noexcept {
+    return first == other.first;
+  }
 
-  bool operator!=(const pair& other) const noexcept { return first != other.first; }
+  bool operator!=(const pair& other) const noexcept {
+    return first != other.first;
+  }
 
-  bool operator<(const pair& other) const noexcept { return first < other.first; }
+  bool operator<(const pair& other) const noexcept {
+    return first < other.first;
+  }
 
-  bool operator>(const pair& other) const noexcept { return first > other.first; }
+  bool operator>(const pair& other) const noexcept {
+    return first > other.first;
+  }
 };
 
 template <typename T1, typename T2>
