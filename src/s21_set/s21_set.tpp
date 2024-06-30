@@ -8,19 +8,19 @@ set_iterator<T> &set_iterator<T>::operator++() {
 }
 
 template <typename T>
-Node<T> *set_iterator<T>::next_node(Node<T> *ptr_node) const {
-  if (ptr_node == nullptr) return nullptr;
+Node<T> *set_iterator<T>::next_node(Node<T> *node) const {
+  if (node == nullptr) return nullptr;
 
   Node<T> *next = nullptr;
 
-  if (ptr_node->right) {
-    next = ptr_node->right;
+  if (node->right) {
+    next = node->right;
     while (next->left) next = next->left;
 
   } else {
-    next = ptr_node->parent;
-    while (next && ptr_node == next->right) {
-      ptr_node = next;
+    next = node->parent;
+    while (next && node == next->right) {
+      node = next;
       next = next->parent;
     }
   }
