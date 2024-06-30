@@ -77,4 +77,4 @@ class set : private sorted_container<T> {
 
 }  // namespace s21
 
-// #include "s21_set.tpp"
+#include "s21_set.tpp"

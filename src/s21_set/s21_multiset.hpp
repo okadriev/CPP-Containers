@@ -26,4 +26,4 @@ class multiset : public set<T> {
 
 }  // namespace s21
 
-// #include "s21_multiset.tpp"
+#include "s21_multiset.tpp"

@@ -1,6 +1,3 @@
-#pragma once
-#include "s21_set.hpp"  // временное решение из-за vscode
-
 namespace s21 {
 
 template <typename value_type>

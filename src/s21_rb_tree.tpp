@@ -1,6 +1,3 @@
-#pragma once
-#include "s21_sorted_containers.hpp"  // временное решение из-за косячности vscode
-
 #define MY_BRO_HAS_RED_SON                   \
   ((my_bro->left && my_bro->left->is_red) || \
    (my_bro->right && my_bro->right->is_red))

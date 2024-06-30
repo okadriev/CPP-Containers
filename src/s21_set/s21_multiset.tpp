@@ -1,6 +1,3 @@
-#pragma once
-#include "s21_multiset.hpp"  // временное решение из-за vscode
-
 namespace s21 {
 
 template <typename T>

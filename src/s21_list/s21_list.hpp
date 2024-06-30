@@ -114,4 +114,4 @@ class list<T>::ListIterator {
 };
 }  // namespace s21
 
-// #include "s21_list.tpp"
+#include "s21_list.tpp"

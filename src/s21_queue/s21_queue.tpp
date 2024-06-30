@@ -1,6 +1,3 @@
-#pragma once
-#include "s21_queue.hpp"  // временное решение из-за vscode
-
 namespace s21 {
 
 /**
