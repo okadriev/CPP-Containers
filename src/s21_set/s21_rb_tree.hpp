@@ -1,4 +1,7 @@
 #pragma once
+#include <type_traits>
+
+#include "../s21_pair.hpp"
 
 namespace s21 {
 
@@ -39,9 +42,11 @@ class rb_tree {
   void fix_2_red(Node<T> *&);
   void fix_2_black(Node<T> *&);
 
-  size_t count_elements(Node<T> *node, const T &data) const;
-  std::pair<Node<T> *, Node<T> *> element_range(Node<T> *node, const T &data);
+  std::size_t count_elements(Node<T> *node, const T &data) const;
+  pair<Node<T> *, Node<T> *> element_range(Node<T> *node, const T &data);
+#ifdef DEBUG
   void print(Node<T> *node, int level) const;  // Дебаг
+#endif
 
  public:
   rb_tree() : root(nullptr) {}
@@ -56,11 +61,14 @@ class rb_tree {
   Node<T> *min() const;
   Node<T> *search(const T &) const;
   bool empty() const { return (this == nullptr) || (root == nullptr); };
-  size_t count(const T &) const;
-  std::pair<Node<T> *, Node<T> *> equal_range(const T &);
+  std::size_t count(const T &) const;
+  pair<Node<T> *, Node<T> *> equal_range(const T &);
+
+#ifdef DEBUG
   void print_tree() const { print(root, 0); };  // Дебаг
+#endif
 };
 
 }  // namespace s21
 
-#include "s21_rb_tree.tpp"
+// #include "s21_rb_tree.tpp"

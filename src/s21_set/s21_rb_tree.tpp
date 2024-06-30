@@ -1,6 +1,7 @@
-namespace s21 {
+#pragma once
+#include "s21_rb_tree.hpp"
 
-using sort_c_t = sorted_container;
+namespace s21 {
 
 template <typename T>
 Node<T> *rb_tree<T>::copy_node(Node<T> *node) {
@@ -236,8 +237,8 @@ void rb_tree<T>::fix_2_black(Node<T> *&node) {
 }
 
 template <typename T>
-size_t rb_tree<T>::count_elements(Node<T> *node, const T &data) const {
-  size_t result = 0;
+std::size_t rb_tree<T>::count_elements(Node<T> *node, const T &data) const {
+  std::size_t result = 0;
   if (node->data == data) result++;
 
   if (node->data >= data && node->left) {
@@ -252,9 +253,9 @@ size_t rb_tree<T>::count_elements(Node<T> *node, const T &data) const {
 }
 
 template <typename T>
-std::pair<Node<T> *, Node<T> *> rb_tree<T>::element_range(Node<T> *node,
-                                                          const T &data) {
-  std::pair<Node<T> *, Node<T> *> range = {nullptr, nullptr};
+pair<Node<T> *, Node<T> *> rb_tree<T>::element_range(Node<T> *node,
+                                                     const T &data) {
+  pair<Node<T> *, Node<T> *> range = {nullptr, nullptr};
   if (node->data >= data && node->left) {
     if (node->data == data) {
       range.first = element_range(node->left, data).first;
@@ -281,7 +282,8 @@ std::pair<Node<T> *, Node<T> *> rb_tree<T>::element_range(Node<T> *node,
 
   return range;
 }
-
+#ifdef DEBUG
+#include <iostream>
 template <typename T>
 void rb_tree<T>::print(Node<T> *node, int level) const {
   if (node == nullptr) return;
@@ -297,6 +299,7 @@ void rb_tree<T>::print(Node<T> *node, int level) const {
 
   print(node->left, level + 1);
 }
+#endif
 
 template <typename T>
 void rb_tree<T>::copy_tree(const rb_tree<T> *other) {
@@ -355,15 +358,15 @@ Node<T> *rb_tree<T>::search(const T &data) const {
 }
 
 template <typename T>
-size_t rb_tree<T>::count(const T &data) const {
+std::size_t rb_tree<T>::count(const T &data) const {
   Node<T> *target = search(data);
 
   return ((target) ? count_elements(target, data) : 0);
 }
 
 template <typename T>
-std::pair<Node<T> *, Node<T> *> rb_tree<T>::equal_range(const T &data) {
-  std::pair<Node<T> *, Node<T> *> range;
+pair<Node<T> *, Node<T> *> rb_tree<T>::equal_range(const T &data) {
+  pair<Node<T> *, Node<T> *> range;
   Node<T> *target = search(data);
 
   if (target) range = element_range(target, data);
