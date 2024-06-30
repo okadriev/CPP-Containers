@@ -19,7 +19,8 @@ pair<typename multiset<T>::iterator, bool> multiset<T>::insert(
 };
 
 template <typename T>
-pair<*T, *T> multiset<T>::equal_range(const_reference data) {
+pair<typename multiset<T>::iterator, typename multiset<T>::iterator>
+multiset<T>::equal_range(const_reference data) {
   return this->tree->equal_range(data);
 };
 

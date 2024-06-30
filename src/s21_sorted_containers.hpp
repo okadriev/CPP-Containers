@@ -51,7 +51,7 @@ class sorted_container {
 
     Node *min() const;
     Node *search(const T &) const;
-    bool empty() const { return (this == nullptr) || (root == nullptr); };
+    bool empty() const { return root == nullptr; };
     std::size_t count(const T &) const;
     pair<Node *, Node *> equal_range(const T &);
     void print_tree() const { print(root, 0); };  // Дебаг
