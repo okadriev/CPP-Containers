@@ -1,60 +1,78 @@
 #include "s21_containers.hpp"
+#include "s21_pair.hpp"
 
 namespace s21 {
 
 template <typename T>
 class sorted_container : public container<T> {
  private:
-  template <typename T = T>
+  struct Node {
+   private:
+    enum e_color { RED, BLACK };
+
+   public:
+    T data;
+    Node *left, *right, *parent;
+    e_color color;
+
+    Node(T data = 0)
+        : data(data),
+          left(nullptr),
+          right(nullptr),
+          parent(nullptr),
+          color(true) {}
+  };
+
   class rb_tree {
    private:
-    Node<T> *root;
+    using size_t = typename container<T>::size_t;
 
-    Node<T> *copy_node(Node<T> *node);
-    void remove_node(Node<T> *target);
-    void delete_tree(Node<T> *);
+    Node *root;
 
-    void rotate_left(Node<T> *&);
-    void rotate_right(Node<T> *&);
-    void fix_2_red(Node<T> *&);
-    void fix_2_black(Node<T> *&);
+    Node *copy_node(Node *node);
+    void remove_node(Node *target);
+    void delete_tree(Node *);
 
-    size_t count_elements(Node<T> *node, const T &data) const;
-    std::pair<Node<T> *, Node<T> *> element_range(Node<T> *node, const T &data);
-    void print(Node<T> *node, int level) const;  // Дебаг
+    void rotate_left(Node *&);
+    void rotate_right(Node *&);
+    void fix_2_red(Node *&);
+    void fix_2_black(Node *&);
+
+    size_t count_elements(Node *node, const T &data) const;
+    pair<Node *, Node *> element_range(Node *node, const T &data);
+    void print(Node *node, int level) const;  // Дебаг
 
    public:
     rb_tree() : root(nullptr) {}
-    rb_tree(const rb_tree<T> *other) { copy_tree(other); }
+    rb_tree(const rb_tree *other) { copy_tree(other); }
     ~rb_tree() { delete_tree(root); }
 
-    void copy_tree(const rb_tree<T> *other);
-    Node<T> *insert(const T &data);
+    void copy_tree(const rb_tree *other);
+    Node *insert(const T &data);
     void remove(const T &data);
 
-    Node<T> *min() const;
-    Node<T> *search(const T &) const;
+    Node *min() const;
+    Node *search(const T &) const;
     bool empty() const { return (this == nullptr) || (root == nullptr); };
     size_t count(const T &data) const;
-    std::pair<Node<T> *, Node<T> *> equal_range(const T &data);
+    std::pair<Node *, Node *> equal_range(const T &data);
     void print_tree() const { print(root, 0); };  // Дебаг
   };
 
  public:
-  template <typename T>
   class iterator {
    private:
     using value_type = T;
     using pointer = T *;
     using reference = T &;
 
-    Node<value_type> *node_;
+    Node *node_;
 
-    Node<value_type> *next_node(Node<value_type> *node) const;
+    Node *next_node(Node *node) const;
 
    public:
     iterator() : node_(nullptr) {};
-    iterator(Node<value_type> *node) : node_(node) {};
+    iterator(Node *node) : node_(node) {};
     ~iterator() {};
 
     bool operator==(const iterator &s) const { return (node_ == s.node_); };
@@ -70,10 +88,10 @@ class sorted_container : public container<T> {
 };
 
 template <typename T>
-Node<T> *sorted_container<T>::iterator::next_node(Node<T> *node) const {
+Node<T> *iterator<T>::next_node(Node *node) const {
   if (node == nullptr) return nullptr;
 
-  Node<T> *next = nullptr;
+  Node *next = nullptr;
 
   if (node->right) {
     next = node->right;
