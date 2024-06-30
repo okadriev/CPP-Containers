@@ -4,7 +4,7 @@
 namespace s21 {
 
 template <typename T1, typename T2>
-class map : public associative_container<pair<T1, T2>> {
+class map : private associative_container<T1, T2> {
  private:
   using key_type = T1;
   using data_type = T2;
@@ -23,10 +23,8 @@ class map : public associative_container<pair<T1, T2>> {
 
   map() : tree(new tree_type()), m_size(0) {};
   map(std::initializer_list<value_type> const &);
-  map(const map &s) : tree(new key_type()), m_size(s.m_size) {
-    tree->copy_tree(other.tree);
-  };
-  map(map &&s) : tree(s), m_size(s.m_size) { s.tree = nullptr, s.m_size = 0; };
+  map(const map &);
+  map(map &&);
   ~map() { delete tree; };
 
   void insert(const key_type &, const value_type &);
