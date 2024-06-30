@@ -4,7 +4,7 @@ CXX = g++
 CXXFLAGS = -Wall -Wextra -Werror --std=c++17 -g
 GFLAGS = -lgtest -pthread -lstdc++ -lsupc++ -lgcc
 #DIRECTORIES = . tests/ s21_array/ s21_list/ s21_map/ s21_multiset/ s21_queue/ s21_set/ s21_stack/ s21_vector/
-DIRECTORIES = . tests/ s21_list/ s21_queue/ s21_set/ s21_stack/ s21_vector/ 
+DIRECTORIES = . tests/ s21_list/ s21_queue/ s21_set/ s21_stack/ s21_vector/ s21_associative_containers/
 ALL_SRC = $(foreach DIR, $(DIRECTORIES), $(wildcard $(DIR)*.tpp))
 ALL_HEADERS = $(foreach DIR, $(DIRECTORIES), $(wildcard $(DIR)*.hpp))
 TEST_FILES = $(wildcard tests/*.cpp)

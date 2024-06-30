@@ -32,30 +32,29 @@ class map : private associative_container<T1, T2> {
   pair<iterator, bool> insert(value_type &&) override;
   void insert(std::initializer_list<value_type>) override;
 
-  void erase(const key_type &) override;
-  void erase(const iterator &) override;
+  void erase(key_type const&) override;
+  void erase(iterator const&) override;
 
-  void clear() override;
+  void clear() override {};
 
   virtual iterator find(const key_type &key) override;
 
   void merge(class_type &);
 
-  bool contains(const key_type &) const override;
-
-  size_type max_size() const override;
+  bool contains(const key_type &) override;
 
   void swap(map &) noexcept {}
 
-  iterator begin() const override;
-  iterator end() const override;
+  iterator begin() const override { return iterator(nullptr); };
+  iterator end() const override { return iterator(nullptr); };
 
-  size_t size() const override;
-  bool empty() const override;
+  size_type max_size() const override { return 0UL; };
+  size_type size() const override { return 0UL; };
+  bool empty() const override { return true; };
 
   bool operator=(const s21::map<T1, T2> &);
 };
 
 }  // namespace s21
 
-// #include "s21_map.tpp"
+#include "s21_map.tpp"

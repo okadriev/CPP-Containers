@@ -3,6 +3,7 @@
 #include <type_traits>
 #include <utility>
 
+#include "s21_associative_containers/s21_map.hpp"
 #include "s21_list/s21_list.hpp"
 #include "s21_queue/s21_queue.hpp"
 #include "s21_set/s21_multiset.hpp"

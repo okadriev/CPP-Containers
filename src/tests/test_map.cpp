@@ -1,5 +1,9 @@
 #include "tests.hpp"
 
+namespace _t {
+using val_pair = pair<int, std::string>;
+}
+
 TEST(MapConstructor, set_default) {
   map<int, std::string> test;
 
@@ -8,7 +12,7 @@ TEST(MapConstructor, set_default) {
 }
 
 TEST(MapConstructor, set_param_1) {
-  map<int, std::string> test1{{1, "A"}, {2, "B"}, {3, "C"}};
+  map<int, std::string> test1{{1, "A"}, _t::val_pair{2, "B"}, {3, "C"}};
   map<int, std::string> test2(test1);
 
   EXPECT_EQ(test2.size(), 3);
