@@ -1,32 +1,9 @@
 #pragma once
 #include <limits>
 
-// #include "s21_rb_tree.hpp"
-#include "../s21_sorted_containers.hpp"
+#include "../s21_sorted_containers/s21_sorted_containers.hpp"
 
 namespace s21 {
-
-// template <typename T>
-// class set_iterator {
-//  private:
-//   using value_type = T;
-//   using reference = value_type &;
-//   using Node = typename sorted_container<T>::Node;
-
-//   Node *node;
-
-//   Node *next_node(Node *) const;
-
-//  public:
-//   set_iterator() : node(nullptr) {};
-//   set_iterator(Node *other) : node(other) {};
-//   ~set_iterator() {};
-
-//   bool operator==(const set_iterator &s) const { return (node == s.node); };
-//   bool operator!=(const set_iterator &s) const { return (node != s.node); };
-//   reference operator*() const { return node->data; };
-//   set_iterator &operator++();
-// };
 
 template <typename T>
 class set : private sorted_container<T> {
