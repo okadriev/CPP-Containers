@@ -1,5 +1,5 @@
 namespace s21 {
-  
+
 template <typename T>
 set_iterator<T> &set_iterator<T>::operator++() {
   node = next_node(node);

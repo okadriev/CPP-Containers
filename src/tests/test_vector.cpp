@@ -210,7 +210,7 @@ TEST(VectorMethodTest, InsertMethod_ElementMove) {
 
   v.reserve(5);
   v.insert(v.begin() + 1, 99);
-  
+
   EXPECT_EQ(v.size(), 4);
   EXPECT_EQ(v[0], 1);
   EXPECT_EQ(v[1], 99);
