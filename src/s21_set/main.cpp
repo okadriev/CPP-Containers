@@ -1,3 +1,5 @@
+#define DEBUG
+
 #include "s21_multiset.hpp"
 #include "s21_set.hpp"
 
