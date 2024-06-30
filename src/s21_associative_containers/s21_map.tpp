@@ -3,6 +3,9 @@
 namespace s21 {
 
 template <typename T1, typename T2>
+void map<T1, T2>::erase(const iterator &) {}
+
+template <typename T1, typename T2>
 map<T1, T2>::map(std::initializer_list<value_type> const &items) {
   for (const auto &item : items) insert(item);
   m_size = items.size();
@@ -29,7 +32,12 @@ pair<typename map<T1, T2>::iterator, bool> map<T1, T2>::insert(
 template <typename T1, typename T2>
 pair<typename map<T1, T2>::iterator, bool> map<T1, T2>::insert(
     value_type &&value) {
-  tree->insert(value);
+  bool result = false;
+  if (!contains(value.first)) {
+    tree->insert(value);
+    result = true;
+  }
+  return {find(value.first), result};
 }
 
 template <typename T1, typename T2>
@@ -38,10 +46,19 @@ void map<T1, T2>::insert(std::initializer_list<value_type> items) {
 }
 
 template <typename T1, typename T2>
-bool map<T1, T2>::contains(const_reference &key) const {}
+void map<T1, T2>::merge(class_type &) {
+  return *this;
+}
 
 template <typename T1, typename T2>
-typename map<T1, T2>::iterator map<T1, T2>::find(const_reference &key) {}
+bool map<T1, T2>::contains(const key_type &key) const {
+  return tree->contains(key);
+}
+
+template <typename T1, typename T2>
+typename map<T1, T2>::iterator s21::map<T1, T2>::find(const key_type &key) {
+  return tree->find(key);
+}
 
 template <typename T1, typename T2>
 bool map<T1, T2>::operator=(const s21::map<T1, T2> &) {}

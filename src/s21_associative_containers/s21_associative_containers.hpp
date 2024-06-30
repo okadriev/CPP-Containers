@@ -29,10 +29,16 @@ class associative_container : sorted_container<pair<T1, T2>> {
   virtual void insert(std::initializer_list<value_type>) = 0;
 
   virtual void erase(const key_type &) = 0;
+  virtual void erase(const iterator &) = 0;
+
   virtual void clear() = 0;
 
-  virtual iterator find(const_reference &) = 0;
-  virtual bool contains(const_reference &) const = 0;
+  virtual iterator find(const key_type &key) = 0;
+
+  virtual bool contains(const key_type &) const = 0;
+
+  virtual size_type max_size() const = 0;
+
   virtual iterator begin() const = 0;
   virtual iterator end() const = 0;
 

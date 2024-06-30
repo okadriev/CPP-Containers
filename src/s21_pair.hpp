@@ -23,7 +23,7 @@ struct pair {
   }
 
   bool operator==(const pair& other) const noexcept {
-    return first == other.first;
+    return first == other.first && second == other.second;
   }
 
   bool operator!=(const pair& other) const noexcept {

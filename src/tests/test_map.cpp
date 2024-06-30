@@ -1,21 +1,21 @@
 #include "tests.hpp"
 
-TEST(Constructor, set_default) {
+TEST(MapConstructor, set_default) {
   map<int, std::string> test;
 
   EXPECT_EQ(test.size(), 0);
   EXPECT_EQ(test.empty(), true);
 }
 
-TEST(Constructor, set_param_1) {
+TEST(MapConstructor, set_param_1) {
   map<int, std::string> test1{{1, "A"}, {2, "B"}, {3, "C"}};
   map<int, std::string> test2(test1);
 
   EXPECT_EQ(test2.size(), 3);
-  EXPECT_EQ(test2.contains({2, "B"}), true);
+  EXPECT_EQ(test2.contains(2), true);
 }
 
-TEST(Constructor, set_param_2) {
+TEST(MapConstructor, set_param_2) {
   map<int, std::string> test1;
   map<int, std::string> test2(test1);
 
@@ -23,7 +23,7 @@ TEST(Constructor, set_param_2) {
   EXPECT_EQ(test2.empty(), true);
 }
 
-TEST(Method, set_copy) {
+TEST(MapMethod, set_copy) {
   map<int, std::string> test1{{1, "A"}, {2, "B"}, {3, "C"}};
   map<int, std::string> test2;
 
@@ -33,7 +33,7 @@ TEST(Method, set_copy) {
   EXPECT_EQ(test2.empty(), false);
 }
 
-TEST(Method, set_move) {
+TEST(MapMethod, set_move) {
   map<int, std::string> test1{{1, "A"}, {2, "B"}, {3, "C"}};
   map<int, std::string> test2;
 
@@ -44,7 +44,7 @@ TEST(Method, set_move) {
   EXPECT_EQ(test2.empty(), false);
 }
 
-TEST(Method, set_clear_1) {
+TEST(MapMethod, set_clear_1) {
   map<int, std::string> test1{{1, "A"}, {2, "B"}, {3, "C"}};
   test1.clear();
 
@@ -52,7 +52,7 @@ TEST(Method, set_clear_1) {
   EXPECT_EQ(test1.empty(), true);
 }
 
-TEST(Method, set_clear_2) {
+TEST(MapMethod, set_clear_2) {
   map<int, std::string> test1;
   test1.clear();
 
@@ -60,8 +60,9 @@ TEST(Method, set_clear_2) {
   EXPECT_EQ(test1.empty(), true);
 }
 
-TEST(Method, set_insert) {
+TEST(MapMethod, set_insert) {
   map<int, std::string> test1;
+  pair<int, std::string> element{2, "B"};
 
   test1.insert({1, "A"});
   pair<map<int, std::string>::iterator, bool> pair = test1.insert({2, "B"});
@@ -69,25 +70,24 @@ TEST(Method, set_insert) {
 
   EXPECT_EQ(test1.size(), 3);
   EXPECT_EQ(pair.second, true);
-  EXPECT_EQ(*pair.first, 2);  // скобки?
+  EXPECT_EQ(*pair.first, element);
 }
 
-TEST(Method, set_erase_1) {
+TEST(MapMethod, set_erase_1) {
   map<int, std::string> test1{{1, "A"}, {2, "B"}, {3, "C"}};
   test1.erase(2);
 
   EXPECT_EQ(test1.size(), 2);
-  EXPECT_EQ(test1.contains({2, "B"}), false);
+  EXPECT_EQ(test1.contains(2), false);
 }
 
-TEST(Method, set_erase_2) {
+TEST(MapMethod, set_erase_2) {
   map<int, std::string> test1{
       {1, "A"},  {2, "B"},  {3, "C"},  {4, "D"},  {5, "E"},  {6, "F"},
       {7, "G"},  {8, "H"},  {9, "I"},  {10, "J"}, {11, "K"}, {12, "L"},
       {13, "M"}, {14, "N"}, {15, "O"}, {16, "P"}, {17, "Q"}, {18, "R"},
       {19, "S"}, {20, "T"}, {21, "U"}, {22, "V"}, {23, "W"}, {24, "X"},
-      {25, "Y"}, {26, "Z"}, {27, "a"}, {28, "b"}, {29, "c"}, {30, "d"}
-  };
+      {25, "Y"}, {26, "Z"}, {27, "a"}, {28, "b"}, {29, "c"}, {30, "d"}};
   test1.erase(11);
   test1.erase(6);
   test1.erase(12);
@@ -123,7 +123,7 @@ TEST(Method, set_erase_2) {
   EXPECT_EQ(test1.empty(), true);
 }
 
-TEST(Method, set_erase_ptr) {
+TEST(MapMethod, set_erase_ptr) {
   map<int, std::string> test1{{1, "A"}, {2, "B"}, {3, "C"}};
   test1.erase(test1.find(2));
 
@@ -131,9 +131,10 @@ TEST(Method, set_erase_ptr) {
   EXPECT_EQ(test1.contains(2), false);
 }
 
-TEST(Method, set_swap) {
+TEST(MapMethod, set_swap) {
   map<int, std::string> test1{{1, "A"}, {2, "B"}, {3, "C"}};
-  map<int, std::string> test2{4, 5, 6, 7, 8, 9};
+  map<int, std::string> test2{{4, "D"}, {5, "E"}, {6, "F"},
+                              {7, "G"}, {8, "H"}, {9, "I"}};
 
   test1.swap(test2);
 
@@ -152,9 +153,10 @@ TEST(Method, set_swap) {
   EXPECT_EQ(test2.contains(3), true);
 }
 
-TEST(Method, set_merge) {
+TEST(MapMethod, set_merge) {
   map<int, std::string> test1{{1, "A"}, {2, "B"}, {3, "C"}};
-  map<int, std::string> test2{4, 5, 6, 7, 8, 9};
+  map<int, std::string> test2{{4, "D"}, {5, "E"}, {6, "F"},
+                              {7, "G"}, {8, "H"}, {9, "I"}};
 
   test1.merge(test2);
 
@@ -169,31 +171,40 @@ TEST(Method, set_merge) {
   EXPECT_EQ(test1.contains(9), true);
 }
 
-TEST(Method, set_find) {
+TEST(MapMethod, set_find) {
   map<int, std::string> test1{{1, "A"}, {2, "B"}, {3, "C"}};
+  pair<int, std::string> element(2, "B");
   map<int, std::string>::iterator it = test1.find(2);
 
-  EXPECT_EQ(*it, 2);
+  EXPECT_EQ(*it, element);
 
   it = test1.find(10);
 
   EXPECT_EQ(it == test1.end(), true);
 }
 
-TEST(Method, set_begin) {
+TEST(MapMethod, set_begin) {
   map<int, std::string> test1{{1, "A"}, {2, "B"}, {3, "C"}};
-  map<int, std::string> test2{3, 2, 1};
-  map<int, std::string> test3{10, 15, 5, 6, 7, 8, 9, 11, 12, 13, 14};
+  map<int, std::string> test2{{3, "C"}, {2, "B"}, {1, "A"}};
+  map<int, std::string> test3{{10, "J"}, {15, "K"}, {5, "I"}, {6, "H"},
+                              {7, "G"},  {8, "F"},  {9, "E"}, {11, "D"},
+                              {12, "C"}, {13, "B"}, {14, "A"}};
 
-  EXPECT_EQ(*test1.begin(), 1);
-  EXPECT_EQ(*test1.begin(), 1);
-  EXPECT_EQ(*test3.begin(), 5);
+  pair<int, std::string> element1{1, "A"};
+  pair<int, std::string> element2{3, "C"};
+  pair<int, std::string> element3{10, "J"};
+
+  EXPECT_EQ(*test1.begin(), element1);
+  EXPECT_EQ(*test2.begin(), element2);
+  EXPECT_EQ(*test3.begin(), element3);
 }
 
-TEST(Method, set_end) {
+TEST(MapMethod, set_end) {
   map<int, std::string> test1{{1, "A"}, {2, "B"}, {3, "C"}};
-  map<int, std::string> test2{3, 2, 1};
-  map<int, std::string> test3{10, 15, 5, 6, 7, 8, 9, 11, 12, 13, 14};
+  map<int, std::string> test2{{3, "C"}, {2, "B"}, {1, "A"}};
+  map<int, std::string> test3{{10, "J"}, {15, "K"}, {5, "I"}, {6, "H"},
+                              {7, "G"},  {8, "F"},  {9, "E"}, {11, "D"},
+                              {12, "C"}, {13, "B"}, {14, "A"}};
 
   map<int, std::string>::iterator result =
       (map<int, std::string>::iterator) nullptr;
@@ -203,7 +214,7 @@ TEST(Method, set_end) {
   EXPECT_EQ(test3.end(), result);
 }
 
-TEST(Method, set_max_size) {
+TEST(MapMethod, set_max_size) {
   map<int, std::string> test1{{1, "A"}, {2, "B"}, {3, "C"}};
 
   EXPECT_GT(test1.max_size(), 1000);

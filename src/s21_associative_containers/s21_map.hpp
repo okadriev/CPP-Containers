@@ -1,5 +1,5 @@
 #pragma once
-#include "s21_associative_containers/s21_associative_containers.hpp"
+#include "s21_associative_containers.hpp"
 
 namespace s21 {
 
@@ -13,6 +13,7 @@ class map : private associative_container<T1, T2> {
   using reference = value_type &;
   using const_reference = const value_type &;
   using size_type = std::size_t;
+  using class_type = map;
 
   tree_type *tree;
   size_type m_size;
@@ -27,22 +28,34 @@ class map : private associative_container<T1, T2> {
   map(map &&);
   ~map() { delete tree; };
 
-  virtual pair<iterator, bool> insert(const value_type &value);
-  virtual pair<iterator, bool> insert(value_type &&);
-  virtual void insert(std::initializer_list<value_type>);
+  pair<iterator, bool> insert(const value_type &value) override;
+  pair<iterator, bool> insert(value_type &&) override;
+  void insert(std::initializer_list<value_type>) override;
 
-  virtual void erase(const key_type &);
-  virtual void clear();
+  void erase(const key_type &) override;
+  void erase(const iterator &) override;
 
-  virtual iterator find(const_reference &);
-  virtual bool contains(const_reference &) const;
-  virtual iterator begin() const;
-  virtual iterator end() const;
+  void clear() override;
 
-  virtual size_t size() const;
-  virtual bool empty() const;
+  virtual iterator find(const key_type &key) override;
+
+  void merge(class_type &);
+
+  bool contains(const key_type &) const override;
+
+  size_type max_size() const override;
+
+  void swap(map &) noexcept {}
+
+  iterator begin() const override;
+  iterator end() const override;
+
+  size_t size() const override;
+  bool empty() const override;
 
   bool operator=(const s21::map<T1, T2> &);
 };
 
 }  // namespace s21
+
+// #include "s21_map.tpp"
