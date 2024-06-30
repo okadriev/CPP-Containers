@@ -135,8 +135,7 @@ set<value_type> &set<value_type>::operator=(set &&other) noexcept {
 
 template <typename value_type>
 void set<value_type>::clear() {
-  delete tree;
-  new key_type(); // ??
+  tree->delete_tree();
   m_size = 0;
 }
 
