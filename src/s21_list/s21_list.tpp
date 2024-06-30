@@ -348,7 +348,7 @@ template <typename T>
 void list<T>::splice(list<T>::const_iterator pos, list<T> &other) {
   if (pos.node == nullptr)
     throw std::invalid_argument("Error: invalid iterator");
-  
+
   if (pos == begin()) {
     other.list_.tail->next = list_.head;
     list_.head->prev = other.list_.tail;
@@ -358,7 +358,7 @@ void list<T>::splice(list<T>::const_iterator pos, list<T> &other) {
     list_.tail->next = other.list_.head;
     other.list_.head->prev = list_.tail;
     list_.tail = other.list_.tail;
-  
+
   } else {
     iterator it_pos = pos;
     it_pos.node->prev->next = other.list_.head;
@@ -366,7 +366,7 @@ void list<T>::splice(list<T>::const_iterator pos, list<T> &other) {
     other.list_.tail->next = it_pos.node;
     it_pos.node->prev = other.list_.tail;
   }
-  
+
   list_.size_list += other.list_.size_list;
   other.list_.tail = nullptr;
   other.list_.head = nullptr;

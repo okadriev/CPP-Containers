@@ -2,6 +2,7 @@
 #define TESTS_H
 
 #include <gtest/gtest.h>
+
 #include <memory>
 
 #include "../s21_containers.hpp"

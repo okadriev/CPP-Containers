@@ -13,7 +13,7 @@ class list {
 
   using value_type = T;
   using reference = T &;
-  using const_reference = const T&;
+  using const_reference = const T &;
   using iterator = ListIterator;
   using const_iterator = const ListIterator;
   using size_type = size_t;
@@ -64,7 +64,6 @@ class list {
 
   void print_list();
 
-
  private:
   struct Node {
     value_type value;
@@ -84,7 +83,7 @@ class list {
 
   List list_;
   Node *MergeSort(Node *head);
-// Node* GetMiddle(Node* head) ;
+  // Node* GetMiddle(Node* head) ;
   Node *Merge(Node *left, Node *right);
 };
 template <typename T>
@@ -96,8 +95,8 @@ class list<T>::ListIterator {
   using iterator_category = std::bidirectional_iterator_tag;
   using value_type = T;
   using difference_type = std::ptrdiff_t;
-  using pointer = T*;
-  using reference = T&;
+  using pointer = T *;
+  using reference = T &;
 
   ListIterator(typename list<T>::Node *node_ = nullptr,
                typename list<T>::Node *last_node_ = nullptr)

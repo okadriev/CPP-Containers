@@ -27,7 +27,6 @@ struct is_valid_container_queue<T1, list<T1>> {
 template <typename T1, typename T2 = vector<T1>>
 class queue : protected T2 {
  private:
- 
   using value_type = T1;
   using container_type = T2;
   using reference = T1 &;
