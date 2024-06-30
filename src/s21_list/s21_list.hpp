@@ -25,6 +25,7 @@ class list {
   list(list &&l) noexcept;
   ~list();
 
+  list &operator=(const list &other);
   list &operator=(list &&other) noexcept;
 
   const_reference front() const;
