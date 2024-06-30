@@ -46,7 +46,7 @@ class rb_tree {
  public:
   rb_tree() : root(nullptr) {}
   rb_tree(const rb_tree<T> *other) { copy_tree(other); }
-  ~rb_tree() { delete_tree();  }
+  ~rb_tree() { delete_tree(); }
 
   void delete_tree() { delete_tree(root), root = nullptr; }
   void copy_tree(const rb_tree<T> *);

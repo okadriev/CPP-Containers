@@ -1,9 +1,20 @@
-#pragma once
+#include "s21_sorted_containers.hpp"
+
+#define MY_BRO_HAS_RED_SON                   \
+  ((my_bro->left && my_bro->left->is_red) || \
+   (my_bro->right && my_bro->right->is_red))
+
+#define RED_GOES_UP         \
+  grand_parent->is_red = 1; \
+  parent->is_red = 0;       \
+  uncle->is_red = 0;
 
 namespace s21 {
+
 template <typename T>
-Node<T> *rb_tree<T>::copy_node(Node<T> *node) {
-  Node<T> *new_node = new Node<T>(node->data);
+typename sorted_container<T>::Node *sorted_container<T>::rb_tree::copy_node(
+    Node *node) {
+  Node *new_node = new Node(node->data);
   new_node->is_red = node->is_red;
 
   if (node->left) {
@@ -20,9 +31,9 @@ Node<T> *rb_tree<T>::copy_node(Node<T> *node) {
 }
 
 template <typename T>
-void rb_tree<T>::remove_node(Node<T> *target) {
-  Node<T> *target_parent = target->parent;
-  Node<T> *placeholder = nullptr;
+void sorted_container<T>::rb_tree::remove_node(Node *target) {
+  Node *target_parent = target->parent;
+  Node *placeholder = nullptr;
   if (target->left && target->right) {
     placeholder = target->left;
     while (placeholder->right != nullptr) {
@@ -65,7 +76,7 @@ void rb_tree<T>::remove_node(Node<T> *target) {
       }
     }
 
-    Node<T> *ph_parent = placeholder->parent;
+    Node *ph_parent = placeholder->parent;
     if (ph_parent->left == placeholder) {
       ph_parent->left = placeholder->left;
     } else {
@@ -81,7 +92,7 @@ void rb_tree<T>::remove_node(Node<T> *target) {
 }
 
 template <typename T>
-void rb_tree<T>::delete_tree(Node<T> *node) {
+void sorted_container<T>::rb_tree::delete_tree(Node *node) {
   if (node) {
     delete_tree(node->left);
     delete_tree(node->right);
@@ -91,8 +102,8 @@ void rb_tree<T>::delete_tree(Node<T> *node) {
 }
 
 template <typename T>
-void rb_tree<T>::rotate_left(Node<T> *&node) {
-  Node<T> *right_child = node->right;
+void sorted_container<T>::rb_tree::rotate_left(Node *&node) {
+  Node *right_child = node->right;
   node->right = right_child->left;
 
   if (node->right) {
@@ -114,8 +125,8 @@ void rb_tree<T>::rotate_left(Node<T> *&node) {
 }
 
 template <typename T>
-void rb_tree<T>::rotate_right(Node<T> *&node) {
-  Node<T> *left_child = node->left;
+void sorted_container<T>::rb_tree::rotate_right(Node *&node) {
+  Node *left_child = node->left;
   node->left = left_child->right;
 
   if (node->left) {
@@ -137,13 +148,13 @@ void rb_tree<T>::rotate_right(Node<T> *&node) {
 }
 
 template <typename T>
-void rb_tree<T>::fix_2_red(Node<T> *&node) {
+void sorted_container<T>::rb_tree::fix_2_red(Node *&node) {
   while ((node != root) && (node->is_red) && (node->parent->is_red)) {
-    Node<T> *parent = node->parent;
-    Node<T> *grand_parent = node->parent->parent;
+    Node *parent = node->parent;
+    Node *grand_parent = node->parent->parent;
 
     if (parent == grand_parent->left) {
-      Node<T> *uncle = grand_parent->right;
+      Node *uncle = grand_parent->right;
 
       if ((uncle) && (uncle->is_red)) {
         RED_GOES_UP;
@@ -161,7 +172,7 @@ void rb_tree<T>::fix_2_red(Node<T> *&node) {
       }
 
     } else {
-      Node<T> *uncle = grand_parent->left;
+      Node *uncle = grand_parent->left;
       if ((uncle) && (uncle->is_red)) {
         RED_GOES_UP;
         node = grand_parent;
@@ -183,12 +194,12 @@ void rb_tree<T>::fix_2_red(Node<T> *&node) {
 }
 template <typename T>
 
-void rb_tree<T>::fix_2_black(Node<T> *&node) {
+void sorted_container<T>::rb_tree::fix_2_black(Node *&node) {
   if (node == root) return;
 
-  Node<T> *parent = node->parent;
+  Node *parent = node->parent;
   bool left_child = (node == parent->left);
-  Node<T> *my_bro = (left_child) ? parent->right : parent->left;
+  Node *my_bro = (left_child) ? parent->right : parent->left;
 
   if (my_bro->is_red) {
     parent->is_red = 1;
@@ -235,8 +246,9 @@ void rb_tree<T>::fix_2_black(Node<T> *&node) {
 }
 
 template <typename T>
-size_t rb_tree<T>::count_elements(Node<T> *node, const T &data) const {
-  size_t result = 0;
+std::size_t sorted_container<T>::rb_tree::count_elements(Node *node,
+                                                         const T &data) const {
+  std::size_t result = 0;
   if (node->data == data) result++;
 
   if (node->data >= data && node->left) {
@@ -251,9 +263,9 @@ size_t rb_tree<T>::count_elements(Node<T> *node, const T &data) const {
 }
 
 template <typename T>
-std::pair<Node<T> *, Node<T> *> rb_tree<T>::element_range(Node<T> *node,
-                                                          const T &data) {
-  std::pair<Node<T> *, Node<T> *> range = {nullptr, nullptr};
+pair<typename sorted_container<T>::Node *, typename sorted_container<T>::Node *>
+sorted_container<T>::rb_tree::element_range(Node *node, const T &data) {
+  pair<Node *, Node *> range = {nullptr, nullptr};
   if (node->data >= data && node->left) {
     if (node->data == data) {
       range.first = element_range(node->left, data).first;
@@ -281,8 +293,10 @@ std::pair<Node<T> *, Node<T> *> rb_tree<T>::element_range(Node<T> *node,
   return range;
 }
 
+#ifdef DEBUG
+#include <iostream>
 template <typename T>
-void rb_tree<T>::print(Node<T> *node, int level) const {
+void sorted_container<T>::rb_tree::print(Node *node, int level) const {
   if (node == nullptr) return;
 
   print(node->right, level + 1);
@@ -296,17 +310,19 @@ void rb_tree<T>::print(Node<T> *node, int level) const {
 
   print(node->left, level + 1);
 }
+#endif
 
 template <typename T>
-void rb_tree<T>::copy_tree(const rb_tree<T> *other) {
+void sorted_container<T>::rb_tree::copy_tree(const rb_tree *other) {
   root = ((other->root) ? copy_node(other->root) : nullptr);
 }
 
 template <typename T>
-Node<T> *rb_tree<T>::insert(const T &data) {
-  Node<T> *new_node = new Node<T>(data);
-  Node<T> *current = root;
-  Node<T> *parent = nullptr;
+typename sorted_container<T>::Node *sorted_container<T>::rb_tree::insert(
+    const T &data) {
+  Node *new_node = new Node(data);
+  Node *current = root;
+  Node *parent = nullptr;
 
   while (current != nullptr) {
     parent = current;
@@ -329,13 +345,13 @@ Node<T> *rb_tree<T>::insert(const T &data) {
 }
 
 template <typename T>
-void rb_tree<T>::remove(const T &data) {
-  if (Node<T> *target = search(data)) remove_node(target);
+void sorted_container<T>::rb_tree::remove(const T &data) {
+  if (Node *target = search(data)) remove_node(target);
 }
 
 template <typename T>
-Node<T> *rb_tree<T>::min() const {
-  Node<T> *current = root;
+typename sorted_container<T>::Node *sorted_container<T>::rb_tree::min() const {
+  Node *current = root;
   if (current)
     while (current->left) current = current->left;
 
@@ -343,8 +359,9 @@ Node<T> *rb_tree<T>::min() const {
 }
 
 template <typename T>
-Node<T> *rb_tree<T>::search(const T &data) const {
-  Node<T> *temp = root;
+typename sorted_container<T>::Node *sorted_container<T>::rb_tree::search(
+    const T &data) const {
+  Node *temp = root;
 
   while (temp != nullptr && temp->data != data) {
     temp = ((data < temp->data) ? temp->left : temp->right);
@@ -354,19 +371,21 @@ Node<T> *rb_tree<T>::search(const T &data) const {
 }
 
 template <typename T>
-size_t rb_tree<T>::count(const T &data) const {
-  Node<T> *target = search(data);
+std::size_t sorted_container<T>::rb_tree::count(const T &data) const {
+  Node *target = search(data);
 
   return ((target) ? count_elements(target, data) : 0);
 }
 
 template <typename T>
-std::pair<Node<T> *, Node<T> *> rb_tree<T>::equal_range(const T &data) {
-  std::pair<Node<T> *, Node<T> *> range;
-  Node<T> *target = search(data);
+pair<typename sorted_container<T>::Node *, typename sorted_container<T>::Node *>
+sorted_container<T>::rb_tree::equal_range(const T &data) {
+  pair<Node *, Node *> range;
+  Node *target = search(data);
 
   if (target) range = element_range(target, data);
 
   return range;
 }
+
 }  // namespace s21

@@ -7,30 +7,24 @@ template <typename T>
 class sorted_container : public container<T> {
  private:
   struct Node {
-   private:
-    enum e_color { RED, BLACK };
-
-   public:
     T data;
     Node *left, *right, *parent;
-    e_color color;
+    bool is_red;  // поменять на int black?
 
     Node(T data = 0)
         : data(data),
           left(nullptr),
           right(nullptr),
           parent(nullptr),
-          color(true) {}
+          is_red(true) {}
   };
 
   class rb_tree {
    private:
-    using size_t = typename container<T>::size_t;
-
     Node *root;
 
-    Node *copy_node(Node *node);
-    void remove_node(Node *target);
+    Node *copy_node(Node *);
+    void remove_node(Node *);
     void delete_tree(Node *);
 
     void rotate_left(Node *&);
@@ -38,24 +32,27 @@ class sorted_container : public container<T> {
     void fix_2_red(Node *&);
     void fix_2_black(Node *&);
 
-    size_t count_elements(Node *node, const T &data) const;
+    std::size_t count_elements(Node *node, const T &data) const;
     pair<Node *, Node *> element_range(Node *node, const T &data);
+#ifdef DEBUG
     void print(Node *node, int level) const;  // Дебаг
+#endif
 
    public:
     rb_tree() : root(nullptr) {}
     rb_tree(const rb_tree *other) { copy_tree(other); }
-    ~rb_tree() { delete_tree(root); }
+    ~rb_tree() { delete_tree(); }
 
-    void copy_tree(const rb_tree *other);
-    Node *insert(const T &data);
-    void remove(const T &data);
+    void delete_tree() { delete_tree(root), root = nullptr; }
+    void copy_tree(const rb_tree *);
+    Node *insert(const T &);
+    void remove(const T &);
 
     Node *min() const;
     Node *search(const T &) const;
     bool empty() const { return (this == nullptr) || (root == nullptr); };
-    size_t count(const T &data) const;
-    std::pair<Node *, Node *> equal_range(const T &data);
+    std::size_t count(const T &) const;
+    pair<Node *, Node *> equal_range(const T &);
     void print_tree() const { print(root, 0); };  // Дебаг
   };
 
@@ -88,7 +85,8 @@ class sorted_container : public container<T> {
 };
 
 template <typename T>
-Node<T> *iterator<T>::next_node(Node *node) const {
+typename sorted_container<T>::Node *sorted_container<T>::iterator::next_node(
+    sorted_container<T>::Node *node) const {
   if (node == nullptr) return nullptr;
 
   Node *next = nullptr;
@@ -110,4 +108,4 @@ Node<T> *iterator<T>::next_node(Node *node) const {
 
 }  // namespace s21
 
-#include "s21_rb_tree.ipp"
+// #include "s21_rb_tree.tpp"

@@ -1,5 +1,7 @@
 namespace s21 {
 
+using sort_c_t = sorted_container;
+
 template <typename T>
 Node<T> *rb_tree<T>::copy_node(Node<T> *node) {
   Node<T> *new_node = new Node<T>(node->data);
