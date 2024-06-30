@@ -43,7 +43,7 @@ void set<value_type>::clear() {
 }
 
 template <typename value_type>
-std::pair<typename set<value_type>::iterator, bool> set<value_type>::insert(
+pair<typename set<value_type>::iterator, bool> set<value_type>::insert(
     const_reference data) {
   bool result = false;
   iterator ptr = nullptr;
@@ -55,7 +55,7 @@ std::pair<typename set<value_type>::iterator, bool> set<value_type>::insert(
     result = true;
   }
 
-  return std::make_pair(ptr, result);
+  return make_pair(ptr, result);
 }
 
 template <typename value_type>
