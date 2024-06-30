@@ -1,5 +1,4 @@
-#ifndef TESTS_H
-#define TESTS_H
+#pragma once
 
 #include <gtest/gtest.h>
 
@@ -9,5 +8,3 @@
 #include "../s21_containersplus.hpp"
 
 using namespace s21;
-
-#endif
