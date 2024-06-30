@@ -93,9 +93,10 @@ list<T> &list<T>::operator=(list &&other) noexcept {
   if (this != &other) {
     clear();
     for (iterator i = list<T>::iterator(other.begin()); i.node; ++i) {
-      push_back(other.front());
-      other.pop_front;
+      push_back(*i);
     }
+
+    other.clear();
   }
 
   return *this;
@@ -557,43 +558,6 @@ bool list<T>::ListIterator::operator==(const iterator &other) const {
 template <typename T>
 bool list<T>::ListIterator::operator!=(const iterator &other) const {
   return node != other.node;
-}
-
-/**
- * Перегрузка оператора < для итераторв
- */
-template <typename T>
-bool list<T>::ListIterator::operator<(const iterator &other) const {
-  return node < other.node;
-}
-
-/**
- * Перегрузка оператора <= для итераторв
- */
-template <typename T>
-bool list<T>::ListIterator::operator<=(const iterator &other) const {
-  return node <= other.node;
-}
-
-/**
- * Перегрузка оператора > для итераторв
- */
-template <typename T>
-bool list<T>::ListIterator::operator>(const iterator &other) const {
-  return node > other.node;
-}
-
-/**
- * Перегрузка оператора >= для итераторв
- */
-template <typename T>
-bool list<T>::ListIterator::operator>=(const iterator &other) const {
-  return node >= other.node;
-}
-
-template <typename T>
-typename list<T>::value_type *list<T>::ListIterator::operator->() const {
-  return &node->value;
 }
 
 template <typename T>

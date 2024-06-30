@@ -268,34 +268,6 @@ TEST(ListTest, ItOperator) {
   EXPECT_EQ(*a, 1);
 }
 
-TEST(ListTest, ItOperator1) {
-  s21::list<int> lst{1, 2, 3};
-  list<int>::ListIterator a = lst.begin();
-
-  EXPECT_EQ((*a < 2), 1);
-}
-
-TEST(ListTest, ItOperator2) {
-  s21::list<int> lst{1, 2, 3};
-  list<int>::ListIterator a = lst.begin();
-
-  EXPECT_EQ((*a <= 2), 1);
-}
-
-TEST(ListTest, ItOperator3) {
-  s21::list<int> lst{1, 2, 3};
-  list<int>::ListIterator a = lst.end();
-
-  EXPECT_EQ((*a >= 2), 1);
-}
-
-TEST(ListTest, ItOperator4) {
-  s21::list<int> lst{1, 2, 3};
-  list<int>::ListIterator a = lst.end();
-
-  EXPECT_EQ((*a > 2), 1);
-}
-
 TEST(ListTest, ItOperator5) {
   s21::list<int> lst{1, 2, 3};
   list<int>::ListIterator a = lst.end();
@@ -317,9 +289,20 @@ TEST(ListTest, ItOperator7) {
   EXPECT_EQ(*a, 2);
 }
 
-TEST(ListTest, ItOperator8){
+TEST(ListTest, ItOperator8) {
   s21::list<int> lst{1, 2, 3};
   list<int>::ListIterator a = lst.begin();
   ++a;
   EXPECT_EQ(*a, 2);
+}
+
+TEST(Method, list_move) {
+  s21::list<int> test1{1, 2, 3};
+  s21::list<int> test2;
+
+  test2 = std::move(test1);
+
+  EXPECT_EQ(test1.empty(), true);
+  EXPECT_EQ(test2.size(), 3);
+  EXPECT_EQ(test2.empty(), false);
 }

@@ -106,11 +106,6 @@ class list<T>::ListIterator {
   iterator operator--(int);
   bool operator==(const iterator &other) const;
   bool operator!=(const iterator &other) const;
-  bool operator<(const iterator &other) const;
-  bool operator<=(const iterator &other) const;
-  bool operator>(const iterator &other) const;
-  bool operator>=(const iterator &other) const;
-  value_type *operator->() const;
   reference operator*() const;
 
  protected:
