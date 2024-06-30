@@ -53,7 +53,6 @@ TEST(Method, multiset_insert) {
 
 TEST(Method, multiset_erase_1) {
   multiset<int> test1{1, 2, 3};
-  test1.print();
   test1.erase(2);
 
   EXPECT_EQ(test1.size(), 2);

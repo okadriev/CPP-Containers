@@ -2,7 +2,6 @@
 #include <limits>
 
 #include "s21_rb_tree.hpp"
-#include "s21_set.hpp"
 
 namespace s21 {
 
@@ -137,7 +136,7 @@ set<value_type> &set<value_type>::operator=(set &&other) noexcept {
 template <typename value_type>
 void set<value_type>::clear() {
   delete tree;
-  new key_type();
+  new key_type(); // ??
   m_size = 0;
 }
 

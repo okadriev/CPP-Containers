@@ -1,5 +1,4 @@
 #pragma once
-#include "s21_rb_tree.hpp"
 #include "s21_set.hpp"
 
 namespace s21 {
