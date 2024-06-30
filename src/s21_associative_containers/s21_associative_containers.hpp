@@ -24,13 +24,15 @@ class associative_container : sorted_container<pair<T1, T2>> {
  public:
   virtual ~associative_container() = default;
 
-  virtual void insert(const key_type &, const value_type &) = 0;
+  virtual pair<iterator, bool> insert(const value_type &) = 0;
+  virtual pair<iterator, bool> insert(value_type &&) = 0;
+  virtual void insert(std::initializer_list<value_type>) = 0;
+
   virtual void erase(const key_type &) = 0;
-  virtual bool contains(const key_type &) const = 0;
   virtual void clear() = 0;
 
   virtual iterator find(const_reference &) = 0;
-  virtual bool contains(const_reference &) = 0;
+  virtual bool contains(const_reference &) const = 0;
   virtual iterator begin() const = 0;
   virtual iterator end() const = 0;
 

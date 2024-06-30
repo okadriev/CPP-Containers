@@ -44,19 +44,25 @@ class sorted_container {
     };
   };
 
+  /**
+   * @brief Класс, представляющий красно-черное дерево для реализации
+   * упорядоченного контейнера.
+   *
+   * @tparam T Тип данных, которые хранятся в узлах дерева.
+   */
   class rb_tree {
    private:
+    /// Корень дерева.
     Node *root;
 
     Node *copy_node(Node *);
     void remove_node(Node *);
     void delete_tree(Node *);
-
     void rotate_left(Node *&);
     void rotate_right(Node *&);
+
     void fix_2_red(Node *&);
     void fix_2_black(Node *&);
-
     std::size_t count_elements(Node *node, const T &data) const;
     pair<Node *, Node *> element_range(Node *node, const T &data);
 
@@ -66,13 +72,14 @@ class sorted_container {
     ~rb_tree() { delete_tree(); }
 
     void delete_tree() { delete_tree(root), root = nullptr; }
+
     void copy_tree(const rb_tree *);
     Node *insert(const T &);
     void remove(const T &);
-
     Node *min() const;
     Node *search(const T &) const;
     bool empty() const { return (this == nullptr) || root == nullptr; };
+
     std::size_t count(const T &) const;
     pair<Node *, Node *> equal_range(const T &);
     iterator make_iterator(Node *node) { return iterator(node); }

@@ -12,7 +12,7 @@ TEST(Constructor, set_param_1) {
   map<int, std::string> test2(test1);
 
   EXPECT_EQ(test2.size(), 3);
-  EXPECT_EQ(test2.contains(2), true);
+  EXPECT_EQ(test2.contains({2, "B"}), true);
 }
 
 TEST(Constructor, set_param_2) {
@@ -24,7 +24,7 @@ TEST(Constructor, set_param_2) {
 }
 
 TEST(Method, set_copy) {
-  map<int, std::string> test1{1, 2, 3};
+  map<int, std::string> test1{{1, "A"}, {2, "B"}, {3, "C"}};
   map<int, std::string> test2;
 
   test2 = test1;
@@ -34,7 +34,7 @@ TEST(Method, set_copy) {
 }
 
 TEST(Method, set_move) {
-  map<int, std::string> test1{1, 2, 3};
+  map<int, std::string> test1{{1, "A"}, {2, "B"}, {3, "C"}};
   map<int, std::string> test2;
 
   test2 = std::move(test1);
@@ -45,7 +45,7 @@ TEST(Method, set_move) {
 }
 
 TEST(Method, set_clear_1) {
-  map<int, std::string> test1{1, 2, 3};
+  map<int, std::string> test1{{1, "A"}, {2, "B"}, {3, "C"}};
   test1.clear();
 
   EXPECT_EQ(test1.size(), 0);
@@ -63,9 +63,9 @@ TEST(Method, set_clear_2) {
 TEST(Method, set_insert) {
   map<int, std::string> test1;
 
-  test1.insert(1);
-  s21::pair<map<int, std::string>::iterator, bool> pair = test1.insert(2);
-  test1.insert(3);
+  test1.insert({1, "A"});
+  pair<map<int, std::string>::iterator, bool> pair = test1.insert({2, "B"});
+  test1.insert({3, "C"});
 
   EXPECT_EQ(test1.size(), 3);
   EXPECT_EQ(pair.second, true);
@@ -73,17 +73,21 @@ TEST(Method, set_insert) {
 }
 
 TEST(Method, set_erase_1) {
-  map<int, std::string> test1{1, 2, 3};
+  map<int, std::string> test1{{1, "A"}, {2, "B"}, {3, "C"}};
   test1.erase(2);
 
   EXPECT_EQ(test1.size(), 2);
-  EXPECT_EQ(test1.contains(2), false);
+  EXPECT_EQ(test1.contains({2, "B"}), false);
 }
 
 TEST(Method, set_erase_2) {
-  map<int, std::string> test1{1,  2,  3,  4,  5,  6,  7,  8,  9,  10,
-                              11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-                              21, 22, 23, 24, 25, 26, 27, 28, 29, 30};
+  map<int, std::string> test1{
+      {1, "A"},  {2, "B"},  {3, "C"},  {4, "D"},  {5, "E"},  {6, "F"},
+      {7, "G"},  {8, "H"},  {9, "I"},  {10, "J"}, {11, "K"}, {12, "L"},
+      {13, "M"}, {14, "N"}, {15, "O"}, {16, "P"}, {17, "Q"}, {18, "R"},
+      {19, "S"}, {20, "T"}, {21, "U"}, {22, "V"}, {23, "W"}, {24, "X"},
+      {25, "Y"}, {26, "Z"}, {27, "a"}, {28, "b"}, {29, "c"}, {30, "d"}
+  };
   test1.erase(11);
   test1.erase(6);
   test1.erase(12);
@@ -120,7 +124,7 @@ TEST(Method, set_erase_2) {
 }
 
 TEST(Method, set_erase_ptr) {
-  map<int, std::string> test1{1, 2, 3};
+  map<int, std::string> test1{{1, "A"}, {2, "B"}, {3, "C"}};
   test1.erase(test1.find(2));
 
   EXPECT_EQ(test1.size(), 2);
@@ -128,7 +132,7 @@ TEST(Method, set_erase_ptr) {
 }
 
 TEST(Method, set_swap) {
-  map<int, std::string> test1{1, 2, 3};
+  map<int, std::string> test1{{1, "A"}, {2, "B"}, {3, "C"}};
   map<int, std::string> test2{4, 5, 6, 7, 8, 9};
 
   test1.swap(test2);
@@ -149,7 +153,7 @@ TEST(Method, set_swap) {
 }
 
 TEST(Method, set_merge) {
-  map<int, std::string> test1{1, 2, 3};
+  map<int, std::string> test1{{1, "A"}, {2, "B"}, {3, "C"}};
   map<int, std::string> test2{4, 5, 6, 7, 8, 9};
 
   test1.merge(test2);
@@ -166,7 +170,7 @@ TEST(Method, set_merge) {
 }
 
 TEST(Method, set_find) {
-  map<int, std::string> test1{1, 2, 3};
+  map<int, std::string> test1{{1, "A"}, {2, "B"}, {3, "C"}};
   map<int, std::string>::iterator it = test1.find(2);
 
   EXPECT_EQ(*it, 2);
@@ -177,7 +181,7 @@ TEST(Method, set_find) {
 }
 
 TEST(Method, set_begin) {
-  map<int, std::string> test1{1, 2, 3};
+  map<int, std::string> test1{{1, "A"}, {2, "B"}, {3, "C"}};
   map<int, std::string> test2{3, 2, 1};
   map<int, std::string> test3{10, 15, 5, 6, 7, 8, 9, 11, 12, 13, 14};
 
@@ -187,7 +191,7 @@ TEST(Method, set_begin) {
 }
 
 TEST(Method, set_end) {
-  map<int, std::string> test1{1, 2, 3};
+  map<int, std::string> test1{{1, "A"}, {2, "B"}, {3, "C"}};
   map<int, std::string> test2{3, 2, 1};
   map<int, std::string> test3{10, 15, 5, 6, 7, 8, 9, 11, 12, 13, 14};
 
@@ -200,7 +204,7 @@ TEST(Method, set_end) {
 }
 
 TEST(Method, set_max_size) {
-  map<int, std::string> test1{1, 2, 3};
+  map<int, std::string> test1{{1, "A"}, {2, "B"}, {3, "C"}};
 
   EXPECT_GT(test1.max_size(), 1000);
 }

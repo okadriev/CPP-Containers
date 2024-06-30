@@ -3,7 +3,7 @@
 
 namespace s21 {
 
-template <typename T1, typename T2>
+template <typename T1, typename T2 /*, typename comparator = std::less<T1>*/>
 class map : private associative_container<T1, T2> {
  private:
   using key_type = T1;
@@ -27,18 +27,22 @@ class map : private associative_container<T1, T2> {
   map(map &&);
   ~map() { delete tree; };
 
-  void insert(const key_type &, const value_type &);
-  void erase(const key_type &);
-  bool contains(const key_type &) const;
-  void clear();
+  virtual pair<iterator, bool> insert(const value_type &value);
+  virtual pair<iterator, bool> insert(value_type &&);
+  virtual void insert(std::initializer_list<value_type>);
 
-  iterator find(const_reference &);
-  bool contains(const_reference &);
-  iterator begin() const;
-  iterator end() const;
+  virtual void erase(const key_type &);
+  virtual void clear();
 
-  size_t size() const;
-  bool empty() const;
+  virtual iterator find(const_reference &);
+  virtual bool contains(const_reference &) const;
+  virtual iterator begin() const;
+  virtual iterator end() const;
+
+  virtual size_t size() const;
+  virtual bool empty() const;
+
+  bool operator=(const s21::map<T1, T2> &);
 };
 
 }  // namespace s21
