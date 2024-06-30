@@ -43,7 +43,7 @@ TEST(Method, multiset_insert) {
   multiset<int> test1;
 
   test1.insert(1);
-  std::pair<set_iterator<int>, bool> pair = test1.insert(2);
+  s21::pair<set<int>::iterator, bool> pair = test1.insert(2);
   test1.insert(3);
 
   EXPECT_EQ(test1.size(), 3);
@@ -138,7 +138,7 @@ TEST(Method, multiset_merge) {
 
 TEST(Method, multiset_find) {
   multiset<int> test1{1, 2, 3};
-  set_iterator<int> it = test1.find(2);
+  multiset<int>::iterator it = test1.find(2);
 
   EXPECT_EQ(*it, 2);
 
@@ -162,7 +162,7 @@ TEST(Method, multiset_end) {
   multiset<int> test2{3, 2, 1};
   multiset<int> test3{10, 15, 5, 6, 7, 8, 9, 11, 12, 13, 14};
 
-  set_iterator<int> result = (set_iterator<int>)nullptr;
+  multiset<int>::iterator result = (multiset<int>::iterator) nullptr;
 
   EXPECT_EQ(test1.end(), result);
   EXPECT_EQ(test1.end(), result);
@@ -185,10 +185,10 @@ TEST(Method, multiset_count) {
 
 TEST(Method, multiset_equal_range) {
   multiset<int> test1{1, 2, 3, 1, 2, 3, 2};
-  set_iterator<int> left = test1.begin();
+  multiset<int>::iterator left = test1.begin();
   ++left;
   ++left;
-  set_iterator<int> right = left;
+  multiset<int>::iterator right = left;
   ++right;
   ++right;
 
@@ -199,7 +199,7 @@ TEST(Method, multiset_equal_range) {
 
 TEST(Method, multiset_lower_bound) {
   multiset<int> test1{1, 2, 3, 1, 2, 3, 2};
-  set_iterator<int> left = test1.begin();
+  multiset<int>::iterator left = test1.begin();
   ++left;
   ++left;
 
@@ -208,7 +208,7 @@ TEST(Method, multiset_lower_bound) {
 
 TEST(Method, multiset_upper_bound) {
   multiset<int> test1{1, 2, 3, 1, 2, 3, 2};
-  set_iterator<int> left = test1.begin();
+  multiset<int>::iterator left = test1.begin();
   ++left;
   ++left;
   ++left;

@@ -64,7 +64,7 @@ TEST(Method, set_insert) {
   set<int> test1;
 
   test1.insert(1);
-  std::pair<set_iterator<int>, bool> pair = test1.insert(2);
+  s21::pair<set<int>::iterator, bool> pair = test1.insert(2);
   test1.insert(3);
 
   EXPECT_EQ(test1.size(), 3);
@@ -166,7 +166,7 @@ TEST(Method, set_merge) {
 
 TEST(Method, set_find) {
   set<int> test1{1, 2, 3};
-  set_iterator<int> it = test1.find(2);
+  set<int>::iterator it = test1.find(2);
 
   EXPECT_EQ(*it, 2);
 
@@ -190,7 +190,7 @@ TEST(Method, set_end) {
   set<int> test2{3, 2, 1};
   set<int> test3{10, 15, 5, 6, 7, 8, 9, 11, 12, 13, 14};
 
-  set_iterator<int> result = (set_iterator<int>)nullptr;
+  set<int>::iterator result = (set<int>::iterator) nullptr;
 
   EXPECT_EQ(test1.end(), result);
   EXPECT_EQ(test1.end(), result);
