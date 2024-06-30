@@ -23,7 +23,7 @@ struct pair {
   }
 
   bool operator==(const pair& other) const noexcept {
-    return first == other.first && second == other.second;
+    return first == other.first;
   }
 
   bool operator!=(const pair& other) const noexcept {
@@ -31,11 +31,12 @@ struct pair {
   }
 
   bool operator<(const pair& other) const noexcept {
-    return first < other.first ||
-           (!(other.first < first) && second < other.second);
+    return first < other.first;
   }
 
-  bool operator>(const pair& other) const noexcept { return other < *this; }
+  bool operator>(const pair& other) const noexcept {
+    return !(first < other.first);
+  }
 };
 
 template <typename T1, typename T2>
