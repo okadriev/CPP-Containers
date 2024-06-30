@@ -1,32 +1,7 @@
+#pragma once
+#include "s21_set.hpp"  // временное решение из-за vscode
+
 namespace s21 {
-  
-template <typename T>
-set_iterator<T> &set_iterator<T>::operator++() {
-  node = next_node(node);
-
-  return *this;
-}
-
-template <typename T>
-Node<T> *set_iterator<T>::next_node(Node<T> *ptr_node) const {
-  if (ptr_node == nullptr) return nullptr;
-
-  Node<T> *next = nullptr;
-
-  if (ptr_node->right) {
-    next = ptr_node->right;
-    while (next->left) next = next->left;
-
-  } else {
-    next = ptr_node->parent;
-    while (next && ptr_node == next->right) {
-      ptr_node = next;
-      next = next->parent;
-    }
-  }
-
-  return next;
-};
 
 template <typename value_type>
 set<value_type>::set(std::initializer_list<value_type> const &items) : set() {

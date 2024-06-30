@@ -1,3 +1,5 @@
+#pragma once
+
 #include "s21_containers.hpp"
 #include "s21_pair.hpp"
 
@@ -5,7 +7,7 @@ namespace s21 {
 
 template <typename T>
 class sorted_container : public container<T> {
- private:
+ public:
   struct Node {
     T data;
     Node *left, *right, *parent;
@@ -56,7 +58,6 @@ class sorted_container : public container<T> {
     void print_tree() const { print(root, 0); };  // Дебаг
   };
 
- public:
   class iterator {
    private:
     using value_type = T;
@@ -80,8 +81,6 @@ class sorted_container : public container<T> {
       return *this;
     };
   };
-
-  virtual void insert(const T &value) = 0;
 };
 
 template <typename T>
