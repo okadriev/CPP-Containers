@@ -21,7 +21,9 @@ pair<typename multiset<T>::iterator, bool> multiset<T>::insert(
 template <typename T>
 pair<typename multiset<T>::iterator, typename multiset<T>::iterator>
 multiset<T>::equal_range(const_reference data) {
-  return this->tree->equal_range(data);
+  auto range = this->tree->equal_range(data);
+  return {this->tree->make_iterator(range.first),
+          this->tree->make_iterator(range.second)};
 };
 
 template <typename T>

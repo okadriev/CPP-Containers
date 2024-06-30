@@ -23,25 +23,23 @@ struct pair {
   }
 
   bool operator==(const pair& other) const noexcept {
-    return first == other.first;
+    return first == other.first && second == other.second;
   }
 
   bool operator!=(const pair& other) const noexcept {
-    return first != other.first;
+    return !(*this == other);
   }
 
   bool operator<(const pair& other) const noexcept {
-    return first < other.first;
+    return first < other.first ||
+           (!(other.first < first) && second < other.second);
   }
 
-  bool operator>(const pair& other) const noexcept {
-    return first > other.first;
-  }
+  bool operator>(const pair& other) const noexcept { return other < *this; }
 };
 
 template <typename T1, typename T2>
 pair<T1, T2> make_pair(T1&& first, T2&& second) {
-  return pair<T1, T2>(first, second);
+  return pair<T1, T2>(std::forward<T1>(first), std::forward<T2>(second));
 }
-
 }  // namespace s21

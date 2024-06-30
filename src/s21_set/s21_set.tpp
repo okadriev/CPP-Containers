@@ -42,17 +42,12 @@ void set<value_type>::clear() {
 template <typename value_type>
 pair<typename set<value_type>::iterator, bool> set<value_type>::insert(
     const_reference data) {
-  bool result = false;
-  iterator ptr = nullptr;
+  pair<iterator, bool> result;
+  result.first = this->tree->insert(data);
+  result.second = true;
+  (this->m_size)++;
 
-  if (!contains(data)) {
-    ptr = tree->insert(data);
-    ++m_size;
-
-    result = true;
-  }
-
-  return make_pair(ptr, result);
+  return result;
 }
 
 template <typename value_type>

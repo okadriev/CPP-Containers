@@ -20,6 +20,30 @@ class sorted_container {
           is_red(true) {}
   };
 
+  class iterator {
+   private:
+    using value_type = T;
+    using pointer = T *;
+    using reference = T &;
+
+    Node *node_;
+
+    Node *next_node(Node *node) const;
+
+   public:
+    iterator() : node_(nullptr) {};
+    iterator(Node *node) : node_(node) {};
+    ~iterator() {};
+
+    bool operator==(const iterator &s) const { return (node_ == s.node_); };
+    bool operator!=(const iterator &s) const { return (node_ != s.node_); };
+    reference operator*() const { return node_->data; };
+    iterator &operator++() {
+      node_ = next_node(node_);
+      return *this;
+    };
+  };
+
   class rb_tree {
    private:
     Node *root;
@@ -51,34 +75,13 @@ class sorted_container {
 
     Node *min() const;
     Node *search(const T &) const;
-    bool empty() const { return root == nullptr; };
+    bool empty() const { return (this == nullptr) || root == nullptr; };
     std::size_t count(const T &) const;
     pair<Node *, Node *> equal_range(const T &);
+#ifdef DEBUG
     void print_tree() const { print(root, 0); };  // Дебаг
-  };
-
-  class iterator {
-   private:
-    using value_type = T;
-    using pointer = T *;
-    using reference = T &;
-
-    Node *node_;
-
-    Node *next_node(Node *node) const;
-
-   public:
-    iterator() : node_(nullptr) {};
-    iterator(Node *node) : node_(node) {};
-    ~iterator() {};
-
-    bool operator==(const iterator &s) const { return (node_ == s.node_); };
-    bool operator!=(const iterator &s) const { return (node_ != s.node_); };
-    reference operator*() const { return node_->data; };
-    iterator &operator++() {
-      node_ = next_node(node_);
-      return *this;
-    };
+#endif
+    iterator make_iterator(Node *node) { return iterator(node); }
   };
 
   virtual size_t size() const = 0;
