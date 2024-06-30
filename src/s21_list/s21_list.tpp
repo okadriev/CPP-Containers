@@ -79,16 +79,26 @@ list<T>::~list() {
  * @return ссылка на текущий объект
  */
 template <typename T>
-list<T> &list<T>::operator=(list &&other) noexcept {
+list<T> &list<T>::operator=(const list &other) {
   if (this != &other) {
     list<T>::clear();
-    while (!other.empty()) {
-      list<T>::push_back(other.front());
-      other.pop_front();
+    for (iterator i = list<T>::iterator(other.begin()); i.node; ++i)
+      push_back(*i);
+  }
+  return (*this);
+}
+
+template <typename T>
+list<T> &list<T>::operator=(list &&other) noexcept {
+  if (this != &other) {
+    clear();
+    for (iterator i = list<T>::iterator(other.begin()); i.node; ++i) {
+      push_back(other.front());
+      other.pop_front;
     }
   }
 
-  return (*this);
+  return *this;
 }
 
 /**
