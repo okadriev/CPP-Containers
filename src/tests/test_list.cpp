@@ -14,6 +14,60 @@ TEST(ListTest, InitializerListConstructor) {
   EXPECT_EQ(lst.back(), 5);
 }
 
+TEST(ListTest, MoveConstructor) {
+  s21::list<int> lst1{1, 2, 3};
+  s21::list<int> lst2(std::move(lst1));
+  EXPECT_EQ(lst2.size(), 3);
+  EXPECT_EQ(lst2.front(), 1);
+  EXPECT_EQ(lst2.back(), 3);
+  EXPECT_TRUE(lst1.empty());
+}
+
+TEST(ListTest, SizeConstructor) {
+  s21::list<int> lst(5);
+  EXPECT_FALSE(lst.empty());
+  EXPECT_EQ(lst.size(), 5);
+}
+
+TEST(ListTest, CopyConstructor) {
+  s21::list<int> lst1{1, 2, 3};
+  s21::list<int> lst2(lst1);
+  EXPECT_EQ(lst2.size(), 3);
+  EXPECT_EQ(lst2.front(), 1);
+  EXPECT_EQ(lst2.back(), 3);
+}
+
+TEST(ListTest, Front) {
+  s21::list<int> lst1{1, 2, 3};
+  EXPECT_EQ(lst1.front(), 1);
+}
+
+TEST(ListTest, Back) {
+  s21::list<int> lst1{1, 2, 3};
+  EXPECT_EQ(lst1.back(), 3);
+}
+
+TEST(ListTest, Empty) {
+  s21::list<int> lst1{1, 2, 3};
+  EXPECT_EQ(lst1.empty(), false);
+}
+
+TEST(ListTest, Empty2) {
+  s21::list<int> lst1;
+  EXPECT_EQ(lst1.empty(), true);
+}
+
+TEST(ListTest, size) {
+  s21::list<int> lst1;
+  EXPECT_EQ(lst1.size(), 0);
+}
+
+TEST(ListTest, Clear) {
+  s21::list<int> lst1{1, 2, 3};
+  lst1.clear();
+  EXPECT_EQ(lst1.empty(), true);
+}
+
 TEST(ListTest, PushBackAndPushFront) {
   s21::list<int> lst;
   lst.push_back(1);
@@ -54,7 +108,7 @@ TEST(ListTest, Sort) {
   EXPECT_EQ(lst.back(), 5);
 }
 
-TEST(ListTest, Clear) {
+TEST(ListTest, Clear2) {
   s21::list<int> lst{1, 2, 3, 4, 5};
   lst.clear();
   EXPECT_TRUE(lst.empty());
@@ -72,13 +126,7 @@ TEST(ListTest, Unique) {
 TEST(ListTest, Merge) {
   s21::list<int> lst1{1, 3, 5};
   s21::list<int> lst2{2, 4, 6};
-  std::cout << "list 1: ";
-  lst1.print_list();
-  std::cout << "list 2: ";
-  lst2.print_list();
   lst1.merge(lst2);
-  std::cout << "merge: ";
-  lst1.print_list();
   EXPECT_EQ(lst1.size(), 6);
   EXPECT_EQ(lst1.front(), 1);
   EXPECT_EQ(lst1.back(), 6);
@@ -87,13 +135,7 @@ TEST(ListTest, Merge) {
 TEST(ListTest, Splice) {
   s21::list<int> lst1{1, 3, 5};
   s21::list<int> lst2{2, 4, 6};
-  std::cout << "list 1: ";
-  lst1.print_list();
-  std::cout << "list 2: ";
-  lst2.print_list();
   lst1.splice(lst1.begin(), lst2);
-  std::cout << "splice:  ";
-  lst1.print_list();
   EXPECT_EQ(lst1.size(), 6);
   EXPECT_EQ(lst1.front(), 2);
   EXPECT_EQ(lst1.back(), 5);
@@ -135,29 +177,6 @@ TEST(ListTest, InsertManyFront) {
   EXPECT_EQ(lst.back(), 3);
 }
 
-TEST(ListTest, CopyConstructor) {
-  s21::list<int> lst1{1, 2, 3};
-  s21::list<int> lst2(lst1);
-  EXPECT_EQ(lst2.size(), 3);
-  EXPECT_EQ(lst2.front(), 1);
-  EXPECT_EQ(lst2.back(), 3);
-}
-
-TEST(ListTest, MoveConstructor) {
-  s21::list<int> lst1{1, 2, 3};
-  s21::list<int> lst2(std::move(lst1));
-  EXPECT_EQ(lst2.size(), 3);
-  EXPECT_EQ(lst2.front(), 1);
-  EXPECT_EQ(lst2.back(), 3);
-  EXPECT_TRUE(lst1.empty());
-}
-
-TEST(ListTest, SizeConstructor) {
-  s21::list<int> lst(5);
-  EXPECT_FALSE(lst.empty());
-  EXPECT_EQ(lst.size(), 5);
-}
-
 TEST(ListTest, PushBack) {
   s21::list<int> lst;
   lst.push_back(1);
@@ -192,4 +211,10 @@ TEST(ListTest, PopFront) {
   EXPECT_EQ(lst.size(), 2);
   EXPECT_EQ(lst.front(), 2);
   EXPECT_EQ(lst.back(), 3);
+}
+
+TEST(ListTest, MaxSize) {
+  s21::list<int> lst;
+  
+  EXPECT_EQ(lst.max_size(), 384307168202282325);
 }

@@ -50,7 +50,7 @@ typename stack<T1, T2>::size_type stack<T1, T2>::size() const {
  */
 template <typename T1, typename T2>
 typename stack<T1, T2>::container_type &stack<T1, T2>::_Get_container() {
-  return *this;  // но это не точно
+  return *this;
 }
 
 /**
@@ -60,7 +60,7 @@ typename stack<T1, T2>::container_type &stack<T1, T2>::_Get_container() {
 template <typename T1, typename T2>
 const typename stack<T1, T2>::container_type &stack<T1, T2>::_Get_container()
     const {
-  return *this;  // но это не точно
+  return *this;
 }
 
 /**

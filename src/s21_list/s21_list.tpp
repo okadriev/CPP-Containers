@@ -59,11 +59,10 @@ list<T>::list(list &&l) noexcept : list() {
   list_.size_list = l.list_.size_list;
   list_.head = l.list_.head;
   list_.tail = l.list_.tail;
+
   l.list_.size_list = 0;
   l.list_.head = nullptr;
   l.list_.tail = nullptr;
-  std::cout << "left constructor";
-  std::cout << list_.head << std::endl;
 }
 
 /**
@@ -381,8 +380,10 @@ template <typename T>
 void list<T>::erase(iterator pos) {
   if (pos == begin()) {
     list<T>::pop_front();
+
   } else if (pos.node == this->list_.tail) {
     list<T>::pop_back();
+
   } else {
     list<T>::Node *node = pos.node;
     node->prev->next = node->next;
@@ -401,8 +402,10 @@ void list<T>::unique() {
     for (iterator i = list<T>::begin(), j = i; i != list<T>::end() && j.node;) {
       j = i;
       ++j;
+
       if (*i == *j)
         list<T>::erase(j);
+
       else
         ++i;
     }
@@ -421,12 +424,15 @@ typename list<T>::iterator list<T>::insert(list<T>::iterator pos,
   if (pos == list<T>::begin()) {
     list<T>::push_front(value);
     pos = list<T>::iterator(this->list_.head);
+
   } else if (pos == list<T>::end()) {
     list<T>::push_back(value);
     pos = list<T>::iterator(this->list_.tail);
+
   } else {
     Node *new_node = new Node(value);
     Node *prev_node = list_.head;
+
     for (iterator it = list<T>::begin(); it != pos; ++it)
       prev_node = prev_node->next;
 
@@ -439,6 +445,7 @@ typename list<T>::iterator list<T>::insert(list<T>::iterator pos,
 
     pos = list<T>::iterator(new_node);
   }
+
   return pos;
 }
 
@@ -452,9 +459,7 @@ template <typename T>
 template <typename... Args>
 typename list<T>::iterator list<T>::insert_many(const_iterator pos,
                                                 Args &&...args) {
-  for (const auto &arg : {args...}) {
-    insert(pos, arg);
-  }
+  for (const auto &arg : {args...}) insert(pos, arg);
 
   return pos;
 }
