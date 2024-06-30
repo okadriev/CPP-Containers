@@ -53,4 +53,4 @@ class stack : protected T2 {
 
 }  // namespace s21
 
-#include "s21_stack.tpp"
+// #include "s21_stack.tpp"

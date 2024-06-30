@@ -1,3 +1,6 @@
+#pragma once
+#include "s21_list.hpp"  // временное решение из-за vscode
+
 namespace s21 {
 
 template <typename T>

@@ -95,7 +95,7 @@ class list<T>::ListIterator {
 
   ListIterator(typename list<T>::Node *node_ = nullptr,
                typename list<T>::Node *last_node_ = nullptr)
-      : node(node_), last_node(last_node_){};
+      : node(node_), last_node(last_node_) {};
 
   ListIterator(const list<T>::Node *node_) : node(node_) {}
 
@@ -118,4 +118,4 @@ class list<T>::ListIterator {
 };
 }  // namespace s21
 
-#include "s21_list.tpp"
+// #include "s21_list.tpp"
