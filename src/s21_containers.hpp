@@ -9,13 +9,3 @@
 #include "s21_set/s21_set.hpp"
 #include "s21_stack/s21_stack.hpp"
 #include "s21_vector/s21_vector.hpp"
-
-namespace s21 {
-template <typename T>
-class container {
- public:
-  virtual ~container() = default;
-  virtual size_t size() const = 0;
-  virtual bool empty() const = 0;
-};
-}  // namespace s21

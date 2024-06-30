@@ -35,8 +35,6 @@ class set : private sorted_container<T> {
   using key_type = typename sorted_container<value_type>::rb_tree;
   using reference = value_type &;
   using const_reference = const value_type &;
-  using iterator = typename sorted_container<value_type>::iterator;
-  using const_iterator = const typename sorted_container<value_type>::iterator;
   using size_type = std::size_t;
 
   key_type *tree;
@@ -45,6 +43,9 @@ class set : private sorted_container<T> {
   void copy(const set &other) { tree->copy_tree(other.tree); };
 
  public:
+  using iterator = typename sorted_container<value_type>::iterator;
+  using const_iterator = const typename sorted_container<value_type>::iterator;
+
   set() : tree(new key_type()), m_size(0) {};
   set(std::initializer_list<value_type> const &);
   set(const set &s) : tree(new key_type()), m_size(s.m_size) { copy(s); };

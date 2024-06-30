@@ -8,10 +8,11 @@ class multiset : public set<T> {
  private:
   using value_type = T;
   using const_reference = const T &;
-  using iterator = typename sorted_container<value_type>::iterator;
   using size_type = std::size_t;
 
  public:
+  using iterator = typename sorted_container<value_type>::iterator;
+
   multiset() : set<T>() {};
   multiset(std::initializer_list<T> const &);
 

@@ -1,12 +1,11 @@
 #pragma once
 
-#include "s21_containers.hpp"
 #include "s21_pair.hpp"
 
 namespace s21 {
 
 template <typename T>
-class sorted_container : public container<T> {
+class sorted_container {
  public:
   struct Node {
     T data;
@@ -81,6 +80,9 @@ class sorted_container : public container<T> {
       return *this;
     };
   };
+
+  virtual size_t size() const = 0;
+  virtual bool empty() const = 0;
 };
 
 template <typename T>
@@ -107,4 +109,4 @@ typename sorted_container<T>::Node *sorted_container<T>::iterator::next_node(
 
 }  // namespace s21
 
-// #include "s21_rb_tree.tpp"
+#include "s21_rb_tree.tpp"
