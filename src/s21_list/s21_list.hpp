@@ -1,6 +1,5 @@
 #pragma once
 #include <initializer_list>
-#include <iostream>
 #include <limits>
 #include <memory>
 
@@ -61,8 +60,6 @@ class list {
   void insert_many_back(Args &&...args);
   template <typename... Args>
   void insert_many_front(Args &&...args);
-
-  void print_list();
 
  private:
   struct Node {

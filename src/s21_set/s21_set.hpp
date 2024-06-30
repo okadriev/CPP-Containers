@@ -62,7 +62,6 @@ class set : private sorted_container<T> {
   void swap(set &);
   void merge(set &);
 
-  void print() { tree->print_tree(); };
   iterator find(const_reference data) { return iterator(tree->search(data)); };
   bool contains(const_reference data) { return find(data) != end(); };
   iterator begin() const { return iterator(tree->min()); };

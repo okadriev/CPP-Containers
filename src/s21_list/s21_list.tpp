@@ -1,14 +1,5 @@
 namespace s21 {
 
-template <typename T>
-void list<T>::print_list() {
-  std::cout << "[ ";
-  for (iterator i = list<T>::iterator(begin()); i.node; ++i) {
-    std::cout << i.node->value << " ";
-  }
-  std::cout << "]" << std::endl;
-}
-
 /**
  * Конструктор по умолчанию
  */

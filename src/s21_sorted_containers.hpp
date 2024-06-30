@@ -59,9 +59,6 @@ class sorted_container {
 
     std::size_t count_elements(Node *node, const T &data) const;
     pair<Node *, Node *> element_range(Node *node, const T &data);
-#ifdef DEBUG
-    void print(Node *node, int level) const;  // Дебаг
-#endif
 
    public:
     rb_tree() : root(nullptr) {}
@@ -78,9 +75,6 @@ class sorted_container {
     bool empty() const { return (this == nullptr) || root == nullptr; };
     std::size_t count(const T &) const;
     pair<Node *, Node *> equal_range(const T &);
-#ifdef DEBUG
-    void print_tree() const { print(root, 0); };  // Дебаг
-#endif
     iterator make_iterator(Node *node) { return iterator(node); }
   };
 

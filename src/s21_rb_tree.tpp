@@ -291,25 +291,6 @@ sorted_container<T>::rb_tree::element_range(Node *node, const T &data) {
   return range;
 }
 
-#ifdef DEBUG
-#include <iostream>
-template <typename T>
-void sorted_container<T>::rb_tree::print(Node *node, int level) const {
-  if (node == nullptr) return;
-
-  print(node->right, level + 1);
-
-  for (int i = 0; i < level; i++) {
-    std::cout << "    ";
-  }
-
-  std::cout << ((node->data < 10) ? " " : "") << node->data
-            << (node->is_red ? " RED" : " BLK") << std::endl;
-
-  print(node->left, level + 1);
-}
-#endif
-
 template <typename T>
 void sorted_container<T>::rb_tree::copy_tree(const rb_tree *other) {
   root = ((other->root) ? copy_node(other->root) : nullptr);
