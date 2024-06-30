@@ -13,7 +13,7 @@ class list {
 
   using value_type = T;
   using reference = T &;
-  using const_reference = const T&;
+  using const_reference = const T &;
   using iterator = ListIterator;
   using const_iterator = const ListIterator;
   using size_type = size_t;
@@ -54,7 +54,6 @@ class list {
   void sort();
 
   iterator insert(iterator pos, const_reference value);
-  // void insert_(const_iterator pos, const_reference value);
   template <typename... Args>
   iterator insert_many(const_iterator pos, Args &&...args);
   template <typename... Args>
@@ -64,7 +63,6 @@ class list {
 
   void print_list();
 
-
  private:
   struct Node {
     value_type value;
@@ -73,7 +71,6 @@ class list {
     Node(value_type val = value_type(), Node *next_ = nullptr,
          Node *prev_ = nullptr)
         : value(val), next(next_), prev(prev_) {}
-    // Node(const_reference val) : value(*val), next(nullptr), prev(nullptr) {}
   };
 
   struct List {
@@ -83,9 +80,6 @@ class list {
   };
 
   List list_;
-  Node *MergeSort(Node *head);
-// Node* GetMiddle(Node* head) ;
-  Node *Merge(Node *left, Node *right);
 };
 template <typename T>
 class list<T>::ListIterator {
@@ -96,19 +90,14 @@ class list<T>::ListIterator {
   using iterator_category = std::bidirectional_iterator_tag;
   using value_type = T;
   using difference_type = std::ptrdiff_t;
-  using pointer = T*;
-  using reference = T&;
+  using pointer = T *;
+  using reference = T &;
 
   ListIterator(typename list<T>::Node *node_ = nullptr,
                typename list<T>::Node *last_node_ = nullptr)
       : node(node_), last_node(last_node_){};
 
   ListIterator(const list<T>::Node *node_) : node(node_) {}
-
-  // ~ListIterator() {
-  //   if(node) delete node;
-  //   if(last_node) delete last_node;
-  // }
 
   iterator &operator++();
   iterator operator++(int);

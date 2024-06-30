@@ -30,8 +30,8 @@ class rb_tree {
  private:
   Node<T> *root;
 
-  Node<T> *copy_node(Node<T> *node);
-  void remove_node(Node<T> *target);
+  Node<T> *copy_node(Node<T> *);
+  void remove_node(Node<T> *);
   void delete_tree(Node<T> *);
 
   void rotate_left(Node<T> *&);
@@ -46,17 +46,18 @@ class rb_tree {
  public:
   rb_tree() : root(nullptr) {}
   rb_tree(const rb_tree<T> *other) { copy_tree(other); }
-  ~rb_tree() { delete_tree(root); }
+  ~rb_tree() { delete_tree();  }
 
-  void copy_tree(const rb_tree<T> *other);
-  Node<T> *insert(const T &data);
-  void remove(const T &data);
+  void delete_tree() { delete_tree(root), root = nullptr; }
+  void copy_tree(const rb_tree<T> *);
+  Node<T> *insert(const T &);
+  void remove(const T &);
 
   Node<T> *min() const;
   Node<T> *search(const T &) const;
   bool empty() const { return (this == nullptr) || (root == nullptr); };
-  size_t count(const T &data) const;
-  std::pair<Node<T> *, Node<T> *> equal_range(const T &data);
+  size_t count(const T &) const;
+  std::pair<Node<T> *, Node<T> *> equal_range(const T &);
   void print_tree() const { print(root, 0); };  // Дебаг
 };
 

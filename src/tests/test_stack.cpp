@@ -1,12 +1,12 @@
 #include "tests.hpp"
 
-TEST(Constructor, stack_constructor) {
+TEST(StackTest, stack_constructor) {
   stack<int> v;
 
   EXPECT_EQ(v.size(), 0);
 }
 
-TEST(Operator, stack_equal) {
+TEST(StackTest, stack_equal) {
   stack<int> v;
   v.push(1);
   stack<int> v2 = v;
@@ -14,21 +14,21 @@ TEST(Operator, stack_equal) {
   EXPECT_EQ(v2.top(), v.top());
 }
 
-TEST(Method, stack_push) {
+TEST(StackTest, stack_push) {
   stack<int> v;
   v.push(1);
 
   EXPECT_EQ(v.top(), 1);
 }
 
-TEST(Method, stack_top) {
+TEST(StackTest, stack_top) {
   stack<int> v;
   v.push(1);
 
   EXPECT_EQ(v.top(), 1);
 }
 
-TEST(Method, stack_pop) {
+TEST(StackTest, stack_pop) {
   stack<int> v;
   v.push(1);
   v.push(2);
@@ -39,14 +39,14 @@ TEST(Method, stack_pop) {
   EXPECT_EQ(v.size(), 1);
 }
 
-TEST(Method, stack_empty) {
+TEST(StackTest, stack_empty) {
   stack<int> v;
   v.push(1);
 
   EXPECT_EQ(v.empty(), false);
 }
 
-TEST(Method, stack_empty2) {
+TEST(StackTest, stack_empty2) {
   stack<int> v;
 
   EXPECT_EQ(v.empty(), true);

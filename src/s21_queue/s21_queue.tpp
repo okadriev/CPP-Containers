@@ -5,7 +5,7 @@ namespace s21 {
  */
 template <typename T1, typename T2>
 void queue<T1, T2>::pop() {
- _Get_container().erase(_Get_container().begin());
+  _Get_container().erase(_Get_container().begin());
 }
 
 /**

@@ -1,12 +1,12 @@
 #include "tests.hpp"
 
-TEST(Constructor, queue_constructor) {
+TEST(QueueTest, queue_constructor) {
   queue<int> v;
 
   EXPECT_EQ(v.size(), 0);
 }
 
-TEST(Operator, queue_equal) {
+TEST(QueueTest, queue_equal) {
   queue<int> v;
   v.push(1);
   queue<int> v2 = v;
@@ -14,28 +14,28 @@ TEST(Operator, queue_equal) {
   EXPECT_EQ(v2.front(), v.front());
 }
 
-TEST(Method1, queue_push) {
+TEST(QueueTest, queue_push) {
   queue<int> v;
   v.push(1);
 
   EXPECT_EQ(v.front(), 1);
 }
 
-TEST(Method2, queue_front) {
+TEST(QueueTest, queue_front) {
   queue<int> v;
   v.push(1);
 
   EXPECT_EQ(v.front(), 1);
 }
 
-TEST(Method3, queue_back) {
+TEST(QueueTest, queue_back) {
   queue<int> v;
   v.push(1);
 
   EXPECT_EQ(v.back(), 1);
 }
 
-TEST(Method4, queue_pop) {
+TEST(QueueTest, queue_pop) {
   queue<int> v;
   v.push(1);
   v.push(2);
@@ -46,14 +46,14 @@ TEST(Method4, queue_pop) {
   EXPECT_EQ(v.size(), 1);
 }
 
-TEST(Method5, queue_empty) {
+TEST(QueueTest, queue_empty) {
   queue<int> v;
   v.push(1);
 
   EXPECT_EQ(v.empty(), false);
 }
 
-TEST(Method6, queue_empty2) {
+TEST(QueueTest, queue_empty2) {
   queue<int> v;
 
   EXPECT_EQ(v.empty(), true);
