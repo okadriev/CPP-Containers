@@ -147,7 +147,8 @@ map<T1, T2> &map<T1, T2>::operator=(const map &other) {
 
 template <typename key_type, typename data_type>
 data_type &map<key_type, data_type>::operator[](const key_type &key) {
-  return tree_->search({key, data_type()})->data().second;
+  if (!contains(key)) insert({key, data_type()});
+  return (tree_->search({key, data_type()}))->data.second;
 }
 
 }  // namespace s21
