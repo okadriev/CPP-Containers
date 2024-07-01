@@ -58,3 +58,6 @@ dkms.conf
 .idea
 .vscode/
 src/.clang-format
+
+# Python venv for gcovr
+gcovr_env/
