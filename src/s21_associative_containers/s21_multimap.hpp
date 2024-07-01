@@ -56,7 +56,6 @@ class map : private sorted_container<pair<T1, T2>> {
   bool operator==(const map &);
   map &operator=(const map &);
   map &operator=(map &&) noexcept;
-  data_type &operator[](const key_type &);
 };
 
 }  // namespace s21

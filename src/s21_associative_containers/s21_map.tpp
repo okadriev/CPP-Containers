@@ -99,24 +99,6 @@ bool map<T1, T2>::empty() const {
   return tree_->empty();
 };
 
-template <typename T1, typename T2>
-bool map<T1, T2>::operator==(const map<T1, T2> &) {
-  return false;
-}
-
-template <typename T1, typename T2>
-map<T1, T2> &map<T1, T2>::operator=(const map &other) {
-  if (this != &other) {
-    delete tree_;
-
-    tree_ = new tree_type();
-    m_size_ = other.m_size_;
-    tree_->copy_tree(other.tree_);
-  }
-
-  return *this;
-}
-
 template <class T1, class T2>
 void map<T1, T2>::swap(map &other) noexcept {
   std::swap(tree_, other.tree_);
@@ -135,6 +117,37 @@ map<T1, T2> &map<T1, T2>::operator=(map &&other) noexcept {
   }
 
   return *this;
+}
+
+template <typename T1, typename T2>
+bool map<T1, T2>::operator==(const map<T1, T2> &other) {
+  if (m_size_ != other.m_size_) return false;
+
+  bool result = true;
+
+  for (auto it = other.begin(); it != other.end() && result; ++it) {
+    auto fonded = find((*it).first);
+    result = fonded != end() && (*fonded).second == (*it).second;
+  }
+  return result;
+}
+
+template <typename T1, typename T2>
+map<T1, T2> &map<T1, T2>::operator=(const map &other) {
+  if (this != &other) {
+    delete tree_;
+
+    tree_ = new tree_type();
+    m_size_ = other.m_size_;
+    tree_->copy_tree(other.tree_);
+  }
+
+  return *this;
+}
+
+template <typename key_type, typename data_type>
+data_type &map<key_type, data_type>::operator[](const key_type &key) {
+  return tree_->search({key, data_type()})->data().second;
 }
 
 }  // namespace s21

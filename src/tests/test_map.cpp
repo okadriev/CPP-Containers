@@ -288,17 +288,18 @@ TEST(MapOperator, indexing1) {
 }
 
 TEST(MapOperator, indexing2) {
-  map<int, std::string> test{{"A", 1}, {"B", 2}, {"C", 3}};
+  map<std::string, int> test{{"A", 1}, {"B", 2}, {"C", 3}};
 
   EXPECT_EQ(test["A"], 1);
   EXPECT_EQ(test["B"], 2);
   EXPECT_EQ(test["C"], 3);
 }
 
-TEST(MapOperator, indexing_insert) {
+TEST(MapOperator, indexing_insert1) {
   map<int, std::string> test{{1, "A"}, {2, "B"}, {3, "C"}};
 
-  EXPECT_EQ(test[1], "A");
-  EXPECT_EQ(test[2], "B");
-  EXPECT_EQ(test[3], "C");
+  test[4] = "D";
+
+  EXPECT_EQ(test.size(), 4);
+  EXPECT_EQ(test[4], "D");
 }
