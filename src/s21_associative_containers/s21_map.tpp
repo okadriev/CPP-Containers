@@ -1,41 +1,33 @@
-#include "s21_map.hpp"
+// #include "s21_map.hpp"
 
 namespace s21 {
 
 template <typename T1, typename T2>
-void map<T1, T2>::erase(const iterator &) {}
-
-template <typename T1, typename T2>
-void map<T1, T2>::erase(const key_type &) {}
+void map<T1, T2>::erase(const key_type &key) {
+  tree_->remove(tree_->search({key, data_type()}));
+  m_size_--;
+}
 
 template <typename T1, typename T2>
 map<T1, T2>::map(std::initializer_list<value_type> const &items) : map() {
   insert(items);
-  m_size = items.size();
+}
+
+template <class T1, class T2>
+void map<T1, T2>::clear() {
+  for (auto it = begin(); it != end(); ++it) erase((*it).first);
 }
 
 template <typename T1, typename T2>
 map<T1, T2>::map(const map<T1, T2> &other)
-    : tree(new tree_type()), m_size(other.m_size) {
-  tree->copy_tree(other.tree);
+    : tree_(new tree_type()), m_size_(other.m_size_) {
+  tree_->copy_tree(other.tree_);
 }
 
 template <typename T1, typename T2>
-map<T1, T2>::map(map<T1, T2> &&other) : tree(other), m_size(other.m_size) {
-  other.tree = nullptr;
-  other.m_size = 0;
-}
-
-template <typename T1, typename T2>
-pair<typename map<T1, T2>::iterator, bool> map<T1, T2>::insert(
-    const value_type &value) {
-  pair<typename map<T1, T2>::iterator, bool> result = {iterator(), false};
-  if (!contains(value.first)) {
-    tree->insert(value);
-    result.second = true;
-  }
-  result.first = find(value.first);
-  return result;
+map<T1, T2>::map(map<T1, T2> &&other) : tree_(other), m_size_(other.m_size_) {
+  other.tree_ = nullptr;
+  other.m_size_ = 0;
 }
 
 template <typename T1, typename T2>
@@ -43,10 +35,18 @@ pair<typename map<T1, T2>::iterator, bool> map<T1, T2>::insert(
     value_type &&value) {
   bool result = false;
   if (!contains(value.first)) {
-    tree->insert(value);
+    tree_->insert(value);
     result = true;
+    m_size_++;
   }
   return {find(value.first), result};
+}
+
+template <typename T1, typename T2>
+pair<typename map<T1, T2>::iterator, bool> map<T1, T2>::insert(
+    const value_type &value) {
+  value_type rvalue(value);
+  return insert(std::move(rvalue));
 }
 
 template <typename T1, typename T2>
@@ -54,8 +54,8 @@ void map<T1, T2>::insert(std::initializer_list<value_type> items) {
   for (const auto &item : items) insert(item);
 }
 
-template <typename T1, typename T2>
-void map<T1, T2>::merge(class_type &) {}
+template <class T1, class T2>
+void map<T1, T2>::merge(map &) {}
 
 template <typename T1, typename T2>
 bool map<T1, T2>::contains(const key_type &key) {
@@ -63,24 +63,49 @@ bool map<T1, T2>::contains(const key_type &key) {
 }
 
 template <typename T1, typename T2>
-typename map<T1, T2>::iterator s21::map<T1, T2>::find(const key_type &key) {
-  value_type data(key, "0");
-  return iterator(tree->search(data));
+typename map<T1, T2>::iterator map<T1, T2>::find(const key_type &key) {
+  value_type data(key, data_type());
+  return iterator(tree_->search(data));
 }
 
 template <typename T1, typename T2>
-bool map<T1, T2>::operator==(const s21::map<T1, T2> &) {
+std::size_t map<T1, T2>::max_size() const {
+  return std::numeric_limits<value_type>::max() / sizeof(value_type);
+}
+
+template <typename T1, typename T2>
+typename map<T1, T2>::iterator map<T1, T2>::begin() const {
+  return iterator(tree_->min());
+}
+
+template <typename T1, typename T2>
+typename map<T1, T2>::iterator map<T1, T2>::end() const {
+  return iterator(nullptr);
+}
+
+template <class T1, class T2>
+std::size_t map<T1, T2>::size() const {
+  return m_size_;
+}
+
+template <class T1, class T2>
+bool map<T1, T2>::empty() const {
+  return tree_->empty();
+};
+
+template <typename T1, typename T2>
+bool map<T1, T2>::operator==(const map<T1, T2> &) {
   return false;
 }
 
 template <typename T1, typename T2>
 map<T1, T2> &map<T1, T2>::operator=(const map &other) {
   if (this != &other) {
-    delete tree;
+    delete tree_;
 
-    tree = new tree_type();
-    m_size = other.m_size;
-    tree->copy_tree(other.tree);
+    tree_ = new tree_type();
+    m_size_ = other.m_size_;
+    tree_->copy_tree(other.tree_);
   }
 
   return *this;
@@ -89,33 +114,15 @@ map<T1, T2> &map<T1, T2>::operator=(const map &other) {
 template <typename T1, typename T2>
 map<T1, T2> &map<T1, T2>::operator=(map &&other) noexcept {
   if (this != &other) {
-    delete tree;
+    delete tree_;
 
-    tree = other.tree;
-    m_size = other.m_size;
-    other.m_size = 0;
-    other.tree = nullptr;
+    tree_ = other.tree_;
+    m_size_ = other.m_size_;
+    other.m_size_ = 0;
+    other.tree_ = nullptr;
   }
 
   return *this;
 }
-
-template <typename T1, typename T2>
-typename map<T1, T2>::size_type map<T1, T2>::max_size() const {
-  return std::numeric_limits<size_type>::max() / sizeof(value_type);
-}
-
-template <typename T1, typename T2>
-typename s21::map<T1, T2>::iterator s21::map<T1, T2>::begin() const {
-  return iterator(tree->min());
-}
-
-template <typename T1, typename T2>
-typename s21::map<T1, T2>::iterator s21::map<T1, T2>::end() const {
-  return iterator(nullptr);
-};
-
-virtual size_type size() const { return m_size; };
-virtual bool empty() const { return tree->empty(); };
 
 }  // namespace s21
