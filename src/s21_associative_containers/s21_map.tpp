@@ -4,7 +4,7 @@ namespace s21 {
 
 template <typename T1, typename T2>
 void map<T1, T2>::erase(const key_type &key) {
-  tree_->remove(tree_->search({key, data_type()}));
+  tree_->remove({key, data_type()});
   m_size_--;
 }
 
@@ -15,7 +15,9 @@ map<T1, T2>::map(std::initializer_list<value_type> const &items) : map() {
 
 template <class T1, class T2>
 void map<T1, T2>::clear() {
-  for (auto it = begin(); it != end(); ++it) erase((*it).first);
+  while (begin() != end()) {
+    erase((*begin()).first);
+  }
 }
 
 template <typename T1, typename T2>
@@ -55,7 +57,11 @@ void map<T1, T2>::insert(std::initializer_list<value_type> items) {
 }
 
 template <class T1, class T2>
-void map<T1, T2>::merge(map &) {}
+void map<T1, T2>::merge(map &other) {
+  for (auto it = other.begin(); it != other.end(); ++it) {
+    insert(*it);
+  }
+}
 
 template <typename T1, typename T2>
 bool map<T1, T2>::contains(const key_type &key) {
@@ -70,7 +76,7 @@ typename map<T1, T2>::iterator map<T1, T2>::find(const key_type &key) {
 
 template <typename T1, typename T2>
 std::size_t map<T1, T2>::max_size() const {
-  return std::numeric_limits<value_type>::max() / sizeof(value_type);
+  return std::numeric_limits<std::size_t>::max() / sizeof(value_type);
 }
 
 template <typename T1, typename T2>
@@ -109,6 +115,12 @@ map<T1, T2> &map<T1, T2>::operator=(const map &other) {
   }
 
   return *this;
+}
+
+template <class T1, class T2>
+void map<T1, T2>::swap(map &other) noexcept {
+  std::swap(tree_, other.tree_);
+  std::swap(m_size_, other.m_size_);
 }
 
 template <typename T1, typename T2>

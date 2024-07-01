@@ -51,7 +51,7 @@ class map : private sorted_container<pair<T1, T2>> {
   bool empty() const;
 
   void merge(map &);
-  void swap(map &) noexcept {}
+  void swap(map &) noexcept;
 
   bool operator==(const map &);
   map &operator=(const map &);
