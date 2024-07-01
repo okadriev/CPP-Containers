@@ -1,33 +1,5 @@
 namespace s21 {
 
-template <typename T>
-set_iterator<T> &set_iterator<T>::operator++() {
-  node = next_node(node);
-
-  return *this;
-}
-
-template <typename T>
-Node<T> *set_iterator<T>::next_node(Node<T> *node) const {
-  if (node == nullptr) return nullptr;
-
-  Node<T> *next = nullptr;
-
-  if (node->right) {
-    next = node->right;
-    while (next->left) next = next->left;
-
-  } else {
-    next = node->parent;
-    while (next && node == next->right) {
-      node = next;
-      next = next->parent;
-    }
-  }
-
-  return next;
-};
-
 template <typename value_type>
 set<value_type>::set(std::initializer_list<value_type> const &items) : set() {
   for (const auto &item : items) insert(item);
@@ -68,19 +40,14 @@ void set<value_type>::clear() {
 }
 
 template <typename value_type>
-std::pair<typename set<value_type>::iterator, bool> set<value_type>::insert(
+pair<typename set<value_type>::iterator, bool> set<value_type>::insert(
     const_reference data) {
-  bool result = false;
-  iterator ptr = nullptr;
+  pair<iterator, bool> result;
+  result.first = this->tree->insert(data);
+  result.second = true;
+  (this->m_size)++;
 
-  if (!contains(data)) {
-    ptr = tree->insert(data);
-    ++m_size;
-
-    result = true;
-  }
-
-  return std::make_pair(ptr, result);
+  return result;
 }
 
 template <typename value_type>

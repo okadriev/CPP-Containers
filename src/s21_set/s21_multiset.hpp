@@ -8,17 +8,18 @@ class multiset : public set<T> {
  private:
   using value_type = T;
   using const_reference = const T &;
-  using iterator = set_iterator<value_type>;
-  using size_type = size_t;
+  using size_type = std::size_t;
 
  public:
-  multiset() : set<T>(){};
+  using iterator = typename sorted_container<value_type>::iterator;
+
+  multiset() : set<T>() {};
   multiset(std::initializer_list<T> const &);
 
-  std::pair<iterator, bool> insert(const_reference);
-
+  pair<iterator, bool> insert(const_reference);
+  void merge(multiset &);
   size_type count(const_reference num) const { return this->tree->count(num); };
-  std::pair<iterator, iterator> equal_range(const_reference);
+  pair<iterator, iterator> equal_range(const_reference);
   iterator lower_bound(const_reference);
   iterator upper_bound(const_reference);
 };

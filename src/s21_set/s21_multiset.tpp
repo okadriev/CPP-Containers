@@ -8,8 +8,9 @@ multiset<T>::multiset(std::initializer_list<T> const &items) : set<T>() {
 }
 
 template <typename T>
-std::pair<set_iterator<T>, bool> multiset<T>::insert(const_reference data) {
-  std::pair<iterator, bool> result;
+pair<typename multiset<T>::iterator, bool> multiset<T>::insert(
+    const_reference data) {
+  pair<iterator, bool> result;
   result.first = this->tree->insert(data);
   result.second = true;
   (this->m_size)++;
@@ -18,9 +19,11 @@ std::pair<set_iterator<T>, bool> multiset<T>::insert(const_reference data) {
 };
 
 template <typename T>
-std::pair<set_iterator<T>, set_iterator<T>> multiset<T>::equal_range(
-    const_reference data) {
-  return this->tree->equal_range(data);
+pair<typename multiset<T>::iterator, typename multiset<T>::iterator>
+multiset<T>::equal_range(const_reference data) {
+  auto range = this->tree->equal_range(data);
+  return {this->tree->make_iterator(range.first),
+          this->tree->make_iterator(range.second)};
 };
 
 template <typename T>
@@ -31,6 +34,13 @@ typename multiset<T>::iterator multiset<T>::lower_bound(const_reference data) {
 template <typename T>
 typename multiset<T>::iterator multiset<T>::upper_bound(const_reference data) {
   return ++(equal_range(data).second);
+}
+
+template <typename T>
+void multiset<T>::merge(multiset &other) {
+  for (auto it = other.begin(); it != other.end(); ++it) {
+    insert(*it);
+  }
 }
 
 }  // namespace s21

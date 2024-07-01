@@ -2,7 +2,6 @@
 #define S21_VECTOR_H_
 
 #include <initializer_list>
-#include <iostream>
 #include <limits>
 #include <memory>
 

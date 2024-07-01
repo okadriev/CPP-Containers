@@ -1,6 +1,5 @@
 #pragma once
 #include <initializer_list>
-#include <iostream>
 #include <limits>
 #include <memory>
 
@@ -62,8 +61,6 @@ class list {
   template <typename... Args>
   void insert_many_front(Args &&...args);
 
-  void print_list();
-
  private:
   struct Node {
     value_type value;
@@ -96,7 +93,7 @@ class list<T>::ListIterator {
 
   ListIterator(typename list<T>::Node *node_ = nullptr,
                typename list<T>::Node *last_node_ = nullptr)
-      : node(node_), last_node(last_node_){};
+      : node(node_), last_node(last_node_) {};
 
   ListIterator(const list<T>::Node *node_) : node(node_) {}
 
