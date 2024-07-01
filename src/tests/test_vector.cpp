@@ -265,7 +265,7 @@ TEST(VectorTest, InsertMethod_PositionOutOfRange) {
 }
 
 TEST(VectorTest, EraseMethod) {
-  s21::vector<int> v = {1, 2, 3, 4, 5};
+  vector<int> v = {1, 2, 3, 4, 5};
 
   v.erase(v.begin() + 2);
   EXPECT_EQ(v.size(), 4U);
@@ -319,7 +319,31 @@ TEST(VectorTest, SwapMethod) {
   EXPECT_EQ(other[2], 3);
 }
 
-TEST(VectorTest, InsertManyMethod) {
+TEST(VectorTest, InsertManyMethod_OutOfRange) {
+  vector<int> v = {1, 2, 3};
+  EXPECT_THROW(v.insert_many(v.cend() + 1, 4, 5, 6), std::out_of_range);
+}
+
+TEST(VectorTest, InsertManyMethod_1) {
+  vector<int> v{1, 2, 3};
+  v.insert_many(v.cbegin() + 1);
+  EXPECT_EQ(v.size(), 3U);
+  EXPECT_EQ(v[0], 1);
+  EXPECT_EQ(v[1], 2);
+  EXPECT_EQ(v[2], 3);
+}
+
+TEST(VectorTest, InsertManyMethod_2) {
+  vector<int> v{1, 2, 3};
+  v.insert_many(v.cbegin() + 1, 4);
+  EXPECT_EQ(v.size(), 4U);
+  EXPECT_EQ(v[0], 1);
+  EXPECT_EQ(v[1], 4);
+  EXPECT_EQ(v[2], 2);
+  EXPECT_EQ(v[3], 3);
+}
+
+TEST(VectorTest, InsertManyMethod_3) {
   vector<int> v{1, 2, 3};
   v.insert_many(v.cbegin() + 1, 4, 5, 6);
   EXPECT_EQ(v.size(), 6U);
@@ -331,20 +355,67 @@ TEST(VectorTest, InsertManyMethod) {
   EXPECT_EQ(v[5], 3);
 }
 
-TEST(VectorTest, InsertManyMethod_OutOfRange) {
-  vector<int> v = {1, 2, 3};
-  EXPECT_THROW(v.insert_many(v.cend() + 1, 4, 5, 6), std::out_of_range);
+TEST(VectorTest, InsertManyMethod_4) {
+  vector<int> v{1, 2, 3};
+  v.insert_many(v.cbegin() + 1, 4, 5, 6, 7, 8);
+  EXPECT_EQ(v.size(), 8U);
+  EXPECT_EQ(v[0], 1);
+  EXPECT_EQ(v[1], 4);
+  EXPECT_EQ(v[2], 5);
+  EXPECT_EQ(v[3], 6);
+  EXPECT_EQ(v[4], 7);
+  EXPECT_EQ(v[5], 8);
+  EXPECT_EQ(v[6], 2);
+  EXPECT_EQ(v[7], 3);
 }
 
-TEST(VectorTest, InsertManyBackMethod) {
+TEST(VectorTest, InsertManyBackMethod_1) {
+  vector<int> v = {1, 2, 3};
+  v.insert_many_back();
+  EXPECT_EQ(v.size(), 3U);
+  EXPECT_EQ(v[0], 1);
+  EXPECT_EQ(v[1], 2);
+  EXPECT_EQ(v[2], 3);
+}
+
+TEST(VectorTest, InsertManyBackMethod_2) {
+  vector<int> v = {1, 2, 3};
+  v.insert_many_back(4);
+  EXPECT_EQ(v.size(), 4U);
+  EXPECT_EQ(v[0], 1);
+  EXPECT_EQ(v[1], 2);
+  EXPECT_EQ(v[2], 3);
+  EXPECT_EQ(v[3], 4);
+}
+
+TEST(VectorTest, InsertManyBackMethod_3) {
+  vector<int> v = {1, 2, 3};
+  v.insert_many_back(4, 5, 6);
+  EXPECT_EQ(v.size(), 6U);
+  EXPECT_EQ(v[0], 1);
+  EXPECT_EQ(v[1], 2);
+  EXPECT_EQ(v[2], 3);
+  EXPECT_EQ(v[3], 4);
+  EXPECT_EQ(v[4], 5);
+  EXPECT_EQ(v[5], 6);
+}
+
+TEST(VectorTest, InsertManyBackMethod_4) {
   vector<int> v = {1, 2, 3};
   v.insert_many_back(4, 5, 6, 7, 8);
-  EXPECT_EQ(v[3], 4);
   EXPECT_EQ(v.size(), 8U);
+  EXPECT_EQ(v[0], 1);
+  EXPECT_EQ(v[1], 2);
+  EXPECT_EQ(v[2], 3);
+  EXPECT_EQ(v[3], 4);
+  EXPECT_EQ(v[4], 5);
+  EXPECT_EQ(v[5], 6);
+  EXPECT_EQ(v[6], 7);
+  EXPECT_EQ(v[7], 8);
 }
 
 TEST(VectorTest, IteratorOperations) {
-  s21::vector<int> v = {1, 2, 3, 4, 5};
+  vector<int> v = {1, 2, 3, 4, 5};
   auto it = v.begin();
 
   EXPECT_EQ(*it, 1);
