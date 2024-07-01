@@ -8,12 +8,12 @@
 namespace s21 {
 
 template <typename T1, typename T2 /*, typename comparator = std::less<T1>*/>
-class map : private sorted_container<pair<T1, T2>> {
+class map : public sorted_container<pair<T1, T2>> {
  private:
   using key_type = T1;
   using data_type = T2;
   using value_type = pair<key_type, data_type>;
-  using tree_type = typename sorted_container<value_type>::rb_tree;
+  using tree_type = rb_tree<value_type>;
   using reference = value_type &;
   using const_reference = const value_type &;
 
@@ -21,11 +21,11 @@ class map : private sorted_container<pair<T1, T2>> {
   using iterator = typename sorted_container<value_type>::iterator;
   using const_iterator = const typename sorted_container<value_type>::iterator;
 
-  map() : tree_(new tree_type()), m_size_(0) {};
+  map() {};
   map(std::initializer_list<value_type> const &);
   map(const map &);
   map(map &&);
-  ~map() { delete tree_; };
+  ~map() {};
 
   pair<iterator, bool> insert(const value_type &value);
   pair<iterator, bool> insert(value_type &&);
@@ -58,4 +58,6 @@ class map : private sorted_container<pair<T1, T2>> {
 
 }  // namespace s21
 
-#include "s21_map.tpp"
+#include "s21_map_constructors.tpp"
+#include "s21_map_methods.tpp"
+#include "s21_map_operators.tpp"
