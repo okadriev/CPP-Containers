@@ -17,9 +17,6 @@ class map : private sorted_container<pair<T1, T2>> {
   using reference = value_type &;
   using const_reference = const value_type &;
 
-  tree_type *tree_;
-  std::size_t m_size_;
-
  public:
   using iterator = typename sorted_container<value_type>::iterator;
   using const_iterator = const typename sorted_container<value_type>::iterator;
