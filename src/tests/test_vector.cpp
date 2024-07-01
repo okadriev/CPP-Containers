@@ -369,6 +369,11 @@ TEST(VectorTest, InsertManyMethod_4) {
   EXPECT_EQ(v[7], 3);
 }
 
+TEST(VectorTest, InsertManyBackMethod_OutOfRange) {
+  vector<int> v = {1, 2, 3};
+  EXPECT_THROW(v.insert_many(v.cend() + 1, 4, 5, 6), std::out_of_range);
+}
+
 TEST(VectorTest, InsertManyBackMethod_1) {
   vector<int> v = {1, 2, 3};
   v.insert_many_back();
