@@ -1,4 +1,4 @@
-// #include "s21_map.hpp"
+#include "s21_map.hpp"
 
 namespace s21 {
 
@@ -99,5 +99,23 @@ map<T1, T2> &map<T1, T2>::operator=(map &&other) noexcept {
 
   return *this;
 }
+
+template <typename T1, typename T2>
+typename map<T1, T2>::size_type map<T1, T2>::max_size() const {
+  return std::numeric_limits<size_type>::max() / sizeof(value_type);
+}
+
+template <typename T1, typename T2>
+typename s21::map<T1, T2>::iterator s21::map<T1, T2>::begin() const {
+  return iterator(tree->min());
+}
+
+template <typename T1, typename T2>
+typename s21::map<T1, T2>::iterator s21::map<T1, T2>::end() const {
+  return iterator(nullptr);
+};
+
+virtual size_type size() const { return m_size; };
+virtual bool empty() const { return tree->empty(); };
 
 }  // namespace s21
