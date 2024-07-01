@@ -1,25 +1,21 @@
 #include "tests.hpp"
 
-namespace _t {
-using val_pair = pair<int, std::string>;
-}
-
-TEST(MapConstructor, set_default) {
+TEST(MapConstructor, default) {
   map<int, std::string> test;
 
   EXPECT_EQ(test.size(), 0);
   EXPECT_EQ(test.empty(), true);
 }
 
-TEST(MapConstructor, set_param_1) {
-  map<int, std::string> test1{{1, "A"}, _t::val_pair{2, "B"}, {3, "C"}};
+TEST(MapConstructor, param_1) {
+  map<int, std::string> test1{{1, "A"}, {2, "B"}, {3, "C"}};
   map<int, std::string> test2(test1);
 
   EXPECT_EQ(test2.size(), 3);
   EXPECT_EQ(test2.contains(2), true);
 }
 
-TEST(MapConstructor, set_param_2) {
+TEST(MapConstructor, param_2) {
   map<int, std::string> test1;
   map<int, std::string> test2(test1);
 
@@ -27,7 +23,7 @@ TEST(MapConstructor, set_param_2) {
   EXPECT_EQ(test2.empty(), true);
 }
 
-TEST(MapMethod, set_copy) {
+TEST(MapMethod, operator_copy) {
   map<int, std::string> test1{{1, "A"}, {2, "B"}, {3, "C"}};
   map<int, std::string> test2;
 
@@ -37,7 +33,7 @@ TEST(MapMethod, set_copy) {
   EXPECT_EQ(test2.empty(), false);
 }
 
-TEST(MapMethod, set_move) {
+TEST(MapMethod, operator_move) {
   map<int, std::string> test1{{1, "A"}, {2, "B"}, {3, "C"}};
   map<int, std::string> test2;
 
@@ -48,7 +44,7 @@ TEST(MapMethod, set_move) {
   EXPECT_EQ(test2.empty(), false);
 }
 
-TEST(MapMethod, set_clear_1) {
+TEST(MapMethod, clear_1) {
   map<int, std::string> test1{{1, "A"}, {2, "B"}, {3, "C"}};
   test1.clear();
 
@@ -56,7 +52,7 @@ TEST(MapMethod, set_clear_1) {
   EXPECT_EQ(test1.empty(), true);
 }
 
-TEST(MapMethod, set_clear_2) {
+TEST(MapMethod, clear_2) {
   map<int, std::string> test1;
   test1.clear();
 
@@ -64,7 +60,7 @@ TEST(MapMethod, set_clear_2) {
   EXPECT_EQ(test1.empty(), true);
 }
 
-TEST(MapMethod, set_insert) {
+TEST(MapMethod, insert) {
   map<int, std::string> test1;
   pair<int, std::string> element{2, "B"};
 
@@ -77,7 +73,7 @@ TEST(MapMethod, set_insert) {
   EXPECT_EQ(*pair.first, element);
 }
 
-TEST(MapMethod, set_erase_1) {
+TEST(MapMethod, erase_1) {
   map<int, std::string> test1{{1, "A"}, {2, "B"}, {3, "C"}};
   test1.erase(2);
 
@@ -85,7 +81,7 @@ TEST(MapMethod, set_erase_1) {
   EXPECT_EQ(test1.contains(2), false);
 }
 
-TEST(MapMethod, set_erase_2) {
+TEST(MapMethod, erase_2) {
   map<int, std::string> test1{
       {1, "A"},  {2, "B"},  {3, "C"},  {4, "D"},  {5, "E"},  {6, "F"},
       {7, "G"},  {8, "H"},  {9, "I"},  {10, "J"}, {11, "K"}, {12, "L"},
@@ -127,7 +123,7 @@ TEST(MapMethod, set_erase_2) {
   EXPECT_EQ(test1.empty(), true);
 }
 
-TEST(MapMethod, set_erase_ptr) {
+TEST(MapMethod, erase_ptr) {
   map<int, std::string> test1{{1, "A"}, {2, "B"}, {3, "C"}};
   test1.erase(test1.find(2));
 
@@ -135,7 +131,7 @@ TEST(MapMethod, set_erase_ptr) {
   EXPECT_EQ(test1.contains(2), false);
 }
 
-TEST(MapMethod, set_swap) {
+TEST(MapMethod, swap) {
   map<int, std::string> test1{{1, "A"}, {2, "B"}, {3, "C"}};
   map<int, std::string> test2{{4, "D"}, {5, "E"}, {6, "F"},
                               {7, "G"}, {8, "H"}, {9, "I"}};
@@ -157,7 +153,7 @@ TEST(MapMethod, set_swap) {
   EXPECT_EQ(test2.contains(3), true);
 }
 
-TEST(MapMethod, set_merge) {
+TEST(MapMethod, merge) {
   map<int, std::string> test1{{1, "A"}, {2, "B"}, {3, "C"}};
   map<int, std::string> test2{{4, "D"}, {5, "E"}, {6, "F"},
                               {7, "G"}, {8, "H"}, {9, "I"}};
@@ -175,7 +171,7 @@ TEST(MapMethod, set_merge) {
   EXPECT_EQ(test1.contains(9), true);
 }
 
-TEST(MapMethod, set_find) {
+TEST(MapMethod, find) {
   map<int, std::string> test1{{1, "A"}, {2, "B"}, {3, "C"}};
   pair<int, std::string> element(2, "B");
   map<int, std::string>::iterator it = test1.find(2);
@@ -187,7 +183,7 @@ TEST(MapMethod, set_find) {
   EXPECT_EQ(it == test1.end(), true);
 }
 
-TEST(MapMethod, set_begin) {
+TEST(MapMethod, begin) {
   map<int, std::string> test1{{1, "A"}, {2, "B"}, {3, "C"}};
   map<int, std::string> test2{{3, "C"}, {2, "B"}, {1, "A"}};
   map<int, std::string> test3{{10, "J"}, {15, "K"}, {5, "I"}, {6, "H"},
@@ -203,7 +199,7 @@ TEST(MapMethod, set_begin) {
   EXPECT_EQ(*test3.begin(), element3);
 }
 
-TEST(MapMethod, set_end) {
+TEST(MapMethod, end) {
   map<int, std::string> test1{{1, "A"}, {2, "B"}, {3, "C"}};
   map<int, std::string> test2{{3, "C"}, {2, "B"}, {1, "A"}};
   map<int, std::string> test3{{10, "J"}, {15, "K"}, {5, "I"}, {6, "H"},
@@ -218,7 +214,7 @@ TEST(MapMethod, set_end) {
   EXPECT_EQ(test3.end(), result);
 }
 
-TEST(MapMethod, set_max_size) {
+TEST(MapMethod, max_size) {
   map<int, std::string> test1{{1, "A"}, {2, "B"}, {3, "C"}};
 
   EXPECT_GT(test1.max_size(), 1000);

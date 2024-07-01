@@ -32,8 +32,8 @@ class map : private associative_container<T1, T2> {
   pair<iterator, bool> insert(value_type &&) override;
   void insert(std::initializer_list<value_type>) override;
 
-  void erase(key_type const&) override;
-  void erase(iterator const&) override;
+  void erase(key_type const &) override;
+  void erase(iterator const &) override;
 
   void clear() override {};
 
@@ -45,14 +45,18 @@ class map : private associative_container<T1, T2> {
 
   void swap(map &) noexcept {}
 
-  iterator begin() const override { return iterator(nullptr); };
+  iterator begin() const override { return iterator(tree->min()); };
   iterator end() const override { return iterator(nullptr); };
 
-  size_type max_size() const override { return 0UL; };
-  size_type size() const override { return 0UL; };
-  bool empty() const override { return true; };
+  size_type max_size() const override {
+    return std::numeric_limits<size_type>::max() / sizeof(value_type);
+  };
+  size_type size() const override { return m_size; };
+  bool empty() const override { return tree->empty(); };
 
-  bool operator=(const s21::map<T1, T2> &);
+  bool operator==(const s21::map<T1, T2> &);
+  map &operator=(const map &);
+  map &operator=(map &&) noexcept;
 };
 
 }  // namespace s21

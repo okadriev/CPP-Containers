@@ -8,7 +8,7 @@
 namespace s21 {
 
 template <typename T1, typename T2>
-class associative_container : sorted_container<pair<T1, T2>> {
+class associative_container {
  private:
   using key_type = T1;
   using data_type = T2;
