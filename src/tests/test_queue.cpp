@@ -110,9 +110,38 @@ TEST(QueueTest, swap) {
 TEST(QueueTest, insert_many) {
   s21::queue<int> q1{1, 2, 3};
 
+  q1.insert_many_back();
+
+  EXPECT_EQ(q1.size(), 3);
+  EXPECT_EQ(q1.front(), 1);
+  EXPECT_EQ(q1.back(), 3);
+}
+TEST(QueueTest, insert_many2) {
+  s21::queue<int> q1{1, 2, 3};
+
+  q1.insert_many_back(4);
+
+  EXPECT_EQ(q1.size(), 4);
+  EXPECT_EQ(q1.front(), 1);
+  EXPECT_EQ(q1.back(), 4);
+}
+
+TEST(QueueTest, insert_many3) {
+  s21::queue<int> q1{1, 2, 3};
+
   q1.insert_many_back(4, 5, 6);
 
   EXPECT_EQ(q1.size(), 6);
   EXPECT_EQ(q1.front(), 1);
   EXPECT_EQ(q1.back(), 6);
+}
+
+TEST(QueueTest, insert_many4) {
+  s21::queue<int> q1{1, 2, 3};
+
+  q1.insert_many_back(4, 5, 6, 7 , 8 );
+
+  EXPECT_EQ(q1.size(), 8);
+  EXPECT_EQ(q1.front(), 1);
+  EXPECT_EQ(q1.back(), 8);
 }
