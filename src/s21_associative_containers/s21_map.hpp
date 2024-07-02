@@ -28,9 +28,9 @@ class map : public sorted_container<pair<T1, T2>> {
   map(map &&);
   ~map() {};
 
-  void erase(key_type const &);
-
-  void clear();
+  void erase(key_type const &key) {
+    this->container::erase({key, data_type()});
+  }
 
   iterator find(const key_type &key);
 

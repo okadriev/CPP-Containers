@@ -2,19 +2,6 @@
 
 namespace s21 {
 
-template <typename T1, typename T2>
-void map<T1, T2>::erase(const key_type &key) {
-  this->tree_->remove({key, data_type()});
-  this->m_size_--;
-}
-
-template <class T1, class T2>
-void map<T1, T2>::clear() {
-  while (this->begin() != this->end()) {
-    erase((*this->begin()).first);
-  }
-}
-
 template <class T1, class T2>
 void map<T1, T2>::merge(map &other) {
   for (auto it = other.begin(); it != other.end(); ++it) {

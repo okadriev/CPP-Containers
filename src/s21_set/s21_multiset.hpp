@@ -14,11 +14,13 @@ class multiset : public set<T> {
   using iterator = typename sorted_container<value_type>::iterator;
 
   multiset() : set<T>() {};
-  multiset(std::initializer_list<T> const &);
+  multiset(std::initializer_list<T> const &items) : set<T>(items) {};
 
-  pair<iterator, bool> insert(const_reference);
+  // pair<iterator, bool> insert(const_reference);
   void merge(multiset &);
-  size_type count(const_reference num) const { return this->tree->count(num); };
+  size_type count(const_reference num) const {
+    return this->tree_->count(num);
+  };
   pair<iterator, iterator> equal_range(const_reference);
   iterator lower_bound(const_reference);
   iterator upper_bound(const_reference);

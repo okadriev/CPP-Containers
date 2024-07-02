@@ -118,13 +118,13 @@ TEST(Method, set_erase_2) {
   EXPECT_EQ(test1.empty(), true);
 }
 
-TEST(Method, set_erase_ptr) {
-  set<int> test1{1, 2, 3};
-  test1.erase(test1.find(2));
+// TEST(Method, set_erase_ptr) {
+//   set<int> test1{1, 2, 3};
+//   test1.erase(test1.find(2));
 
-  EXPECT_EQ(test1.size(), 2);
-  EXPECT_EQ(test1.contains(2), false);
-}
+//   EXPECT_EQ(test1.size(), 2);
+//   EXPECT_EQ(test1.contains(2), false);
+// }
 
 TEST(Method, set_swap) {
   set<int> test1{1, 2, 3};

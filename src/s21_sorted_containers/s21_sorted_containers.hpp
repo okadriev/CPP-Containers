@@ -103,6 +103,8 @@ class sorted_container {
   void insert(std::initializer_list<T> items);
   bool contains(const value_type &key);
   iterator find(const value_type &key);
+  void erase(value_type const &);
+  void clear();
 
   iterator begin() const { return iterator(this->tree_->min()); }
   iterator end() const { return iterator(nullptr); }
@@ -171,6 +173,19 @@ typename sorted_container<T>::iterator sorted_container<T>::find(
 template <typename T>
 bool sorted_container<T>::contains(const value_type &key) {
   return find(key) != end();
+}
+
+template <typename T>
+void sorted_container<T>::erase(const value_type &key) {
+  this->tree_->remove(key);
+  this->m_size_--;
+}
+
+template <typename T>
+void sorted_container<T>::clear() {
+  while (this->begin() != this->end()) {
+    erase((*this->begin()));
+  }
 }
 
 }  // namespace s21
