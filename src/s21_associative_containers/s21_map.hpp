@@ -16,20 +16,17 @@ class map : public sorted_container<pair<T1, T2>> {
   using tree_type = rb_tree<value_type>;
   using reference = value_type &;
   using const_reference = const value_type &;
+  using container = sorted_container<pair<T1, T2>>;
 
  public:
-  using iterator = typename sorted_container<value_type>::iterator;
-  using const_iterator = const typename sorted_container<value_type>::iterator;
+  using iterator = typename container::iterator;
+  using const_iterator = const typename container::iterator;
 
   map() {};
-  map(std::initializer_list<value_type> const &);
+  map(std::initializer_list<value_type> const &items) : container(items) {};
   map(const map &);
   map(map &&);
   ~map() {};
-
-  pair<iterator, bool> insert(const value_type &value);
-  pair<iterator, bool> insert(value_type &&);
-  void insert(std::initializer_list<value_type>);
 
   void erase(key_type const &);
 
@@ -37,15 +34,11 @@ class map : public sorted_container<pair<T1, T2>> {
 
   iterator find(const key_type &key);
 
-  bool contains(const key_type &);
+  bool contains(const key_type &key) {
+    return this->container::contains({key, data_type()});
+  };
 
   std::size_t max_size() const;
-
-  iterator begin() const;
-  iterator end() const;
-
-  std::size_t size() const;
-  bool empty() const;
 
   void merge(map &);
   void swap(map &) noexcept;

@@ -82,13 +82,13 @@ class rb_tree {
   iterator make_iterator(node_t *node) { return iterator(node); }
 };
 
-template <typename T, class C>
+template <typename T>
 class sorted_container {
  protected:
   using value_type = T;
-  using container = C;
   using iterator = Iterator<value_type>;
   using tree_t = rb_tree<value_type>;
+  using iter_pair_return = pair<iterator, bool>;
 
   tree_t *tree_;
   std::size_t m_size_;
@@ -96,12 +96,18 @@ class sorted_container {
  public:
   sorted_container() : tree_(new tree_t()), m_size_(0) {}
   sorted_container(std::initializer_list<value_type> const &);
-  sorted_container(const container &);
-  sorted_container(container &&);
-
   ~sorted_container() { delete tree_; }
 
-  tree_t *tree() { return tree_; }
+  iter_pair_return insert(value_type &&value);
+  iter_pair_return insert(const value_type &value);
+  void insert(std::initializer_list<T> items);
+  bool contains(const value_type &key);
+  iterator find(const value_type &key);
+
+  iterator begin() const { return iterator(this->tree_->min()); }
+  iterator end() const { return iterator(nullptr); }
+  std::size_t size() const { return this->m_size_; }
+  bool empty() const { return this->tree_->empty(); }
 };
 
 template <typename T>
@@ -125,29 +131,46 @@ inline Node<T> *Iterator<T>::next_node(node_t *node) const {
   return next;
 };
 
-template <typename value_type, class container>
-sorted_container<value_type, container>::sorted_container(
+template <typename value_type>
+sorted_container<value_type>::sorted_container(
     std::initializer_list<value_type> const &items)
     : sorted_container() {
   insert(items);
 }
-template <typename value_type>
-sorted_container<value_type>::sorted_container(
-    const sorted_container<value_type> &other)
-    : sorted_container() {
-  this->m_size_ = other.size();
-  this->tree_->copy_tree(other.tree_);
+
+template <typename T>
+void sorted_container<T>::insert(std::initializer_list<T> items) {
+  for (const auto &item : items) insert(item);
 }
 
-template <typename value_type>
-sorted_container<value_type>::sorted_container(
-    sorted_container<value_type> &&other)
-    : sorted_container() {
-  delete this->tree_;
-  this->tree_ = other.tree_;
-  this->m_size_(other.m_size_);
-  other.tree_ = nullptr;
-  other.m_size_ = 0;
+template <typename T>
+typename sorted_container<T>::iter_pair_return sorted_container<T>::insert(
+    value_type &&value) {
+  bool result = false;
+  if (!contains(value)) {
+    tree_->insert(value);
+    result = true;
+    m_size_++;
+  }
+  return {find(value), result};
+}
+
+template <typename T>
+typename sorted_container<T>::iter_pair_return sorted_container<T>::insert(
+    const value_type &value) {
+  value_type rvalue(value);
+  return insert(std::move(rvalue));
+}
+
+template <typename T>
+typename sorted_container<T>::iterator sorted_container<T>::find(
+    const value_type &key) {
+  return iterator(this->tree_->search(key));
+}
+
+template <typename T>
+bool sorted_container<T>::contains(const value_type &key) {
+  return find(key) != end();
 }
 
 }  // namespace s21

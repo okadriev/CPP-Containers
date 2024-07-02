@@ -7,7 +7,7 @@ bool map<T1, T2>::operator==(const map<T1, T2> &other) {
 
   for (auto it = other.begin(); it != other.end() && result; ++it) {
     auto fonded = find((*it).first);
-    result = fonded != end() && (*fonded).second == (*it).second;
+    result = fonded != this->end() && (*fonded).second == (*it).second;
   }
   return result;
 }
@@ -25,9 +25,23 @@ map<T1, T2> &map<T1, T2>::operator=(const map &other) {
   return *this;
 }
 
+template <typename T1, typename T2>
+map<T1, T2> &map<T1, T2>::operator=(map &&other) noexcept {
+  if (this != &other) {
+    delete this->tree_;
+
+    this->tree_ = other.tree_;
+    this->m_size_ = other.m_size_;
+    other.m_size_ = 0;
+    other.tree_ = nullptr;
+  }
+
+  return *this;
+}
+
 template <typename key_type, typename data_type>
 data_type &map<key_type, data_type>::operator[](const key_type &key) {
-  if (!contains(key)) insert({key, data_type()});
+  if (!contains(key)) this->insert({key, data_type()});
   return (this->tree_->search({key, data_type()}))->data.second;
 }
 
