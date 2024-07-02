@@ -40,8 +40,9 @@ class map : public sorted_container<pair<T1, T2>> {
     return this->container::contains({key, data_type()});
   };
 
-  void merge(map &s) { this->container::merge(s.begin(), s.end()); };
-  void swap(map &s) noexcept { this->container::swap(s.tree_, s.m_size_); };
+  // void swap(map &s) noexcept { this->container::swap(sorted_container other);
+  // };
+  void merge(map &s) { this->container::merge(s); };
 
   bool operator==(const map &);
   map &operator=(const map &);

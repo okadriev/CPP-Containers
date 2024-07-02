@@ -49,6 +49,7 @@ class rb_tree {
  private:
   using node_t = Node<T>;
   using iterator = Iterator<T>;
+  using size_t = std::size_t;
 
   node_t *root;
 
@@ -60,7 +61,7 @@ class rb_tree {
 
   void fix_2_red(node_t *&);
   void fix_2_black(node_t *&);
-  std::size_t count_elements(node_t *node, const T &data) const;
+  size_t count_elements(node_t *node, const T &data) const;
   pair<node_t *, node_t *> element_range(node_t *node, const T &data);
 
  public:
@@ -77,7 +78,7 @@ class rb_tree {
   node_t *search(const T &) const;
   bool empty() const { return (this == nullptr) || root == nullptr; };
 
-  std::size_t count(const T &) const;
+  size_t count(const T &) const;
   pair<node_t *, node_t *> equal_range(const T &);
   iterator make_iterator(node_t *node) { return iterator(node); }
 };
@@ -89,32 +90,31 @@ class sorted_container {
   using iterator = Iterator<value_type>;
   using tree_t = rb_tree<value_type>;
   using iter_pair_return = pair<iterator, bool>;
+  using size_t = std::size_t;
+  using limits = std::numeric_limits<size_t>;
 
   tree_t *tree_;
-  std::size_t m_size_;
-
-  void merge(iterator, iterator);
-  void swap(tree_t &, std::size_t &) noexcept;
-  bool contains(const value_type &key);
-  void erase(value_type const &);
+  size_t m_size_;
 
  public:
   sorted_container() : tree_(new tree_t()), m_size_(0) {}
   sorted_container(std::initializer_list<value_type> const &);
   ~sorted_container() { delete tree_; }
 
-  pair<iterator, bool> insert(value_type &&value);
-  pair<iterator, bool> insert(const value_type &value);
-  void insert(std::initializer_list<T> items);
-
-  iterator find(const value_type &key);
+  pair<iterator, bool> insert(value_type &&);
+  pair<iterator, bool> insert(const value_type &);
+  void insert(std::initializer_list<T>);
+  void merge(sorted_container &);
+  bool contains(const value_type &);
+  void erase(value_type const &);
+  iterator find(const value_type &);
 
   void clear();
-
+  void swap(sorted_container &) noexcept;
   iterator begin() const { return iterator(this->tree_->min()); }
   iterator end() const { return iterator(nullptr); }
-  std::size_t size() const { return this->m_size_; }
-  std::size_t max_size() const;
+  size_t size() const { return this->m_size_; }
+  size_t max_size() const { return limits::max() / sizeof(value_type); };
   bool empty() const { return this->tree_->empty(); }
 };
 
@@ -194,21 +194,16 @@ void sorted_container<T>::clear() {
 }
 
 template <typename T>
-void sorted_container<T>::merge(iterator it, iterator end) {
-  for (; it != end; ++it) {
+void sorted_container<T>::merge(sorted_container &other) {
+  for (auto it = other.begin(); it != other.end(); ++it) {
     this->insert(*it);
   }
 }
 
-template <typename T>
-std::size_t sorted_container<T>::max_size() const {
-  return std::numeric_limits<std::size_t>::max() / sizeof(value_type);
-}
-
 template <class T>
-void sorted_container<T>::swap(tree_t &o_tree, std::size_t &o_m_size) noexcept {
-  std::swap(this->tree_, o_tree);
-  std::swap(this->m_size_, o_m_size);
+void sorted_container<T>::swap(sorted_container &other) noexcept {
+  std::swap(this->tree_, other.tree_);
+  std::swap(this->m_size_, other.m_size_);
 }
 
 }  // namespace s21

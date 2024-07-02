@@ -30,8 +30,8 @@ class set : public sorted_container<T> {
   set<value_type> &operator=(const set &);
   set<value_type> &operator=(set &&) noexcept;
 
-  void swap(set &s) { this->container::swap(s.container); };
-  void merge(set &s) { this->container::merge(s.container); };
+  // void swap(set &s) { this->container::swap(s.tree_, s.m_size_); };
+  // void merge(set &s) { this->container::merge(s.begin(), s.end()); };
 };
 
 template <typename value_type>

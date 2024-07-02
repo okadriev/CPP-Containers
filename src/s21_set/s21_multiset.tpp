@@ -36,11 +36,4 @@ typename multiset<T>::iterator multiset<T>::upper_bound(const_reference data) {
   return ++(equal_range(data).second);
 }
 
-template <typename T>
-void multiset<T>::merge(multiset &other) {
-  for (auto it = other.begin(); it != other.end(); ++it) {
-    this->insert(*it);
-  }
-}
-
 }  // namespace s21
