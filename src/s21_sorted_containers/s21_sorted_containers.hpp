@@ -93,22 +93,28 @@ class sorted_container {
   tree_t *tree_;
   std::size_t m_size_;
 
+  void merge(iterator, iterator);
+  void swap(tree_t &, std::size_t &) noexcept;
+  bool contains(const value_type &key);
+  void erase(value_type const &);
+
  public:
   sorted_container() : tree_(new tree_t()), m_size_(0) {}
   sorted_container(std::initializer_list<value_type> const &);
   ~sorted_container() { delete tree_; }
 
-  iter_pair_return insert(value_type &&value);
-  iter_pair_return insert(const value_type &value);
+  pair<iterator, bool> insert(value_type &&value);
+  pair<iterator, bool> insert(const value_type &value);
   void insert(std::initializer_list<T> items);
-  bool contains(const value_type &key);
+
   iterator find(const value_type &key);
-  void erase(value_type const &);
+
   void clear();
 
   iterator begin() const { return iterator(this->tree_->min()); }
   iterator end() const { return iterator(nullptr); }
   std::size_t size() const { return this->m_size_; }
+  std::size_t max_size() const;
   bool empty() const { return this->tree_->empty(); }
 };
 
@@ -158,8 +164,7 @@ typename sorted_container<T>::iter_pair_return sorted_container<T>::insert(
 }
 
 template <typename T>
-typename sorted_container<T>::iter_pair_return sorted_container<T>::insert(
-    const value_type &value) {
+pair<Iterator<T>, bool> sorted_container<T>::insert(const value_type &value) {
   value_type rvalue(value);
   return insert(std::move(rvalue));
 }
@@ -186,6 +191,24 @@ void sorted_container<T>::clear() {
   while (this->begin() != this->end()) {
     erase((*this->begin()));
   }
+}
+
+template <typename T>
+void sorted_container<T>::merge(iterator it, iterator end) {
+  for (; it != end; ++it) {
+    this->insert(*it);
+  }
+}
+
+template <typename T>
+std::size_t sorted_container<T>::max_size() const {
+  return std::numeric_limits<std::size_t>::max() / sizeof(value_type);
+}
+
+template <class T>
+void sorted_container<T>::swap(tree_t &o_tree, std::size_t &o_m_size) noexcept {
+  std::swap(this->tree_, o_tree);
+  std::swap(this->m_size_, o_m_size);
 }
 
 }  // namespace s21

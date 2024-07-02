@@ -30,12 +30,8 @@ class set : public sorted_container<T> {
   set<value_type> &operator=(const set &);
   set<value_type> &operator=(set &&) noexcept;
 
-  void swap(set &);
-  void merge(set &);
-
-  size_type max_size() const noexcept {
-    return std::numeric_limits<size_type>::max() / sizeof(value_type);
-  };
+  void swap(set &s) { this->container::swap(s.container); };
+  void merge(set &s) { this->container::merge(s.container); };
 };
 
 template <typename value_type>

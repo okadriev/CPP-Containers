@@ -32,16 +32,16 @@ class map : public sorted_container<pair<T1, T2>> {
     this->container::erase({key, data_type()});
   }
 
-  iterator find(const key_type &key);
+  iterator find(const key_type &key) {
+    return this->container::find({key, data_type()});
+  };
 
   bool contains(const key_type &key) {
     return this->container::contains({key, data_type()});
   };
 
-  std::size_t max_size() const;
-
-  void merge(map &);
-  void swap(map &) noexcept;
+  void merge(map &s) { this->container::merge(s.begin(), s.end()); };
+  void swap(map &s) noexcept { this->container::swap(s.tree_, s.m_size_); };
 
   bool operator==(const map &);
   map &operator=(const map &);
