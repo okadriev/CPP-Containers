@@ -84,8 +84,8 @@ void rb_tree<T>::delete_tree(node_t *node) {
   if (node) {
     delete_tree(node->left);
     delete_tree(node->right);
-
     delete node;
+    node = nullptr;
   }
 };
 
@@ -307,6 +307,11 @@ Node<T> *rb_tree<T>::insert(const T &data) {
   fix_2_red(new_node);
 
   return new_node;
+};
+
+template <typename T>
+void rb_tree<T>::remove(node_t *node) {
+  remove_node(node);
 };
 
 template <typename T>

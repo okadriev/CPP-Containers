@@ -18,13 +18,20 @@ class set : public sorted_container<T> {
   // void copy(const set &other) { this->tree_->copy_tree(other.tree); };
 
  public:
-  using iterator = typename container::iterator;
-  using const_iterator = const typename container::iterator;
+  using iterator = Iterator<T>;
+  using const_iterator = const Iterator<T>;
 
-  set() {};
-  set(std::initializer_list<value_type> const &items) : container(items) {};
-  set(const set &);
-  set(set &&);
+  set() : container(false) {};
+  set(std::initializer_list<value_type> const &items)
+      : container(items, false) {};
+
+  set(const set &other) : container(other) {};
+  set(set &&other) : container(other) {};
+
+  set(std::initializer_list<value_type> const &items, bool multi)
+      : container(items, multi) {};
+  set(bool) : container(true) {};
+
   ~set() {};
 
   set<value_type> &operator=(const set &);
@@ -34,20 +41,20 @@ class set : public sorted_container<T> {
   // void merge(set &s) { this->container::merge(s.begin(), s.end()); };
 };
 
-template <typename value_type>
-set<value_type>::set(const set<value_type> &other) : set() {
-  this->m_size_ = other.size();
-  this->tree_->copy_tree(other.tree_);
-}
+// template <typename value_type>
+// set<value_type>::set(const set<value_type> &other) : set() {
+//   this->m_size_ = other.size();
+//   this->tree_->copy_tree(other.tree_);
+// }
 
-template <typename value_type>
-set<value_type>::set(set<value_type> &&other) : container() {
-  delete this->tree_;
-  this->tree_ = other.tree_;
-  this->m_size_(other.m_size_);
-  other.tree_ = nullptr;
-  other.m_size_ = 0;
-}
+// template <typename value_type>
+// set<value_type>::set(set<value_type> &&other) : container() {
+//   delete this->tree_;
+//   this->tree_ = other.tree_;
+//   this->m_size_(other.m_size_);
+//   other.tree_ = nullptr;
+//   other.m_size_ = 0;
+// }
 
 }  // namespace s21
 

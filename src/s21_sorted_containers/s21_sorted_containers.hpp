@@ -16,6 +16,18 @@ struct Node {
         right(nullptr),
         parent(nullptr),
         is_red(true) {}
+
+  ~Node() {
+    if (left) {
+      left = nullptr;
+    }
+    if (right) {
+      right = nullptr;
+    }
+    if (parent) {
+      parent = nullptr;
+    }
+  }
 };
 
 template <typename T>
@@ -81,9 +93,11 @@ class rb_tree {
   void copy_tree(const rb_tree *);
   node_t *insert(const T &);
   void remove(const T &);
+  void remove(node_t *);
   node_t *min() const;
   node_t *search(const T &) const;
   bool empty() const { return (this == nullptr) || root == nullptr; };
+  node_t *get_root() const { return root; }
 
   size_t count(const T &) const;
   pair<node_t *, node_t *> equal_range(const T &);
@@ -96,16 +110,29 @@ class sorted_container {
   using value_type = T;
   using iterator = Iterator<value_type>;
   using tree_t = rb_tree<value_type>;
-  using iter_pair_return = pair<iterator, bool>;
   using size_t = std::size_t;
   using limits = std::numeric_limits<size_t>;
 
   tree_t *tree_;
   size_t m_size_;
+  bool multi_;
+
+  bool insert_value(const value_type &);
 
  public:
-  sorted_container() : tree_(new tree_t()), m_size_(0) {}
-  sorted_container(std::initializer_list<value_type> const &);
+  // sorted_container() : tree_(new tree_t()), m_size_(0), multi_(false) {}
+  sorted_container(bool m) : tree_(new tree_t()), m_size_(0), multi_(m) {}
+  sorted_container(std::initializer_list<value_type> const &, bool);
+  sorted_container(const sorted_container &other)
+      : tree_(other.tree_), m_size_(other.m_size_), multi_(other.multi_) {}
+  sorted_container(sorted_container &&other) noexcept {
+    multi_ = other.multi_;
+    tree_ = other.tree_;
+    m_size_ = other.m_size_;
+    other.m_size_ = 0;
+    other.tree_ = nullptr;
+  }
+
   ~sorted_container() { delete tree_; }
 
   pair<iterator, bool> insert(value_type &&);
@@ -148,9 +175,16 @@ inline Node<T> *Iterator<T>::next_node(node_t *node) const {
 
 template <typename value_type>
 sorted_container<value_type>::sorted_container(
-    std::initializer_list<value_type> const &items)
-    : sorted_container() {
+    std::initializer_list<value_type> const &items, bool multi)
+    : sorted_container(multi) {
   insert(items);
+}
+
+template <typename T>
+bool s21::sorted_container<T>::insert_value(const value_type &value) {
+  tree_->insert(value);
+  m_size_++;
+  return true;
 }
 
 template <typename T>
@@ -159,13 +193,10 @@ void sorted_container<T>::insert(std::initializer_list<T> items) {
 }
 
 template <typename T>
-typename sorted_container<T>::iter_pair_return sorted_container<T>::insert(
-    value_type &&value) {
+pair<Iterator<T>, bool> sorted_container<T>::insert(value_type &&value) {
   bool result = false;
-  if (!contains(value)) {
-    tree_->insert(value);
-    result = true;
-    m_size_++;
+  if (multi_ || !contains(value)) {
+    result = insert_value(std::move(value));
   }
   return {find(value), result};
 }
@@ -195,9 +226,11 @@ void sorted_container<T>::erase(const value_type &key) {
 
 template <typename T>
 void sorted_container<T>::clear() {
-  while (this->begin() != this->end()) {
-    erase((*this->begin()));
-  }
+  this->tree_->delete_tree();
+  this->m_size_ = 0;
+  // while (this->begin() != this->end()) {
+  //   erase((*this->begin()));
+  // }
 }
 
 template <typename T>
