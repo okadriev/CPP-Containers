@@ -58,5 +58,4 @@ class map : public sorted_container<pair<T1, T2>> {
 
 }  // namespace s21
 
-#include "s21_map_constructors.tpp"
 #include "s21_map_operators.tpp"

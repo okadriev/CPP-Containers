@@ -1,23 +1,5 @@
 namespace s21 {
 
-// template <typename T>
-// multiset<T>::multiset(std::initializer_list<T> const &items) : set<T>() {
-//   for (const auto &item : items) insert(item);
-
-//   this->m_size = items.size();
-// }
-
-// template <typename T>
-// pair<typename multiset<T>::iterator, bool> multiset<T>::insert(
-//     const_reference data) {
-//   pair<iterator, bool> result;
-//   result.first = this->tree_->insert(data);
-//   result.second = true;
-//   (this->m_size)++;
-
-//   return result;
-// };
-
 template <typename T>
 pair<typename multiset<T>::iterator, typename multiset<T>::iterator>
 multiset<T>::equal_range(const_reference data) {

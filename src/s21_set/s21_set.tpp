@@ -1,4 +1,3 @@
-// #include "s21_set.hpp"
 namespace s21 {
 
 template <typename value_type>

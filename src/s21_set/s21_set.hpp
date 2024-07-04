@@ -14,8 +14,6 @@ class set : public sorted_container<T> {
   using const_reference = const value_type &;
   using size_type = std::size_t;
   using container = sorted_container<value_type>;
-  // using iter_pair_return = pair<typename container::iterator, bool>;
-  // void copy(const set &other) { this->tree_->copy_tree(other.tree); };
 
  public:
   using iterator = Iterator<T>;
@@ -36,25 +34,7 @@ class set : public sorted_container<T> {
 
   set<value_type> &operator=(const set &);
   set<value_type> &operator=(set &&) noexcept;
-
-  // void swap(set &s) { this->container::swap(s.tree_, s.m_size_); };
-  // void merge(set &s) { this->container::merge(s.begin(), s.end()); };
 };
-
-// template <typename value_type>
-// set<value_type>::set(const set<value_type> &other) : set() {
-//   this->m_size_ = other.size();
-//   this->tree_->copy_tree(other.tree_);
-// }
-
-// template <typename value_type>
-// set<value_type>::set(set<value_type> &&other) : container() {
-//   delete this->tree_;
-//   this->tree_ = other.tree_;
-//   this->m_size_(other.m_size_);
-//   other.tree_ = nullptr;
-//   other.m_size_ = 0;
-// }
 
 }  // namespace s21
 
