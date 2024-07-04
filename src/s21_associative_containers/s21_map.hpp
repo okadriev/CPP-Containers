@@ -14,34 +14,40 @@ class map : public sorted_container<pair<T1, T2>> {
   using data_type = T2;
   using value_type = pair<key_type, data_type>;
   using tree_type = rb_tree<value_type>;
+  using node_t = Node<value_type>;
   using reference = value_type &;
   using const_reference = const value_type &;
   using container = sorted_container<pair<T1, T2>>;
+  // using iter_pair_return = pair<typename container::iterator, bool>;
 
  public:
-  using iterator = typename container::iterator;
-  using const_iterator = const typename container::iterator;
+  using iterator = Iterator<value_type>;
+  using const_iterator = const Iterator<value_type>;
 
-  map() {};
-  map(std::initializer_list<value_type> const &items) : container(items) {};
-  map(const map &);
-  map(map &&);
+  map() : container(false) {};
+  map(std::initializer_list<value_type> const &items)
+      : container(items, false) {};
+  map(const map &other) : container(other) {}
+  map(map &&other) : container(other) {}
   ~map() {};
 
-  void erase(key_type const &key) {
-    this->container::erase({key, data_type()});
+  void erase(const key_type &key) {
+    this->tree_->remove(*(this->find(key)));
+    this->m_size_--;
   }
 
   iterator find(const key_type &key) {
-    return this->container::find({key, data_type()});
-  };
+    node_t *temp = this->tree_->get_root();
 
-  bool contains(const key_type &key) {
-    return this->container::contains({key, data_type()});
-  };
+    while (temp != nullptr && temp->data != key) {
+      temp = ((temp->data > key) ? temp->left : temp->right);
+    }
 
-  // void swap(map &s) noexcept { this->container::swap(sorted_container other);
-  // };
+    return iterator(temp);
+  }
+
+  bool contains(const key_type &key) { return find(key) != this->end(); }
+
   void merge(map &s) { this->container::merge(s); };
 
   bool operator==(const map &);
@@ -53,5 +59,4 @@ class map : public sorted_container<pair<T1, T2>> {
 }  // namespace s21
 
 #include "s21_map_constructors.tpp"
-#include "s21_map_methods.tpp"
 #include "s21_map_operators.tpp"
