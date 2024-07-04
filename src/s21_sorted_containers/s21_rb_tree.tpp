@@ -328,7 +328,7 @@ Node<T> *rb_tree<T>::search(const T &data) const {
   node_t *temp = root;
 
   while (temp != nullptr && temp->data != data) {
-    temp = ((data < temp->data) ? temp->left : temp->right);
+    temp = ((temp->data > data) ? temp->left : temp->right);
   }
 
   return temp;

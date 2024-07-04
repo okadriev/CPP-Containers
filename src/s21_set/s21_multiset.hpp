@@ -13,8 +13,11 @@ class multiset : public set<T> {
  public:
   using iterator = typename sorted_container<value_type>::iterator;
 
-  multiset() : set<T>() {};
-  multiset(std::initializer_list<T> const &items) : set<T>(items) {};
+  multiset() : set<T>() { this->multi_container(); }
+  multiset(std::initializer_list<T> const &items) : set<T>() {
+    this->multi_container();
+    for (const auto &item : items) this->insert(item);
+  }
 
   // pair<iterator, bool> insert(const_reference);
   // void merge(multiset &);

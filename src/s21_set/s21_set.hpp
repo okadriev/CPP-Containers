@@ -14,7 +14,7 @@ class set : public sorted_container<T> {
   using const_reference = const value_type &;
   using size_type = std::size_t;
   using container = sorted_container<value_type>;
-
+  // using iter_pair_return = pair<typename container::iterator, bool>;
   // void copy(const set &other) { this->tree_->copy_tree(other.tree); };
 
  public:
