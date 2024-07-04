@@ -70,8 +70,7 @@ TEST(MapMethod, insert1) {
   test.insert({3, "C"});
 
   EXPECT_EQ(test.size(), 3);
-  EXPECT_EQ((*pair.first).first, element.first);
-  EXPECT_EQ((*pair.first).second, element.second);
+  EXPECT_EQ((*pair.first), element);
   EXPECT_TRUE(pair.second);
 }
 
@@ -82,8 +81,7 @@ TEST(MapMethod, insert2) {
   pair<map<int, std::string>::iterator, bool> pair = test.insert({4, "D"});
 
   EXPECT_EQ(test.size(), 4);
-  EXPECT_EQ((*pair.first).first, element.first);
-  EXPECT_EQ((*pair.first).second, element.second);
+  EXPECT_EQ((*pair.first), element);
   EXPECT_TRUE(pair.second);
 }
 
@@ -91,11 +89,22 @@ TEST(MapMethod, insert3) {
   map<int, std::string> test{{1, "A"}, {2, "B"}, {3, "C"}};
   pair<int, std::string> element{2, "B"};
 
+  pair<map<int, std::string>::iterator, bool> pair = test.insert({2, "B"});
+
+  EXPECT_EQ(test.size(), 3);
+  EXPECT_EQ((*pair.first), element);
+  EXPECT_FALSE(pair.second);
+}
+
+TEST(MapMethod, insert4) {
+  map<int, std::string> test{{1, "A"}, {2, "B"}, {3, "C"}};
+  pair<int, std::string> element{2, "B"};
+
   pair<map<int, std::string>::iterator, bool> pair = test.insert({2, "F"});
 
   EXPECT_EQ(test.size(), 3);
   EXPECT_EQ((*pair.first).first, element.first);
-  EXPECT_EQ((*pair.first).second, element.second);
+  EXPECT_NE((*pair.first).second, element.second);
   EXPECT_FALSE(pair.second);
 }
 
