@@ -1,5 +1,4 @@
 #pragma once
-
 #include <algorithm>
 
 namespace s21 {
@@ -14,29 +13,27 @@ struct pair {
       : first(std::move(first)), second(std::move(second)) {}
   pair(const pair& other) : first(other.first), second(other.second) {}
 
-  pair& operator=(const pair& other) {
-    if (this != &other) {
-      first = other.first;
-      second = other.second;
-    }
-    return *this;
-  }
+  pair& operator=(const pair&) noexcept;
 
-  bool operator==(const pair& other) const noexcept {
-    return first == other.first /* && second == other.second */;
-  }
+  pair& operator=(pair&&) noexcept;
 
-  bool operator!=(const pair& other) const noexcept {
-    return !(*this == other);
-  }
+  bool operator==(T1 const) const noexcept;
+  bool operator!=(T1 const) const noexcept;
 
-  bool operator<(const pair& other) const noexcept {
-    return first < other.first;
-  }
+  bool operator<(T1 const) const noexcept;
+  bool operator<=(T1 const) const noexcept;
+  bool operator>(T1 const) const noexcept;
+  bool operator>=(T1 const) const noexcept;
 
-  bool operator>(const pair& other) const noexcept {
-    return !(first < other.first);
-  }
+  bool operator==(const pair&) const noexcept;
+  bool operator!=(const pair&) const noexcept;
+
+  bool operator<(const pair&) const noexcept;
+  bool operator<=(const pair&) const noexcept;
+  bool operator>(const pair&) const noexcept;
+  bool operator>=(const pair&) const noexcept;
 };
 
 }  // namespace s21
+
+#include "s21_pair_operators.tpp"
