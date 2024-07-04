@@ -6,5 +6,4 @@ lint-job:
   script:
     - cp ./materials/linters/.clang-format ./src/.clang-format
     - cd ./src/
-    - if [ -f *.cc ] || [ -f *.h ]; then if $(clang-format -n *.cc *.hpp *.cpp *.tpp *.h *.c); then  clang-format -i *.cc *.hpp *.cpp *.tpp *.h *.c; fi; fi
-    - rm .clang-format
+    - if [ -f *.cc ] || [ -f *.h ] || [ -f .*cpp ] || [ -f *.tpp ] || [ -f *.hpp ] || [ -f *.c ]; clang-format -n *.cc *.hpp *.cpp *.tpp *.h *.c; fi
