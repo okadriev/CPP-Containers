@@ -197,13 +197,61 @@ TEST(ListTest, Swap) {
 
 TEST(ListTest, InsertMany) {
   s21::list<int> lst{1, 2, 3};
+  lst.insert_many(lst.begin());
+  EXPECT_EQ(lst.size(), 3);
+  EXPECT_EQ(lst.front(), 1);
+  EXPECT_EQ(lst.back(), 3);
+}
+
+TEST(ListTest, InsertManyBack) {
+  s21::list<int> lst{1, 2, 3};
+  lst.insert_many_back();
+  EXPECT_EQ(lst.size(), 3);
+  EXPECT_EQ(lst.front(), 1);
+  EXPECT_EQ(lst.back(), 3);
+}
+
+TEST(ListTest, InsertManyFront) {
+  s21::list<int> lst{1, 2, 3};
+  lst.insert_many_front();
+  EXPECT_EQ(lst.size(), 3);
+  EXPECT_EQ(lst.front(), 1);
+  EXPECT_EQ(lst.back(), 3);
+}
+
+TEST(ListTest, InsertMany2) {
+  s21::list<int> lst{1, 2, 3};
+  lst.insert_many(lst.begin(), 4);
+  EXPECT_EQ(lst.size(), 4);
+  EXPECT_EQ(lst.front(), 4);
+  EXPECT_EQ(lst.back(), 3);
+}
+
+TEST(ListTest, InsertManyBack2) {
+  s21::list<int> lst{1, 2, 3};
+  lst.insert_many_back(4);
+  EXPECT_EQ(lst.size(), 4);
+  EXPECT_EQ(lst.front(), 1);
+  EXPECT_EQ(lst.back(), 4);
+}
+
+TEST(ListTest, InsertManyFront2) {
+  s21::list<int> lst{1, 2, 3};
+  lst.insert_many_front(4);
+  EXPECT_EQ(lst.size(), 4);
+  EXPECT_EQ(lst.front(), 4);
+  EXPECT_EQ(lst.back(), 3);
+}
+
+TEST(ListTest, InsertMany3) {
+  s21::list<int> lst{1, 2, 3};
   lst.insert_many(lst.begin(), 4, 5, 6);
   EXPECT_EQ(lst.size(), 6);
   EXPECT_EQ(lst.front(), 4);
   EXPECT_EQ(lst.back(), 3);
 }
 
-TEST(ListTest, InsertManyBack) {
+TEST(ListTest, InsertManyBack3) {
   s21::list<int> lst{1, 2, 3};
   lst.insert_many_back(4, 5, 6);
   EXPECT_EQ(lst.size(), 6);
@@ -211,7 +259,7 @@ TEST(ListTest, InsertManyBack) {
   EXPECT_EQ(lst.back(), 6);
 }
 
-TEST(ListTest, InsertManyFront) {
+TEST(ListTest, InsertManyFront3) {
   s21::list<int> lst{1, 2, 3};
   lst.insert_many_front(4, 5, 6);
   EXPECT_EQ(lst.size(), 6);
@@ -219,6 +267,29 @@ TEST(ListTest, InsertManyFront) {
   EXPECT_EQ(lst.back(), 3);
 }
 
+TEST(ListTest, InsertMany4) {
+  s21::list<int> lst{1, 2, 3};
+  lst.insert_many(lst.begin(), 4, 5, 6, 7, 8);
+  EXPECT_EQ(lst.size(), 8);
+  EXPECT_EQ(lst.front(), 4);
+  EXPECT_EQ(lst.back(), 3);
+}
+
+TEST(ListTest, InsertManyBack4) {
+  s21::list<int> lst{1, 2, 3};
+  lst.insert_many_back(4, 5, 6, 7, 8);
+  EXPECT_EQ(lst.size(), 8);
+  EXPECT_EQ(lst.front(), 1);
+  EXPECT_EQ(lst.back(), 8);
+}
+
+TEST(ListTest, InsertManyFront4) {
+  s21::list<int> lst{1, 2, 3};
+  lst.insert_many_front(4, 5, 6, 7 ,8);
+  EXPECT_EQ(lst.size(), 8);
+  EXPECT_EQ(lst.front(), 8);
+  EXPECT_EQ(lst.back(), 3);
+}
 TEST(ListTest, PushBack) {
   s21::list<int> lst;
   lst.push_back(1);

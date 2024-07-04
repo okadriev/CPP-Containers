@@ -461,7 +461,8 @@ template <typename T>
 template <typename... Args>
 typename list<T>::iterator list<T>::insert_many(const_iterator pos,
                                                 Args &&...args) {
-  for (const auto &arg : {args...}) insert(pos, arg);
+  if constexpr (sizeof...(args) > 0)
+    for (const auto &arg : {args...}) insert(pos, arg);
 
   return pos;
 }
@@ -475,7 +476,8 @@ typename list<T>::iterator list<T>::insert_many(const_iterator pos,
 template <typename T>
 template <typename... Args>
 void list<T>::insert_many_front(Args &&...args) {
-  for (const auto &arg : {args...}) push_front(arg);
+  if constexpr (sizeof...(args) > 0)
+    for (const auto &arg : {args...}) push_front(arg);
 }
 
 /**
@@ -487,7 +489,8 @@ void list<T>::insert_many_front(Args &&...args) {
 template <typename T>
 template <typename... Args>
 void list<T>::insert_many_back(Args &&...args) {
-  for (const auto &arg : {args...}) push_back(arg);
+  if constexpr (sizeof...(args) > 0)
+    for (const auto &arg : {args...}) push_back(arg);
 }
 
 /**
