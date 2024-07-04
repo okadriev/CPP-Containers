@@ -64,6 +64,13 @@ class rb_tree {
   size_t count_elements(node_t *node, const T &data) const;
   pair<node_t *, node_t *> element_range(node_t *node, const T &data);
 
+  node_t *red_goes_up(node_t *grand_parent, node_t *parent, node_t *uncle) {
+    grand_parent->is_red = 1;
+    parent->is_red = 0;
+    uncle->is_red = 0;
+    return grand_parent;
+  }
+
  public:
   rb_tree() : root(nullptr) {}
   rb_tree(const rb_tree *other) { copy_tree(other); }

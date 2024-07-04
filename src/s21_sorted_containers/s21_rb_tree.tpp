@@ -1,12 +1,3 @@
-#define MY_BRO_HAS_RED_SON                   \
-  ((my_bro->left && my_bro->left->is_red) || \
-   (my_bro->right && my_bro->right->is_red))
-
-#define RED_GOES_UP         \
-  grand_parent->is_red = 1; \
-  parent->is_red = 0;       \
-  uncle->is_red = 0;
-
 namespace s21 {
 
 template <typename T>
@@ -154,9 +145,7 @@ void rb_tree<T>::fix_2_red(node_t *&node) {
       node_t *uncle = grand_parent->right;
 
       if ((uncle) && (uncle->is_red)) {
-        RED_GOES_UP;
-        node = grand_parent;
-
+        node = red_goes_up(grand_parent, parent, uncle);
       } else {
         if (node == parent->right) {
           rotate_left(parent);
@@ -171,9 +160,7 @@ void rb_tree<T>::fix_2_red(node_t *&node) {
     } else {
       node_t *uncle = grand_parent->left;
       if ((uncle) && (uncle->is_red)) {
-        RED_GOES_UP;
-        node = grand_parent;
-
+        node = red_goes_up(grand_parent, parent, uncle);
       } else {
         if (node == parent->left) {
           rotate_right(parent);
@@ -198,6 +185,10 @@ void rb_tree<T>::fix_2_black(node_t *&node) {
   bool left_child = (node == parent->left);
   node_t *my_bro = (left_child) ? parent->right : parent->left;
 
+  bool my_bro_left_is_red = my_bro->left && my_bro->left->is_red;
+  bool my_bro_right_is_red = my_bro->right && my_bro->right->is_red;
+  bool my_bro_has_red_son = my_bro_left_is_red || my_bro_right_is_red;
+
   if (my_bro->is_red) {
     parent->is_red = 1;
     my_bro->is_red = 0;
@@ -208,8 +199,7 @@ void rb_tree<T>::fix_2_black(node_t *&node) {
       rotate_right(parent);
     }
     fix_2_black(node);
-
-  } else if MY_BRO_HAS_RED_SON {
+  } else if (my_bro_has_red_son) {
     if (my_bro->left && my_bro->left->is_red) {
       if (left_child) {
         std::swap(my_bro->left->is_red, my_bro->is_red);
@@ -232,7 +222,6 @@ void rb_tree<T>::fix_2_black(node_t *&node) {
       }
     }
     parent->is_red = 0;
-
   } else {
     my_bro->is_red = 1;
     if (parent->is_red == 0)
