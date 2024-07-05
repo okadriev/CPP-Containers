@@ -20,6 +20,7 @@ class set : public sorted_container<T> {
   using const_iterator = const Iterator<T>;
 
   set() : container(false) {};
+  set(bool multi) : container(multi) {};
   set(std::initializer_list<value_type> const &items)
       : container(items, false) {};
 
@@ -28,7 +29,6 @@ class set : public sorted_container<T> {
 
   set(std::initializer_list<value_type> const &items, bool multi)
       : container(items, multi) {};
-  set(bool) : container(true) {};
 
   ~set() {};
 

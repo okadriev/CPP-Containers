@@ -70,5 +70,6 @@ template <class T>
 void sorted_container<T>::swap(sorted_container &other) noexcept {
   std::swap(this->tree_, other.tree_);
   std::swap(this->m_size_, other.m_size_);
+  std::swap(this->multi_, other.multi_);
 }
 }  // namespace s21
