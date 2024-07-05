@@ -10,9 +10,6 @@ ALL_HEADERS = $(foreach DIR, $(DIRECTORIES), $(wildcard $(DIR)*.hpp))
 TEST_FILES = $(wildcard tests/*.cpp)
 TEST_TARGET = test
 
-WHEREIS_GCOVR:=$(shell whereis gcovr | sed 's/.*://')
-
-
 all: clear clean test
 
 clean:
@@ -27,11 +24,11 @@ test: clear clean
 gcov_report: clear clean
 	$(CXX) $(CXXFLAGS) $(TEST_FILES) -o $(TEST_TARGET) $(GFLAGS) --coverage
 	./$(TEST_TARGET)
-	mkdir report
-	source gcovr_env/bin/activate; gcovr --txt-metric branch -r . -e 'tests/*' --exclude-throw-branches --html-details report/index.html --html-theme github.dark-blue; deactivate
+#	mkdir report
+#	source gcovr_env/bin/activate; gcovr --txt-metric branch -r . -e 'tests/*' --exclude-throw-branches --html-details report/index.html --html-theme github.dark-blue; deactivate
 #	@if [-d gcovr_env]; then; rm -rf gcovr_env
-#	lcov --no-external -o test.info -c -d . -rc lcov_branch_coverage=1 --exclude "$(PWD)/tests/*"
-#	genhtml -o report test.info -rc lcov_branch_coverage=1
+	lcov --no-external -o test.info -c -d . -rc lcov_branch_coverage=1 --exclude "$(PWD)/tests/*"
+	genhtml -o report test.info -rc lcov_branch_coverage=1
 	@rm -rf *.gcno *.gcda *.gcov $(TEST_TARGET) test.info
 
 clang-format:
