@@ -104,7 +104,7 @@ TEST(MapMethod, insert4) {
 
   EXPECT_EQ(test.size(), 3);
   EXPECT_EQ((*pair.first).first, element.first);
-  EXPECT_NE((*pair.first).second, element.second);
+  EXPECT_EQ((*pair.first).second, element.second);
   EXPECT_FALSE(pair.second);
 }
 

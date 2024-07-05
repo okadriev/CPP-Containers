@@ -82,8 +82,8 @@ void rb_tree<T>::remove_node(node_t *target) {
 template <typename T>
 void rb_tree<T>::delete_tree(node_t *node) {
   if (node) {
-    delete_tree(node->left);
-    delete_tree(node->right);
+    if (node->left) delete_tree(node->left);
+    if (node->right) delete_tree(node->right);
     delete node;
     node = nullptr;
   }

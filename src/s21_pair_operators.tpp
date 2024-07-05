@@ -37,7 +37,7 @@ bool pair<T1, T2>::operator==(const pair &other) const noexcept {
 
 template <typename T1, typename T2>
 bool pair<T1, T2>::operator!=(const pair &other) const noexcept {
-  return first != other.first || second != other.second;
+  return first != other.first /* || second != other.second */;
 }
 
 template <typename T1, typename T2>

@@ -17,17 +17,11 @@ struct Node {
         parent(nullptr),
         is_red(true) {}
 
-  ~Node() {
-    if (left) {
-      left = nullptr;
-    }
-    if (right) {
-      right = nullptr;
-    }
-    if (parent) {
-      parent = nullptr;
-    }
-  }
+  // ~Node() {
+  //   if (left) left = nullptr;
+  //   if (right) right = nullptr;
+  //   if (parent) parent = nullptr;
+  // }
 };
 
 template <typename T>
@@ -88,7 +82,10 @@ class rb_tree {
   rb_tree(const rb_tree *other) { copy_tree(other); }
   ~rb_tree() { delete_tree(); }
 
-  void delete_tree() { delete_tree(root), root = nullptr; }
+  void delete_tree() {
+    delete_tree(root);
+    root = nullptr;
+  }
 
   void copy_tree(const rb_tree *);
   node_t *insert(const T &);
@@ -124,7 +121,9 @@ class sorted_container {
   sorted_container(bool m) : tree_(new tree_t()), m_size_(0), multi_(m) {}
   sorted_container(std::initializer_list<value_type> const &, bool);
   sorted_container(const sorted_container &other)
-      : tree_(other.tree_), m_size_(other.m_size_), multi_(other.multi_) {}
+      : tree_(new tree_t()), m_size_(other.m_size_), multi_(other.multi_) {
+    tree_->copy_tree(other.tree_);
+  }
   sorted_container(sorted_container &&other) noexcept {
     multi_ = other.multi_;
     tree_ = other.tree_;
