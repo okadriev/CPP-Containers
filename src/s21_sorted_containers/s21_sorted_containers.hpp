@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../s21_pair.hpp"
+#include "../s21_pair/s21_pair.hpp"
 
 namespace s21 {
 
