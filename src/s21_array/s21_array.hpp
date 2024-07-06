@@ -1,5 +1,7 @@
 #pragma once
 
+#include <initializer_list>
+#include <stdexcept>
 #include <utility>
 
 namespace s21 {
@@ -34,8 +36,14 @@ class array {
   reference back() { return data()[N - 1]; }
   const_reference back() const { return data()[N - 1]; }
 
-  reference at(size_type index) { return *(data() + index); }
-  const_reference at(size_type index) const { return *(data() + index); }
+  reference at(size_type index) {
+    return index < N ? *(data() + index)
+                     : throw std::out_of_range("Index out of range");
+  }
+  const_reference at(size_type index) const {
+    return index < N ? *(data() + index)
+                     : throw std::out_of_range("Index out of range");
+  }
 
   // Оператор индексации
   reference operator[](size_type index) { return at(index); }
