@@ -312,3 +312,20 @@ TEST(MapOperator, indexing_insert1) {
   EXPECT_EQ(test.size(), 4);
   EXPECT_EQ(test[4], "D");
 }
+
+TEST(Method, map_insert_many) {
+  map<int, std::string> test1{{1, "A"}, {2, "B"}, {3, "C"}};
+  vector<pair<map<int, std::string>::iterator, bool>> result =
+      test1.insert_many(pair<int, std::string>{4, "D"},
+                        pair<int, std::string>{5, "E"},
+                        pair<int, std::string>{6, "F"});
+  EXPECT_EQ(result.size(), 3);
+  EXPECT_EQ(result[0].second, true);
+  EXPECT_EQ(result[1].second, true);
+  EXPECT_EQ(result[2].second, true);
+
+  EXPECT_EQ(test1.size(), 6);
+  EXPECT_EQ(test1.contains(4), true);
+  EXPECT_EQ(test1.contains(5), true);
+  EXPECT_EQ(test1.contains(6), true);
+}
