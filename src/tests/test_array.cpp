@@ -1,4 +1,4 @@
-#include "s21_array/s21_array.hpp"
+#include "../s21_array/s21_array.hpp"
 #include "tests.hpp"
 
 namespace s21 {
