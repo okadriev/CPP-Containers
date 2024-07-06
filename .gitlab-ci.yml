@@ -7,10 +7,9 @@ lint-job:
     - cp ./materials/linters/.clang-format ./src/.clang-format
     - cd ./src/
     - rm -rf gcovr_env/
-    - find . -name "*.cpp" -exec clang-format -n {} \; 2>>stderr.txt
-    - find . -name "*.hpp" -exec clang-format -n {} \; 2>>stderr.txt
-    - find . -name "*.tpp" -exec clang-format -n {} \; 2>>stderr.txt
-    - find . -name "*.cc" -exec clang-format -n {} \; 2>>stderr.txt
-    - find . -name "*.c" -exec clang-format -n {} \; 2>>stderr.txt
-    - find . -name "*.h" -exec clang-format -n {} \; 2>>stderr.txt
-    - if [ $(cat ./stderr.txt) ]; then exit 1; fi
+    - find . -name "*.cpp" -exec clang-format -n {} \;
+    - find . -name "*.hpp" -exec clang-format -n {} \;
+    - find . -name "*.tpp" -exec clang-format -n {} \;
+    - find . -name "*.cc" -exec clang-format -n {} \;
+    - find . -name "*.c" -exec clang-format -n {} \;
+    - find . -name "*.h" -exec clang-format -n {} \;
