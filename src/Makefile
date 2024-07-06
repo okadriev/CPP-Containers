@@ -27,7 +27,7 @@ gcov_report: clear clean
 	mkdir report
 	source gcovr_env/bin/activate; gcovr --txt-metric branch -r . -e 'tests/*' --exclude-throw-branches --html-details report/index.html --html-theme github.dark-blue; deactivate
 #	lcov --no-external -o test.info -c -d . -rc lcov_branch_coverage=1 --exclude "$(PWD)/tests/*"
-	genhtml -o report test.info -rc lcov_branch_coverage=1
+#	genhtml -o report test.info -rc lcov_branch_coverage=1
 	@rm -rf *.gcno *.gcda *.gcov $(TEST_TARGET) test.info
 
 clang-format:
