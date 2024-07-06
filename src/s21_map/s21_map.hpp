@@ -45,7 +45,9 @@ class map : public sorted_container<pair<T1, T2>> {
     return iterator(temp);
   }
 
-  bool contains(const key_type &key) { return find(key) != this->end(); }
+  bool
+  contains(const key_type &key) { 
+  return find(key) != this->end(); }
 
   void merge(map &s) { this->container::merge(s); };
 
