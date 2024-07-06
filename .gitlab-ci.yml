@@ -13,4 +13,4 @@ lint-job:
     - find . -name "*.cc" -exec clang-format -n {} \; 2>>stderr.txt
     - find . -name "*.c" -exec clang-format -n {} \; 2>>stderr.txt
     - find . -name "*.h" -exec clang-format -n {} \; 2>>stderr.txt
-    - if [ $(cat stderr.txt) ]; then exit 1; fi
+    - if [ $(cat ./stderr.txt) ]; then exit 1; fi
