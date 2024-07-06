@@ -6,4 +6,4 @@ lint-job:
   script:
     - cp ./materials/linters/.clang-format ./src/.clang-format
     - cd ./src/
-    - clang-format -n *.cc *.hpp *.cpp *.tpp *.h *.c
+    - find . -name "*.cpp" -exec clang-format -n {} \;
