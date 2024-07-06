@@ -6,6 +6,7 @@ lint-job:
   script:
     - cp ./materials/linters/.clang-format ./src/.clang-format
     - cd ./src/
+    - rm -rf gcovr_env/
     - if [ $(find . -name "*.cpp" -exec clang-format -n {} \;) ]; then exit 1; fi
     - if [ $(find . -name "*.hpp" -exec clang-format -n {} \;) ]; then exit 1; fi
     - if [ $(find . -name "*.tpp" -exec clang-format -n {} \;) ]; then exit 1; fi
