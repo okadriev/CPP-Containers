@@ -1,4 +1,3 @@
-#include "../s21_array/s21_array.hpp"
 #include "tests.hpp"
 
 namespace s21 {
@@ -129,14 +128,14 @@ TEST(ArrayTest, data_empty) {
   EXPECT_EQ(arr.data(), nullptr);
 }
 
-TEST(Arraytest, operator_brackets) {
+TEST(ArrayTest, operator_brackets) {
   array<int, 3> arr{1, 2, 3};
   EXPECT_EQ(arr[0], 1);
   EXPECT_EQ(arr[1], 2);
   EXPECT_EQ(arr[2], 3);
 }
 
-TEST(Arraytest, operator_brackets_modify) {
+TEST(ArrayTest, operator_brackets_modify) {
   array<int, 3> arr{1, 2, 3};
   arr[0] = 10;
   arr[1] = 20;
@@ -146,24 +145,24 @@ TEST(Arraytest, operator_brackets_modify) {
   EXPECT_EQ(arr[2], 30);
 }
 
-TEST(Arraytest, operator_brackets_const) {
+TEST(ArrayTest, operator_brackets_const) {
   const array<int, 3> arr{1, 2, 3};
   EXPECT_EQ(arr[0], 1);
   EXPECT_EQ(arr[1], 2);
   EXPECT_EQ(arr[2], 3);
 }
 
-TEST(Arraytest, operator_brackets_empty) {
+TEST(ArrayTest, operator_brackets_empty) {
   array<int, 0> arr;
   EXPECT_THROW(arr[0], std::length_error);
 }
 
-TEST(Arraytest, operator_brackets_out_of_range) {
+TEST(ArrayTest, operator_brackets_out_of_range) {
   array<int, 3> arr{1, 2, 3};
   EXPECT_THROW(arr[3], std::out_of_range);
 }
 
-TEST(Arraytest, operator_brackets_const_empty) {
+TEST(ArrayTest, operator_brackets_const_empty) {
   const array<int, 0> arr;
   EXPECT_THROW(arr[0], std::length_error);
 }

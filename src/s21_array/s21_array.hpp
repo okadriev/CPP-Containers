@@ -2,7 +2,6 @@
 
 #include <initializer_list>
 #include <stdexcept>
-#include <utility>
 
 namespace s21 {
 
@@ -49,18 +48,14 @@ class array {
   reference back() { return at(N - 1); }
   const_reference back() const { return at(N - 1); }
 
-  // Оператор индексации
   reference operator[](size_type index) { return at(index); }
   const_reference operator[](size_type index) const { return at(index); }
 
-  // Получить размер массива
   constexpr size_type size() const noexcept { return N; }
 
-  // Итераторы
   pointer begin() noexcept { return data(); }
   pointer end() noexcept { return &(data()[N]); }
 
-  // Заполнение массива
   void fill(const T& value) {
     for (std::size_t i = 0; i < N; ++i) data_[i] = value;
   }
