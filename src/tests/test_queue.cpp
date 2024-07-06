@@ -139,7 +139,7 @@ TEST(QueueTest, insert_many3) {
 TEST(QueueTest, insert_many4) {
   s21::queue<int> q1{1, 2, 3};
 
-  q1.insert_many_back(4, 5, 6, 7 , 8 );
+  q1.insert_many_back(4, 5, 6, 7, 8);
 
   EXPECT_EQ(q1.size(), 8);
   EXPECT_EQ(q1.front(), 1);
