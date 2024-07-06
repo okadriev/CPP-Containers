@@ -60,4 +60,10 @@ dkms.conf
 src/.clang-format
 
 # Python venv for gcovr
-gcovr_env/
+src/gcovr_env/*
+
+# Reports
+src/report/*
+*.gcno
+*.gcda
+*.gcov
