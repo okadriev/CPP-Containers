@@ -217,3 +217,18 @@ TEST(Method, multiset_upper_bound) {
 
   EXPECT_EQ(test1.upper_bound(2), left);
 }
+
+TEST(Method, multiset_insert_many) {
+  multiset<int> test1{1, 2, 3};
+  vector<pair<set<int>::iterator, bool>> result = test1.insert_many(4, 5, 6, 5);
+  EXPECT_EQ(result.size(), 4);
+  EXPECT_EQ(result[0].second, true);
+  EXPECT_EQ(result[1].second, true);
+  EXPECT_EQ(result[2].second, true);
+  EXPECT_EQ(result[3].second, true);
+
+  EXPECT_EQ(test1.size(), 7);
+  EXPECT_EQ(test1.count(4), 1);
+  EXPECT_EQ(test1.count(5), 2);
+  EXPECT_EQ(test1.count(6), 1);
+}

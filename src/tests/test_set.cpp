@@ -202,3 +202,17 @@ TEST(Method, set_max_size) {
 
   EXPECT_GT(test1.max_size(), 1000);
 }
+
+TEST(Method, set_insert_many) {
+  set<int> test1{1, 2, 3};
+  vector<pair<set<int>::iterator, bool>> result = test1.insert_many(4, 5, 6);
+  EXPECT_EQ(result.size(), 3);
+  EXPECT_EQ(result[0].second, true);
+  EXPECT_EQ(result[1].second, true);
+  EXPECT_EQ(result[2].second, true);
+
+  EXPECT_EQ(test1.size(), 6);
+  EXPECT_EQ(test1.contains(4), true);
+  EXPECT_EQ(test1.contains(5), true);
+  EXPECT_EQ(test1.contains(6), true);
+}

@@ -2,6 +2,7 @@
 #include <type_traits>
 
 #include "../s21_pair/s21_pair.hpp"
+#include "../s21_vector/s21_vector.hpp"
 #include "s21_rb_tree.hpp"
 
 namespace s21 {
@@ -54,6 +55,9 @@ class sorted_container {
   size_t size() const { return this->m_size_; }
   size_t max_size() const { return limits::max() / sizeof(value_type); };
   bool empty() const { return this->tree_->empty(); }
+
+  template <typename... Args>
+  vector<pair<iterator, bool>> insert_many(Args &&...args);
 };
 
 }  // namespace s21

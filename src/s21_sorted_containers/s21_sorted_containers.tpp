@@ -72,4 +72,17 @@ void sorted_container<T>::swap(sorted_container &other) noexcept {
   std::swap(this->m_size_, other.m_size_);
   std::swap(this->multi_, other.multi_);
 }
+
+template <typename T>
+template <typename... Args>
+inline vector<pair<Iterator<T>, bool>> s21::sorted_container<T>::insert_many(
+    Args &&...args) {
+  vector<pair<Iterator<T>, bool>> result;
+  for (auto &&arg : {std::forward<Args>(args)...}) {
+    insert(arg);
+    result.push_back({find(arg), true});
+  }
+  return result;
+}
+
 }  // namespace s21
