@@ -93,7 +93,7 @@ class list<T>::ListIterator {
 
   ListIterator(typename list<T>::Node *node_ = nullptr,
                typename list<T>::Node *last_node_ = nullptr)
-      : node(node_), last_node(last_node_) {};
+      : node(node_), last_node(last_node_){};
 
   ListIterator(const list<T>::Node *node_) : node(node_) {}
 

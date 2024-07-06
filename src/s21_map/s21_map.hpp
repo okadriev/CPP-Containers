@@ -23,12 +23,12 @@ class map : public sorted_container<pair<T1, T2>> {
   using iterator = Iterator<value_type>;
   using const_iterator = const Iterator<value_type>;
 
-  map() : container(false) {};
+  map() : container(false){};
   map(std::initializer_list<value_type> const &items)
-      : container(items, false) {};
+      : container(items, false){};
   map(const map &other) : container(other) {}
   map(map &&other) : container(other) {}
-  ~map() {};
+  ~map(){};
 
   void erase(const key_type &key) {
     this->tree_->remove(*(this->find(key)));
@@ -45,9 +45,7 @@ class map : public sorted_container<pair<T1, T2>> {
     return iterator(temp);
   }
 
-  bool
-  contains(const key_type &key) { 
-  return find(key) != this->end(); }
+  bool contains(const key_type &key) { return find(key) != this->end(); }
 
   void merge(map &s) { this->container::merge(s); };
 

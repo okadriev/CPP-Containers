@@ -17,9 +17,9 @@ class Iterator {
   node_t *next_node(node_t *node) const;
 
  public:
-  Iterator() : node_(nullptr) {};
-  Iterator(node_t *node) : node_(node) {};
-  ~Iterator() {};
+  Iterator() : node_(nullptr){};
+  Iterator(node_t *node) : node_(node){};
+  ~Iterator(){};
 
   bool operator==(const Iterator &s) const { return (node_ == s.node_); };
   bool operator!=(const Iterator &s) const { return (node_ != s.node_); };
