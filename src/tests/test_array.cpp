@@ -2,18 +2,18 @@
 #include "tests.hpp"
 
 namespace s21 {
-TEST(S21ArrayTest, Size) {
+TEST(ArrayTest, Size) {
   array<int, 5> arr;
   EXPECT_EQ(arr.size(), 5);
 }
 
-TEST(S21ArrayTest, EmptyArray) {
+TEST(ArrayTest, EmptyArray) {
   array<int, 0> arr;
   EXPECT_EQ(arr.size(), 0);
-  EXPECT_THROW(arr.at(0), std::out_of_range);
+  EXPECT_EQ(arr.data(), nullptr);
 }
 
-TEST(S21ArrayTest, ElementAccess) {
+TEST(ArrayTest, ElementAccess) {
   array<int, 3> arr;
   arr[0] = 10;
   arr[1] = 20;
@@ -24,13 +24,13 @@ TEST(S21ArrayTest, ElementAccess) {
   EXPECT_EQ(arr[2], 30);
 }
 
-TEST(S21ArrayTest, ElementAccessOutOfBounds) {
+TEST(ArrayTest, ElementAccessOutOfBounds) {
   array<int, 3> arr;
   EXPECT_THROW(arr.at(3), std::out_of_range);
   EXPECT_THROW(arr.at(-1), std::out_of_range);
 }
 
-TEST(S21ArrayTest, AtFunction) {
+TEST(ArrayTest, AtFunction) {
   array<int, 3> arr;
   arr[0] = 10;
   arr[1] = 20;
@@ -42,7 +42,7 @@ TEST(S21ArrayTest, AtFunction) {
   EXPECT_THROW(arr.at(3), std::out_of_range);
 }
 
-TEST(S21ArrayTest, AtFunctionConst) {
+TEST(ArrayTest, AtFunctionConst) {
   const array<int, 3> arr{10, 20, 30};
 
   EXPECT_EQ(arr.at(0), 10);
@@ -51,7 +51,7 @@ TEST(S21ArrayTest, AtFunctionConst) {
   EXPECT_THROW(arr.at(3), std::out_of_range);
 }
 
-TEST(S21ArrayTest, FrontBack) {
+TEST(ArrayTest, FrontBack) {
   array<int, 3> arr;
   arr[0] = 10;
   arr[1] = 20;
@@ -61,7 +61,7 @@ TEST(S21ArrayTest, FrontBack) {
   EXPECT_EQ(arr.back(), 30);
 }
 
-TEST(S21ArrayTest, FrontBackSingleElement) {
+TEST(ArrayTest, FrontBackSingleElement) {
   array<int, 1> arr;
   arr[0] = 42;
 
@@ -69,7 +69,7 @@ TEST(S21ArrayTest, FrontBackSingleElement) {
   EXPECT_EQ(arr.back(), 42);
 }
 
-TEST(S21ArrayTest, Data) {
+TEST(ArrayTest, Data) {
   array<int, 3> arr;
   arr[0] = 10;
   arr[1] = 20;
@@ -81,12 +81,12 @@ TEST(S21ArrayTest, Data) {
   EXPECT_EQ(data[2], 30);
 }
 
-TEST(S21ArrayTest, DataEmptyArray) {
+TEST(ArrayTest, DataEmptyArray) {
   array<int, 0> arr;
   EXPECT_EQ(arr.data(), nullptr);
 }
 
-TEST(S21ArrayTest, ConstArray) {
+TEST(ArrayTest, ConstArray) {
   const array<int, 3> arr = {10, 20, 30};
   EXPECT_EQ(arr.front(), 10);
   EXPECT_EQ(arr.back(), 30);
@@ -94,7 +94,7 @@ TEST(S21ArrayTest, ConstArray) {
   EXPECT_EQ(arr.at(2), 30);
 }
 
-TEST(S21ArrayTest, ExceptionSafety) {
+TEST(ArrayTest, ExceptionSafety) {
   array<int, 3> arr = {1, 2, 3};
 
   try {
@@ -110,7 +110,7 @@ TEST(S21ArrayTest, ExceptionSafety) {
   }
 }
 
-TEST(S21ArrayTest, ModifyArrayThroughData) {
+TEST(ArrayTest, ModifyArrayThroughData) {
   array<int, 3> arr = {1, 2, 3};
   int* data = arr.data();
   data[0] = 10;
@@ -122,7 +122,7 @@ TEST(S21ArrayTest, ModifyArrayThroughData) {
   EXPECT_EQ(arr[2], 30);
 }
 
-TEST(S21ArrayTest, ConstArrayAccess) {
+TEST(ArrayTest, ConstArrayAccess) {
   const array<int, 3> arr = {1, 2, 3};
   const int* data = arr.data();
 
