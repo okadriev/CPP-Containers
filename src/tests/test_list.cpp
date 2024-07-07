@@ -285,7 +285,7 @@ TEST(ListTest, InsertManyBack4) {
 
 TEST(ListTest, InsertManyFront4) {
   s21::list<int> lst{1, 2, 3};
-  lst.insert_many_front(4, 5, 6, 7 ,8);
+  lst.insert_many_front(4, 5, 6, 7, 8);
   EXPECT_EQ(lst.size(), 8);
   EXPECT_EQ(lst.front(), 8);
   EXPECT_EQ(lst.back(), 3);

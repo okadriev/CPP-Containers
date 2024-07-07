@@ -13,11 +13,8 @@ class multiset : public set<T> {
  public:
   using iterator = Iterator<T>;
 
-  multiset() : set<T>(true) {};
-  multiset(std::initializer_list<T> const &items) : set<T>(items, true) {};
-
-  // pair<iterator, bool> insert(const_reference);
-  // void merge(multiset &);
+  multiset() : set<T>(true){};
+  multiset(std::initializer_list<T> const &items) : set<T>(items, true){};
 
   size_t count(const_reference num) const { return this->tree_->count(num); };
   pair<iterator, iterator> equal_range(const_reference);

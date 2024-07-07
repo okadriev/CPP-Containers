@@ -1,20 +1,20 @@
 namespace s21 {
 template <typename value_type>
-sorted_container<value_type>::sorted_container(
+inline sorted_container<value_type>::sorted_container(
     std::initializer_list<value_type> const &items, bool multi)
     : sorted_container(multi) {
   insert(items);
 }
 
 template <typename T>
-bool s21::sorted_container<T>::insert_value(const value_type &value) {
+inline bool sorted_container<T>::insert_value(const value_type &value) {
   tree_->insert(value);
   m_size_++;
   return true;
 }
 
 template <typename T>
-void sorted_container<T>::insert(std::initializer_list<T> items) {
+inline void sorted_container<T>::insert(std::initializer_list<T> items) {
   for (const auto &item : items) insert(item);
 }
 
@@ -40,18 +40,18 @@ typename sorted_container<T>::iterator sorted_container<T>::find(
 }
 
 template <typename T>
-bool sorted_container<T>::contains(const value_type &key) {
+inline bool sorted_container<T>::contains(const value_type &key) {
   return find(key) != end();
 }
 
 template <typename T>
-void sorted_container<T>::erase(const value_type &key) {
+inline void sorted_container<T>::erase(const value_type &key) {
   this->tree_->remove(key);
   this->m_size_--;
 }
 
 template <typename T>
-void sorted_container<T>::clear() {
+inline void sorted_container<T>::clear() {
   this->tree_->delete_tree();
   this->m_size_ = 0;
   // while (this->begin() != this->end()) {
@@ -60,16 +60,26 @@ void sorted_container<T>::clear() {
 }
 
 template <typename T>
-void sorted_container<T>::merge(sorted_container &other) {
+inline void sorted_container<T>::merge(sorted_container &other) {
   for (auto it = other.begin(); it != other.end(); ++it) {
     this->insert(*it);
   }
 }
 
 template <class T>
-void sorted_container<T>::swap(sorted_container &other) noexcept {
+inline void sorted_container<T>::swap(sorted_container &other) noexcept {
   std::swap(this->tree_, other.tree_);
   std::swap(this->m_size_, other.m_size_);
   std::swap(this->multi_, other.multi_);
 }
-}  // namespace s21
+
+template <typename T>
+template <typename... Args>
+inline vector<pair<Iterator<T>, bool>> s21::sorted_container<T>::insert_many(
+    Args &&...args) {
+  vector<pair<iterator, bool>> results;
+  (results.push_back(this->insert(std::forward<Args>(args))), ...);
+  return results;
+}
+
+};  // namespace s21

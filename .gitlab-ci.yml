@@ -6,4 +6,10 @@ lint-job:
   script:
     - cp ./materials/linters/.clang-format ./src/.clang-format
     - cd ./src/
-    - if [ -f *.cc ] || [ -f *.h ] || [ -f .*cpp ] || [ -f *.tpp ] || [ -f *.hpp ] || [ -f *.c ]; clang-format -n *.cc *.hpp *.cpp *.tpp *.h *.c; fi
+    - rm -rf gcovr_env/
+    - find . -name "*.cpp" -exec clang-format -n {} \;
+    - find . -name "*.hpp" -exec clang-format -n {} \;
+    - find . -name "*.tpp" -exec clang-format -n {} \;
+    - find . -name "*.cc" -exec clang-format -n {} \;
+    - find . -name "*.c" -exec clang-format -n {} \;
+    - find . -name "*.h" -exec clang-format -n {} \;
