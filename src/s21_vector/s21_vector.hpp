@@ -1,5 +1,4 @@
-#ifndef S21_VECTOR_H_
-#define S21_VECTOR_H_
+#pragma once
 
 #include <initializer_list>
 #include <limits>
@@ -137,5 +136,3 @@ class vector {
 }  // namespace s21
 
 #include "s21_vector.tpp"
-
-#endif
