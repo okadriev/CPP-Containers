@@ -24,8 +24,8 @@ gcov_report: clear clean
 	$(CXX) $(CXXFLAGS) $(TEST_FILES) -o $(TEST_TARGET) $(GFLAGS) --coverage
 	./$(TEST_TARGET)
 	mkdir report
-	lcov --no-external -o test.info -c -d . -rc lcov_branch_coverage=1 --exclude "$(PWD)/tests/*"
-	genhtml -o report test.info -rc lcov_branch_coverage=1
+	lcov --no-external -o test.info -c -d . --exclude "$(PWD)/tests/*"
+	genhtml -o report test.info
 	@rm -rf *.gcno *.gcda *.gcov $(TEST_TARGET) test.info
 
 clang-format:
