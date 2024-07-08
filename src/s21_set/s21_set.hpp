@@ -25,7 +25,7 @@ class set : public sorted_container<T> {
       : container(items, false){};
 
   set(const set &other) : container(other){};
-  set(set &&other) : container(other){};
+  set(set &&other);
 
   set(std::initializer_list<value_type> const &items, bool multi)
       : container(items, multi){};

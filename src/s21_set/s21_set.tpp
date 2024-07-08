@@ -1,6 +1,12 @@
 namespace s21 {
 
 template <typename value_type>
+set<value_type>::set(set &&other) : container(other) {
+  other.m_size_ = 0;
+  other.tree_ = nullptr;
+}
+
+template <typename value_type>
 set<value_type> &set<value_type>::operator=(const set &other) {
   if (this != &other) {
     delete this->tree_;

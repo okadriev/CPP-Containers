@@ -23,6 +23,20 @@ TEST(Constructor, set_param_2) {
   EXPECT_EQ(test2.empty(), true);
 }
 
+TEST(Constructor, move_constructor) {
+  s21::set<int> set1 = {1, 2, 3, 4, 5};
+  s21::set<int> set2(std::move(set1));
+
+  EXPECT_EQ(set1.size(), 0);
+  EXPECT_EQ(set2.size(), 5);
+
+  EXPECT_TRUE(set2.contains(1));
+  EXPECT_TRUE(set2.contains(2));
+  EXPECT_TRUE(set2.contains(3));
+  EXPECT_TRUE(set2.contains(4));
+  EXPECT_TRUE(set2.contains(5));
+}
+
 TEST(Method, set_copy) {
   set<int> test1{1, 2, 3};
   set<int> test2;
