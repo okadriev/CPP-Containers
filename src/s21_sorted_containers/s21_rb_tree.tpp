@@ -22,6 +22,7 @@ template <typename T>
 void rb_tree<T>::remove_node(node_t *target) {
   node_t *target_parent = target->parent;
   node_t *placeholder = nullptr;
+  
   if (target->left && target->right) {
     placeholder = target->left;
     while (placeholder->right != nullptr) {
@@ -38,9 +39,7 @@ void rb_tree<T>::remove_node(node_t *target) {
       root = nullptr;
 
     } else {
-      if (target->is_red == 0) {
-        fix_2_black(target);
-      }
+      if (target->is_red == 0) fix_2_black(target);
 
       if (target_parent && target == target_parent->left) {
         target_parent->left = nullptr;
@@ -48,6 +47,7 @@ void rb_tree<T>::remove_node(node_t *target) {
         target_parent->right = nullptr;
       }
     }
+    
     delete target;
 
   } else {

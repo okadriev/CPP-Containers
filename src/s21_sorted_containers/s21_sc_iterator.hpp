@@ -32,8 +32,6 @@ class Iterator {
 
 template <typename T>
 inline Node<T> *Iterator<T>::next_node(node_t *node) const {
-  if (node == nullptr) return nullptr;
-
   node_t *next = nullptr;
 
   if (node->right) {
